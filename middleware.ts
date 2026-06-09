@@ -9,7 +9,7 @@ const JWT_SECRET = new TextEncoder().encode(
 const COOKIE_NAME = "wholesale_token";
 
 // These paths do not require authentication
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/products", "/"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/products", "/products", "/"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
