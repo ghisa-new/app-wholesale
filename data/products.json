@@ -1,16 +1,5995 @@
 {
-  "lastSync": "2026-06-09T00:00:00.000000+00:00",
+  "lastSync": "2026-03-02T12:21:28.174740+00:00",
   "handles": [
     "ghisa-ajur-orgu-hirka",
     "ghisa-aksesuar-detayli-ceket",
     "ghisa-aksesuar-detayli-elbise",
+    "ghisa-aksesuar-detayli-elbise-1",
+    "ghisa-aksesuar-detayli-file-hirka",
+    "ghisa-aksesuar-detayli-hirka",
+    "ghisa-aksesuar-detayli-triko-elbise",
+    "ghisa-aksesuar-detayli-uclu-takim",
+    "ghisa-aksesuar-detayli-uzun-hirka",
+    "ghisa-aksesuar-detayli-yelek",
+    "ghisa-aksesuarli-keten-elbise",
+    "ghisa-aksesuarli-tunik-pantolon-takimi",
+    "ghisa-apolet-detay-kap",
+    "ghisa-arkasi-brokar-hirka",
+    "ghisa-arkasi-triko-firfir-detayli-hirka",
+    "ghisa-asimetrik-kesimtakim",
+    "ghisa-asimetrik-takim",
+    "ghisa-astarli-sifon-elbise",
+    "ghisa-baglama-detayli-takim",
+    "ghisa-baglama-detayli-tunik",
+    "ghisa-balikci-yaka-kaban",
     "ghisa-balikci-yaka-triko-takim",
-    "ghisa-blazer-ceket",
+    "ghisa-balikci-yaka-triko-tunik",
+    "ghisa-balikci-yaka-triko-tunik-5",
+    "ghisa-balikci-yaka-triko-tunik-7",
+    "ghisa-balon-kol-kisa-tunik",
+    "ghisa-baski-detayli-takim",
+    "ghisa-bel-detayli-takim",
+    "ghisa-beli-kemerli-takim",
     "ghisa-beli-kusakli-elbise",
+    "ghisa-beli-kusakli-elbise-1",
+    "ghisa-beli-kusakli-elbise-3",
+    "ghisa-beli-kusakli-elbise-5",
+    "ghisa-beli-kusakli-elbise-7",
+    "ghisa-beli-kusakli-hirka",
+    "ghisa-beli-kusakli-jean-ceket",
+    "ghisa-beli-kusakli-kap",
+    "ghisa-beli-kusakli-takim",
+    "ghisa-beli-kusakli-takim-2",
+    "ghisa-beli-kusakli-triko-kaban",
+    "ghisa-beli-lastikli-buyuk-beden-pantolon",
+    "ghisa-beli-lastikli-cepli-pantolon",
+    "ghisa-beli-lastikli-elbise",
+    "ghisa-beli-lastikli-etek",
+    "ghisa-beli-lastikli-etek-6",
     "ghisa-beli-lastikli-pantolon",
-    "ghisa-boncuk-isleme-detayli-takim",
+    "ghisa-beli-lastikli-pantolon-1",
+    "ghisa-beli-lastikli-pantolon-13",
+    "ghisa-beli-lastikli-pantolon-18",
+    "ghisa-beli-lastikli-pantolon-24",
+    "ghisa-beli-lastikli-pantolon-3",
+    "ghisa-beli-lastikli-pantolon-31",
+    "ghisa-beli-lastikli-pantolon-40",
+    "ghisa-beli-lastikli-pantolon-45",
+    "ghisa-beli-lastikli-pantolon-9",
+    "ghisa-biye-detayli-keten-etek",
+    "ghisa-biye-detayli-takim",
+    "ghisa-blazer-ceket",
+    "ghisa-blazer-ceket-pantolon-takim",
+    "ghisa-blazer-takim",
+    "ghisa-blok-gecisli-ceket",
+    "ghisa-blok-gecisli-hirka",
+    "ghisa-blok-gecisli-hirka-3",
+    "ghisa-blok-gecisli-takim",
+    "ghisa-blok-gecisli-takim-1",
+    "ghisa-blok-gecisli-takim-5",
+    "ghisa-blok-gecisli-takim-8",
+    "ghisa-blok-parcali-takim",
+    "ghisa-bloklu-cizgili-tunik",
+    "ghisa-bomber-ceket",
+    "ghisa-boncuk-i\u0307sleme-detayli-takim",
+    "ghisa-boncuk-i\u0307sleme-detayli-takim-2",
+    "ghisa-boncuk-i\u0307sleme-detayli-tunik",
+    "ghisa-boncuk-i\u0307slemeli-triko-tunik",
+    "ghisa-brokar-kumas-mixli-takim",
+    "ghisa-brokar-kumas-mixli-takim-1",
+    "ghisa-brokar-kumas-mixli-takim-5",
+    "ghisa-bros-detayli-tunik",
+    "ghisa-buyuk-beden-triko-detayli-hirka",
+    "ghisa-buyuk-beden-triko-detayli-tunik-6",
+    "ghisa-buzgu-detayli-takim",
+    "ghisa-buzgu-detayli-triko-takim",
+    "ghisa-canta",
+    "ghisa-canta-12",
+    "ghisa-canta-16",
+    "ghisa-canta-2",
+    "ghisa-canta-22",
+    "ghisa-canta-25",
+    "ghisa-canta-29",
+    "ghisa-canta-33",
+    "ghisa-canta-38",
+    "ghisa-canta-5",
+    "ghisa-canta-8",
+    "ghisa-ceket",
+    "ghisa-ceket-1",
+    "ghisa-ceket-etek-takim",
     "ghisa-ceket-pantolon-takim",
-    "ghisa-dantel-detayli-takim"
+    "ghisa-ceket-pantolon-takim-2",
+    "ghisa-cep-detayli-ceket",
+    "ghisa-cep-detayli-ceket-2",
+    "ghisa-cep-detayli-pantolon",
+    "ghisa-cep-detayli-parasut-kumas-takim",
+    "ghisa-cep-detayli-pardosu",
+    "ghisa-cep-detayli-takim",
+    "ghisa-cep-detayli-takim-1",
+    "ghisa-cep-detayli-takim-15",
+    "ghisa-cep-detayli-takim-19",
+    "ghisa-cep-detayli-takim-27",
+    "ghisa-cep-detayli-takim-9",
+    "ghisa-cep-detayli-triko-panco",
+    "ghisa-cep-kapagi-detayli-takim",
+    "ghisa-cepli-triko-hirka",
+    "ghisa-cepli-triko-hirka-7",
+    "ghisa-cicek-detayli-elbise",
+    "ghisa-cicek-detayli-triko-tunik",
+    "ghisa-cift-sira-gold-dugmeli-hirka",
+    "ghisa-cit-cit-kapamali-takim",
+    "ghisa-citcit-detayli-takim",
+    "ghisa-citcit-dugmeli-takim",
+    "ghisa-cizgili-triko-tunik",
+    "ghisa-dama-desen-triko-hirka",
+    "ghisa-dantel-ceket",
+    "ghisa-dantel-detayli-takim",
+    "ghisa-dantel-detayli-takim-2",
+    "ghisa-dantel-detayli-tunik",
+    "ghisa-dantel-hirka",
+    "ghisa-dantel-kumas-mixli-triko-ceket",
+    "ghisa-dantelli-sifon-takim",
+    "ghisa-degrade-detayli-takim",
+    "ghisa-degrade-gecisli-pardosu",
+    "ghisa-degrade-gecisli-takim",
+    "ghisa-denim-etek",
+    "ghisa-deri-detayli-ceket",
+    "ghisa-deri-kaban",
+    "ghisa-deri-kumas-mixli-takim",
+    "ghisa-deri-pantolon-5",
+    "ghisa-desenli-elbise-2",
+    "ghisa-dik-yaka-takim",
+    "ghisa-dik-yaka-tunik",
+    "ghisa-dokuma-kumas-mixli-triko-hirka",
+    "ghisa-dokuma-kumas-mixli-triko-tunik",
+    "ghisa-dugme-detayli-etek",
+    "ghisa-dugme-detayli-hirka",
+    "ghisa-dugme-detayli-jakarli-takim",
+    "ghisa-dugme-detayli-takim",
+    "ghisa-dugme-detayli-triko-tunik",
+    "ghisa-dusuk-kol-tunik-etek-takimi",
+    "ghisa-elbise-2",
+    "ghisa-elbise-3",
+    "ghisa-elbise-5",
+    "ghisa-elbise-ceket-takim",
+    "ghisa-etnik-desen-kaban",
+    "ghisa-etnik-desen-kap",
+    "ghisa-etnik-desen-yelek",
+    "ghisa-fermuar-baskili-tunik-etek-takimi",
+    "ghisa-fermuar-detayli-elbise",
+    "ghisa-fermuar-detayli-takim",
+    "ghisa-fermuar-detayli-takim-18",
+    "ghisa-fermuar-detayli-takim-9",
+    "ghisa-fermuar-detayli-tunik",
+    "ghisa-fermuar-detayli-tunik-2",
+    "ghisa-fermuar-kapamali-takim-1",
+    "ghisa-fermuarli-ceket-pantolon-takim",
+    "ghisa-fermuarli-dik-yaka-kaban",
+    "ghisa-fermuarli-triko-ceket",
+    "ghisa-fermuarli-triko-hirka-pantolon-takimi",
+    "ghisa-file-detayli-asimetrik-takim",
+    "ghisa-file-detayli-takim",
+    "ghisa-file-detayli-takim-2",
+    "ghisa-file-detayli-takim-4",
+    "ghisa-file-detayli-tunik-pantolon-takimi",
+    "ghisa-firfir-detay-takim",
+    "ghisa-firfir-detayli-elbise",
+    "ghisa-firfir-detayli-hirka",
+    "ghisa-firfir-detayli-kisa-hirka",
+    "ghisa-firfir-detayli-sifon-takim",
+    "ghisa-firfir-detayli-takim",
+    "ghisa-firfir-detayli-takim-2",
+    "ghisa-firfir-detayli-takim-6",
+    "ghisa-firfir-detayli-takim-8",
+    "ghisa-firfir-detayli-triko-hirka",
+    "ghisa-firfir-detayli-triko-hirka-9",
+    "ghisa-firfir-detayli-tunik",
+    "ghisa-firfir-detayli-tunik-1",
+    "ghisa-firfir-detayli-tunik-13",
+    "ghisa-firfirli-triko-detayli-tunik",
+    "ghisa-firfirli-triko-hirka",
+    "ghisa-firfirli-triko-hirka-6",
+    "ghisa-fisto-detayli-deri-takim",
+    "ghisa-fisto-detayli-takim",
+    "ghisa-fistolu-takim",
+    "ghisa-fitilli-triko-elbise",
+    "ghisa-fiyonk-detayli-tunik",
+    "ghisa-fiyonk-detayli-tunik-1",
+    "ghisa-fiyonk-takim",
+    "ghisa-fiyonk-tas-i\u0307sleme-detayli-hirka",
+    "ghisa-fular-yaka-kisa-tunik",
+    "ghisa-fular-yaka-takim",
+    "ghisa-fular-yaka-tunik",
+    "ghisa-fular-yakali-tunik",
+    "ghisa-genis-klapa-yaka-kase-kaban-1",
+    "ghisa-genis-paca-pantolon",
+    "ghisa-gomlek-ceket",
+    "ghisa-gomlek-yaka-pardosu",
+    "ghisa-gomlek-yaka-takim-11",
+    "ghisa-gomlek-yaka-takim-13",
+    "ghisa-gomlek-yaka-takim-3",
+    "ghisa-gomlek-yaka-tunik",
+    "ghisa-gomlek-yaka-tunik-5",
+    "ghisa-gomlek-yaka-tunik-6",
+    "ghisa-gul-kabartmali-triko-hirka",
+    "ghisa-hakim-yaka-tunik",
+    "ghisa-hirka",
+    "ghisa-hirka-3",
+    "ghisa-i\u0307sleme-detayli-denim-ceket",
+    "ghisa-i\u0307sleme-detayli-takim-4",
+    "ghisa-i\u0307sleme-detayli-triko-elbise",
+    "ghisa-i\u0307sleme-detayli-tunik",
+    "ghisa-i\u0307sleme-detayli-tunik-1",
+    "ghisa-jakar-dokuma-ceket-1",
+    "ghisa-jakar-dokuma-etek",
+    "ghisa-jakar-dokuma-takim",
+    "ghisa-jakar-kumas-mixli-takim",
+    "ghisa-jakar-kumas-mixli-takim-1",
+    "ghisa-jakar-kumasli-takim",
+    "ghisa-jarse-uclu-takim",
+    "ghisa-kadife-dokulu-takim",
+    "ghisa-kapitone-detayli-kaban",
+    "ghisa-kapitone-kaban",
+    "ghisa-kapitone-yelek",
+    "ghisa-kapitone-yelek-1",
+    "ghisa-kapsonlu-kisa-kap",
+    "ghisa-kapusonlu-kaban",
+    "ghisa-kapusonlu-kaban-3",
+    "ghisa-kapusonlu-kap-2",
+    "ghisa-kapusonlu-kisa-tunik",
+    "ghisa-kapusonlu-suet-kap",
+    "ghisa-kapusonlu-takim",
+    "ghisa-kapusonlu-takim-13",
+    "ghisa-kapusonlu-takim-2",
+    "ghisa-kapusonlu-takim-22",
+    "ghisa-kapusonlu-takim-26",
+    "ghisa-kapusonlu-takim-28",
+    "ghisa-kapusonlu-takim-6",
+    "ghisa-kapusonlu-takim-9",
+    "ghisa-kapusonlu-triko-ceket",
+    "ghisa-kapusonlu-tunik-pantolon-takim",
+    "ghisa-kapusonlu-uzun-tunik-pantolon-takimi",
+    "ghisa-kase-kaban",
+    "ghisa-kazayagi-desen-hirka",
+    "ghisa-kazayagi-desen-ribana-detayli-hirka",
+    "ghisa-kazayagi-desenli-triko-kaban",
+    "ghisa-kazayagi-kumas-mixli-triko-tunik",
+    "ghisa-kemer-detayli-pantolon",
+    "ghisa-kemerli-paca-detayli-pantolon",
+    "ghisa-kemerli-takim",
+    "ghisa-kemerli-takim-4",
+    "ghisa-kemerli-tunik-pantolon-takimi",
+    "ghisa-keten-kap",
+    "ghisa-keten-pantolon",
+    "ghisa-keten-takim",
+    "ghisa-keten-takim-3",
+    "ghisa-keten-takim-4",
+    "ghisa-keten-takim-7",
+    "ghisa-keten-tunik",
+    "ghisa-keten-tunik-4",
+    "ghisa-kiraz-desen-hirka",
+    "ghisa-kisa-hirka",
+    "ghisa-kisa-kap",
+    "ghisa-kisa-tunik-4",
+    "ghisa-klasik-pantolon",
+    "ghisa-kol-detayli-takim-4",
+    "ghisa-kol-detayli-triko-tunik",
+    "ghisa-kol-detayli-tunik",
+    "ghisa-kol-detayli-tunik-3",
+    "ghisa-kollari-bagcikli-trenckot",
+    "ghisa-kollari-cizgili-triko-kaban",
+    "ghisa-kollari-dugmeli-tunik",
+    "ghisa-kollari-nakisli-tunik",
+    "ghisa-kollari-tas-detayli-tunik",
+    "ghisa-kolsuz-tunik",
+    "ghisa-kolsuz-tunik-6",
+    "ghisa-kolu-dugmeli-tunik",
+    "ghisa-kolu-kisa-tunik",
+    "ghisa-kot-kumas-mixlii-takim",
+    "ghisa-kot-pantolon",
+    "ghisa-kot-takim",
+    "ghisa-kristal-tasli-ceket-pantolon-takimi",
+    "ghisa-kruaze-triko-ceket",
+    "ghisa-kruvaze-ceket-6",
+    "ghisa-kruvaze-ceket-pantolon-takim",
+    "ghisa-kruvaze-yaka-etek-ceket-takim",
+    "ghisa-kruvaze-yaka-kemerli-takim",
+    "ghisa-kruvaze-yaka-takim",
+    "ghisa-kruvaze-yakali-takim",
+    "ghisa-kupra-takim",
+    "ghisa-kurk-detayli-ceket",
+    "ghisa-kurk-detayli-kaban-5",
+    "ghisa-kurk-detayli-takim",
+    "ghisa-kurk-detayli-takim-4",
+    "ghisa-kurk-detayli-triko-hirka",
+    "ghisa-kurk-hirka",
+    "ghisa-kurk-yelek",
+    "ghisa-kurk-yelek-3",
+    "ghisa-kurklu-kap",
+    "ghisa-kurklu-triko-kaban",
+    "ghisa-kus-gozu-detayli-kap",
+    "ghisa-kusakli-kap",
+    "ghisa-kusakli-kap-5",
+    "ghisa-kusakli-tunik-pantolon-takimi",
+    "ghisa-kusgozlu-ceket-pantolon-takimi",
+    "ghisa-kusgozlu-tunik-pantolon-takimi-3",
+    "ghisa-kusgozu-detayli-takim",
+    "ghisa-kusgozu-detayli-tunik",
+    "ghisa-lastik-detayli-ceket-etek-takim",
+    "ghisa-leopar-desenli-etek",
+    "ghisa-leopar-kumas-mixli-takim",
+    "ghisa-manset-detayli-kisa-tunik",
+    "ghisa-metal-puskullu-triko-hirka",
+    "ghisa-mono-yaka-kaban",
+    "ghisa-mono-yaka-kap",
+    "ghisa-mono-yaka-takim",
+    "ghisa-mono-yaka-takim-1",
+    "ghisa-mono-yaka-takim-4",
+    "ghisa-nakis-detayli-blazer-takim",
+    "ghisa-nakis-detayli-keten-takim",
+    "ghisa-nakis-detayli-takim",
+    "ghisa-nakis-detayli-takim-2",
+    "ghisa-nakis-detayli-tunik",
+    "ghisa-nakis-isleme-detayli-keten-takim",
+    "ghisa-nakis-i\u0307sleme-detayli-takim",
+    "ghisa-nakis-i\u0307slemeli-keten-elbise",
+    "ghisa-nakis-i\u0307slemeli-keten-tunik",
+    "ghisa-nakisli-tunik-pantolon-takimi",
+    "ghisa-nervur-detayli-takim",
+    "ghisa-nervur-detayli-takim-1",
+    "ghisa-nervur-detayli-takim-9",
+    "ghisa-nervur-dikisli-kot-pantolon",
+    "ghisa-omuz-detayli-takim",
+    "ghisa-omuz-detayli-takim-1",
+    "ghisa-omuz-detayli-yelek",
+    "ghisa-omzu-tas-i\u0307slemeli-gomlek-tunik",
+    "ghisa-onu-dikisli-pantolon",
+    "ghisa-paca-detayli-takim-1",
+    "ghisa-paca-detayli-triko-pantolon",
+    "ghisa-pantolon",
+    "ghisa-pantolon-10",
+    "ghisa-pantolon-11",
+    "ghisa-pantolon-13",
+    "ghisa-pantolon-3",
+    "ghisa-pantolon-31",
+    "ghisa-pantolon-8",
+    "ghisa-parasut-kumas-mixli-elbise",
+    "ghisa-parasut-kumas-mixli-takim",
+    "ghisa-pardosu",
+    "ghisa-payet-detayli-etek",
+    "ghisa-payet-detayli-hirka",
+    "ghisa-payet-detayli-i\u0307kili-takim",
+    "ghisa-payet-detayli-takim",
+    "ghisa-payet-kumas-mixli-kap",
+    "ghisa-payet-kumas-mixli-takim",
+    "ghisa-payet-kumas-mixli-takim-1",
+    "ghisa-payetli-hirka",
+    "ghisa-payetli-hirka-4",
+    "ghisa-payetli-hirka-8",
+    "ghisa-payetli-mono-yaka-ceket",
+    "ghisa-payetli-orgu-tunik",
+    "ghisa-payetli-orgu-tunik-4",
+    "ghisa-payetli-tunik",
+    "ghisa-payetli-tunik-4",
+    "ghisa-pensli-etek",
+    "ghisa-pilise-detayli-takim",
+    "ghisa-pilisoley-etek",
+    "ghisa-puantiyeli-hirka",
+    "ghisa-pul-detayli-triko-ceket",
+    "ghisa-pul-payetli-triko-detayli-takim",
+    "ghisa-puskul-detayli-keten-takim",
+    "ghisa-puskul-detayli-pardosu",
+    "ghisa-puskul-detayli-takim",
+    "ghisa-puskul-detayli-takim-4",
+    "ghisa-puskul-detayli-takim-8",
+    "ghisa-puskul-detayli-takim-9",
+    "ghisa-reglan-kol-ceket",
+    "ghisa-reglan-kol-triko-tunik",
+    "ghisa-reglan-kol-triko-tunik-9",
+    "ghisa-ribana-detali-hirka",
+    "ghisa-ribana-detayla-hirka",
+    "ghisa-ribana-detayli-asimetrik-takim",
+    "ghisa-ribana-detayli-ceket-4",
+    "ghisa-ribana-detayli-hirka",
+    "ghisa-ribana-detayli-kaban",
+    "ghisa-ribana-detayli-kaban-2",
+    "ghisa-ribana-detayli-saten-takim",
+    "ghisa-ribana-detayli-takim",
+    "ghisa-ribana-detayli-takim-1",
+    "ghisa-ribana-detayli-takim-8",
+    "ghisa-ribana-detayli-tunik",
+    "ghisa-ribana-detayli-tunik-11",
+    "ghisa-ribana-detayli-tunik-14",
+    "ghisa-ribana-detayli-tunik-25",
+    "ghisa-ribana-detayli-tunik-29",
+    "ghisa-ribana-detayli-tunik-33",
+    "ghisa-ribana-detayli-tunik-4",
+    "ghisa-ribana-detayli-tunik-45",
+    "ghisa-ribana-detayli-tunik-pantolon-takimi",
+    "ghisa-ribanali-tunik",
+    "ghisa-rolyef-detayli-takim",
+    "ghisa-ruzgarlik-detayli-takim",
+    "ghisa-ruzgarlik-detayli-takim-3",
+    "ghisa-ruzgarlik-detayli-takimi",
+    "ghisa-sacak-detayli-triko-hirka",
+    "ghisa-sal-yaka-ceket",
+    "ghisa-sal-yaka-detayli-hirka",
+    "ghisa-sal-yaka-takim",
+    "ghisa-sal-yaka-triko-hirka",
+    "ghisa-salas-kap",
+    "ghisa-salas-kap-1",
+    "ghisa-saten-takim",
+    "ghisa-saten-tunik",
+    "ghisa-selanik-triko-bluz",
+    "ghisa-selanik-triko-tunik",
+    "ghisa-seyyar-yaka-triko-takim",
+    "ghisa-sifon-detayli-i\u0307kili-takim",
+    "ghisa-sifon-detayli-triko-hirka",
+    "ghisa-sifon-detayli-triko-hirka-8",
+    "ghisa-sifon-detayli-triko-tunik",
+    "ghisa-sifon-detayli-triko-tunik-15",
+    "ghisa-sifon-detayli-tunik-4",
+    "ghisa-sifon-detayli-yelek",
+    "ghisa-sifon-etek",
+    "ghisa-sifon-kumas-mixli-takim",
+    "ghisa-sifon-kumas-mixli-takim-3",
+    "ghisa-sifon-kumas-mixli-takim-4",
+    "ghisa-sifon-kumas-mixli-takim-5",
+    "ghisa-sifon-kumas-mixli-takim-6",
+    "ghisa-sifon-kumas-mixli-tunik",
+    "ghisa-sifon-takim",
+    "ghisa-sifonlu-triko-hirka",
+    "ghisa-simli-hirka",
+    "ghisa-simli-triko-takim",
+    "ghisa-suet-takim",
+    "ghisa-suet-takim-3",
+    "ghisa-takim",
+    "ghisa-takim-12",
+    "ghisa-takim-13",
+    "ghisa-takim-15",
+    "ghisa-takim-16",
+    "ghisa-takim-17",
+    "ghisa-takim-18",
+    "ghisa-takim-2",
+    "ghisa-takim-20",
+    "ghisa-takim-21",
+    "ghisa-takim-24",
+    "ghisa-takim-25",
+    "ghisa-takim-27",
+    "ghisa-takim-31",
+    "ghisa-takim-39",
+    "ghisa-takim-41",
+    "ghisa-takim-53",
+    "ghisa-takim-6",
+    "ghisa-takim-61",
+    "ghisa-takim-63",
+    "ghisa-takim-7",
+    "ghisa-takim-8",
+    "ghisa-tas-detayli-elbise",
+    "ghisa-tas-detayli-jean-ceket",
+    "ghisa-tas-detayli-jean-pantolon",
+    "ghisa-tas-detayli-kolsuz-tunik",
+    "ghisa-tas-detayli-kot-ceket",
+    "ghisa-tas-detayli-kot-pantolon",
+    "ghisa-tas-detayli-takim",
+    "ghisa-tas-detayli-takim-1",
+    "ghisa-tas-detayli-takim-11",
+    "ghisa-tas-detayli-takim-15",
+    "ghisa-tas-detayli-takim-3",
+    "ghisa-tas-detayli-takim-6",
+    "ghisa-tas-detayli-triko-tunik",
+    "ghisa-tas-detayli-triko-tunik-3",
+    "ghisa-tas-detayli-tunik",
+    "ghisa-tas-detayli-tunik-pantolon-takimi",
+    "ghisa-tas-i\u0307sleme-detayli-ceket",
+    "ghisa-tas-i\u0307sleme-detayli-jean-ceket",
+    "ghisa-tas-i\u0307sleme-detayli-takim",
+    "ghisa-tas-i\u0307sleme-detayli-takim-4",
+    "ghisa-tas-i\u0307sleme-detayli-triko-elbise",
+    "ghisa-tas-i\u0307sleme-detayli-tunik",
+    "ghisa-tas-i\u0307sleme-detayli-tunik-1",
+    "ghisa-tas-i\u0307slemeli-jean-ceket",
+    "ghisa-tas-i\u0307slemeli-takim",
+    "ghisa-tas-i\u0307slemeli-triko-tunik",
+    "ghisa-tas-puskul-detayli-ceket",
+    "ghisa-triko-bluz",
+    "ghisa-triko-ceket",
+    "ghisa-triko-ceket-2",
+    "ghisa-triko-ceket-pantolon-takimi",
+    "ghisa-triko-degaje-yaka-tunik",
+    "ghisa-triko-detayli-asimetrik-tunik",
+    "ghisa-triko-detayli-firfirli-hirka",
+    "ghisa-triko-detayli-hirka",
+    "ghisa-triko-detayli-hirka-24",
+    "ghisa-triko-detayli-takim",
+    "ghisa-triko-detayli-tunik",
+    "ghisa-triko-detayli-tunik-11",
+    "ghisa-triko-detayli-tunik-13",
+    "ghisa-triko-detayli-tunik-15",
+    "ghisa-triko-detayli-tunik-22",
+    "ghisa-triko-detayli-tunik-5",
+    "ghisa-triko-detayli-tunik-68",
+    "ghisa-triko-detayli-uzun-hirka-1",
+    "ghisa-triko-elbise",
+    "ghisa-triko-elbise-4",
+    "ghisa-triko-etek",
+    "ghisa-triko-etek-6",
+    "ghisa-triko-etek-9",
+    "ghisa-triko-hirka",
+    "ghisa-triko-hirka-4",
+    "ghisa-triko-hirka-8",
+    "ghisa-triko-hirka-9",
+    "ghisa-triko-kap",
+    "ghisa-triko-kazayagi-tunik",
+    "ghisa-triko-kumas-mixli-hirka",
+    "ghisa-triko-kumas-mixli-kisa-hirka",
+    "ghisa-triko-kumas-mixli-saten-takim",
+    "ghisa-triko-kumas-mixli-saten-takim-1",
+    "ghisa-triko-kumas-mixli-tunik",
+    "ghisa-triko-mixli-ceket",
+    "ghisa-triko-mixli-tunik",
+    "ghisa-triko-mixli-tunik-4",
+    "ghisa-triko-panco",
+    "ghisa-triko-pantolon",
+    "ghisa-triko-pantolon-15",
+    "ghisa-triko-pantolon-21",
+    "ghisa-triko-pantolon-26",
+    "ghisa-triko-pantolon-34",
+    "ghisa-triko-pantolon-7",
+    "ghisa-triko-pardosu",
+    "ghisa-triko-suslemeli-tunik",
+    "ghisa-triko-takim",
+    "ghisa-triko-takim-2",
+    "ghisa-triko-takim-4",
+    "ghisa-triko-takim-5",
+    "ghisa-triko-takim-9",
+    "ghisa-triko-trenckot",
+    "ghisa-triko-tunik",
+    "ghisa-triko-tunik-10",
+    "ghisa-triko-tunik-13",
+    "ghisa-triko-tunik-23",
+    "ghisa-triko-tunik-31",
+    "ghisa-triko-tunik-40",
+    "ghisa-triko-tunik-46",
+    "ghisa-triko-tunik-5",
+    "ghisa-triko-tunik-62",
+    "ghisa-triko-tunik-7",
+    "ghisa-triko-tunik-pantolon-takimi",
+    "ghisa-triko-uzun-hirka",
+    "ghisa-triko-uzun-yelek",
+    "ghisa-triko-zebra-desen-hirka",
+    "ghisa-tropikal-desenli-takim",
+    "ghisa-tul-detayli-triko-etek",
+    "ghisa-tunik",
+    "ghisa-tunik-10",
+    "ghisa-tunik-13",
+    "ghisa-tunik-15",
+    "ghisa-tunik-18",
+    "ghisa-tunik-2",
+    "ghisa-tunik-20",
+    "ghisa-tunik-22",
+    "ghisa-tunik-26",
+    "ghisa-tunik-35",
+    "ghisa-tunik-38",
+    "ghisa-tunik-44",
+    "ghisa-tunik-5",
+    "ghisa-tutu-kumas-mixli-ceket",
+    "ghisa-tutu-kumas-mixli-yelek",
+    "ghisa-tuvit-ceket",
+    "ghisa-uclu-takim",
+    "ghisa-uclu-takim-17",
+    "ghisa-uclu-takim-2",
+    "ghisa-uclu-takim-3",
+    "ghisa-uclu-takim-9",
+    "ghisa-ustten-cepli-ceket-etek-takimi",
+    "ghisa-ustten-cepli-kaban",
+    "ghisa-ustten-cepli-triko-detayli-hirka",
+    "ghisa-uzun-cizgili-triko-hirka",
+    "ghisa-uzun-triko-hirka",
+    "ghisa-uzun-tunik",
+    "ghisa-uzun-tunik-1",
+    "ghisa-uzun-tunik-2",
+    "ghisa-vatkali-kisa-tunik",
+    "ghisa-yaka-detayli-ceket",
+    "ghisa-yaka-detayli-hirka",
+    "ghisa-yaka-detayli-takim",
+    "ghisa-yaka-detayli-takim-1",
+    "ghisa-yaka-detayli-takim-7",
+    "ghisa-yaka-detayli-tunik",
+    "ghisa-yaka-detayli-tunik-etek-takimi",
+    "ghisa-yaka-detayli-yelek",
+    "ghisa-yakasi-i\u0307sleme-detayli-tunik",
+    "ghisa-yakasi-i\u0307slemeli-tunik-pantolon-takimi",
+    "ghisa-yanlari-dugmeli-triko-tunik",
+    "ghisa-yanlari-nervurlu-etek",
+    "ghisa-yanlari-nervurlu-etek-6",
+    "ghisa-yapistirma-tas-detayli-takim",
+    "ghisa-yarasa-kol-detayli-takim",
+    "ghisa-yarasa-kol-saten-takim",
+    "ghisa-yarasa-kol-takim",
+    "ghisa-yelek-pantolon-takim",
+    "ghisa-yirtmac-detayli-pantolon",
+    "ghisa-yuksek-bel-pantolon",
+    "ghisa-yuksek-bel-pantolon-17",
+    "ghisa-yuksek-bel-pantolon-5",
+    "ghisa-yuksel-bel-pantolon",
+    "ghisa-yuvarlak-yaka-tunik",
+    "ghisa-zimba-detayli-takim",
+    "ghisa-zimba-detayli-triko-takim",
+    "ghisadantel-detayli-takim",
+    "ghisai-triko-tunik",
+    "ghisatriko-cepli-tunik",
+    "ghi\u0307sa-sal",
+    "ghi\u0307sa-sal-20",
+    "ghi\u0307sa-sal-39"
   ],
-  "products": {}
+  "products": {
+    "ghisa-selanik-triko-bluz": {
+      "temperature": "COOL",
+      "lotCount": 12,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-asimetrik-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ajur-orgu-hirka": {
+      "temperature": "COOL",
+      "lotCount": 8,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-ceket": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-aksesuar-detayli-elbise": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-elbise-1": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-file-hirka": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-hirka": {
+      "temperature": "FIRE",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-triko-elbise": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-uclu-takim": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuar-detayli-uzun-hirka": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-aksesuar-detayli-yelek": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-aksesuarli-keten-elbise": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "0": 1,
+        "1": 1
+      }
+    },
+    "ghisa-aksesuarli-tunik-pantolon-takimi": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-apolet-detay-kap": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-arkasi-brokar-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-arkasi-triko-firfir-detayli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-asimetrik-kesimtakim": {
+      "temperature": "WARM",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-asimetrik-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-astarli-sifon-elbise": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-baglama-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-baglama-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-balikci-yaka-kaban": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kollari-cizgili-triko-kaban": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-balikci-yaka-triko-takim": {
+      "temperature": "HOT",
+      "lotCount": 13,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-balikci-yaka-triko-tunik": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-balikci-yaka-triko-tunik-5": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-balikci-yaka-triko-tunik-7": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-balon-kol-kisa-tunik": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-baski-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-bel-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kemerli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-elbise": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-elbise-1": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-elbise-3": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-elbise-5": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-elbise-7": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-hirka": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-jean-ceket": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-kap": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-kusakli-triko-kaban": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-beli-lastikli-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-13": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-beli-lastikli-buyuk-beden-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 7,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-cepli-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-beli-lastikli-elbise": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-etek": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-etek-6": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-1": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-3": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-beli-lastikli-pantolon-9": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-18": {
+      "temperature": "HOT",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-24": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-31": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-beli-lastikli-pantolon-40": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-beli-lastikli-pantolon-45": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    },
+    "ghisa-biye-detayli-keten-etek": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "38": 1,
+        "40": 1,
+        "42": 1,
+        "44": 1
+      }
+    },
+    "ghisa-biye-detayli-takim": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blazer-ceket": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    "ghisa-blazer-ceket-pantolon-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blazer-takim": {
+      "temperature": "HOT",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-hirka-3": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-ceket": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-takim-1": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-takim-5": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-blok-gecisli-takim-8": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-blok-parcali-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-bloklu-cizgili-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-bomber-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-boncuk-i\u0307sleme-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-boncuk-i\u0307sleme-detayli-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-boncuk-i\u0307sleme-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-boncuk-i\u0307slemeli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-brokar-kumas-mixli-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-brokar-kumas-mixli-takim-1": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-brokar-kumas-mixli-takim-5": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-bros-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-buyuk-beden-triko-detayli-hirka": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-buyuk-beden-triko-detayli-tunik-6": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-buzgu-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-buzgu-detayli-triko-takim": {
+      "temperature": "COOL",
+      "lotCount": 7,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-canta": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-2": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-5": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-8": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-12": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-16": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-22": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-25": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-29": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-33": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-canta-38": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-ceket": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-ceket-1": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-ceket-etek-takim": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-ceket-pantolon-takim": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "0": 1,
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-ceket-pantolon-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 7,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-ceket-2": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 12,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-parasut-kumas-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-pardosu": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 7,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim-1": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim-9": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim-15": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim-19": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-takim-27": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cep-detayli-triko-panco": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-cep-kapagi-detayli-takim": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-cepli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 10,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-cepli-triko-hirka-7": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-cicek-detayli-elbise": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-cicek-detayli-triko-tunik": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-cift-sira-gold-dugmeli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-cit-cit-kapamali-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-citcit-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-citcit-dugmeli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-cizgili-triko-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-dama-desen-triko-hirka": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-dantel-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dantel-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dantel-detayli-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dantel-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dantel-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-dantel-kumas-mixli-triko-ceket": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-dantelli-sifon-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-degrade-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-degrade-gecisli-pardosu": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-degrade-gecisli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-denim-etek": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "38": 1,
+        "40": 1,
+        "42": 1,
+        "44": 1
+      }
+    },
+    "ghisa-deri-detayli-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-deri-kaban": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-deri-kumas-mixli-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-deri-pantolon-5": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-desenli-elbise-2": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-hirka": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-dik-yaka-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "0": 1,
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dik-yaka-tunik": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dokuma-kumas-mixli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-dokuma-kumas-mixli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dugme-detayli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-dugme-detayli-etek": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dugme-detayli-jakarli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dugme-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-dugme-detayli-triko-tunik": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-dusuk-kol-tunik-etek-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-elbise-2": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-elbise-3": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-elbise-5": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-elbise-ceket-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-etnik-desen-kaban": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-etnik-desen-kap": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-etnik-desen-yelek": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-baskili-tunik-etek-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fermuar-detayli-elbise": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-detayli-takim-9": {
+      "temperature": "DEAD",
+      "lotCount": 7,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-detayli-takim-18": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-detayli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuar-detayli-tunik-2": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fermuar-kapamali-takim-1": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fermuarli-ceket-pantolon-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-fermuarli-dik-yaka-kaban": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-fermuarli-triko-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fermuarli-triko-hirka-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-file-detayli-asimetrik-takim": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-file-detayli-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-file-detayli-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-file-detayli-takim-4": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-file-detayli-tunik-pantolon-takimi": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detay-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-elbise": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-hirka": {
+      "temperature": "HOT",
+      "lotCount": 10,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-kisa-hirka": {
+      "temperature": "WARM",
+      "lotCount": 12,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-sifon-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-takim": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-takim-2": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-takim-6": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-takim-8": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 10,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-triko-hirka-9": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-firfir-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-tunik-1": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfir-detayli-tunik-13": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-firfirli-triko-detayli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-firfirli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-firfirli-triko-hirka-6": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fisto-detayli-deri-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fisto-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fistolu-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fitilli-triko-elbise": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-fiyonk-detayli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fiyonk-detayli-tunik-1": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fiyonk-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fiyonk-tas-i\u0307sleme-detayli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fular-yaka-kisa-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fular-yaka-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-fular-yaka-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-fular-yakali-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-genis-klapa-yaka-kase-kaban-1": {
+      "temperature": "WARM",
+      "lotCount": 9,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-genis-paca-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-ceket": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-pardosu": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-takim-3": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-takim-11": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-takim-13": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-tunik-5": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gomlek-yaka-tunik-6": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-gul-kabartmali-triko-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-hakim-yaka-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-hirka": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-hirka-3": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-i\u0307sleme-detayli-denim-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-i\u0307sleme-detayli-takim-4": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-i\u0307sleme-detayli-triko-elbise": {
+      "temperature": "COOL",
+      "lotCount": 6,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-i\u0307sleme-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-i\u0307sleme-detayli-tunik-1": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-dokuma-ceket-1": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-dokuma-etek": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-dokuma-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-kumas-mixli-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-kumas-mixli-takim-1": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jakar-kumasli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-jarse-uclu-takim": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kadife-dokulu-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kapitone-detayli-kaban": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-kapitone-kaban": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kapitone-yelek": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapitone-yelek-1": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapsonlu-kisa-kap": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-kaban": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-kaban-3": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-kapusonlu-kap-2": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kapusonlu-kisa-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-suet-kap": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-2": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-6": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-9": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-13": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-22": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kapusonlu-takim-26": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-takim-28": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kapusonlu-triko-ceket": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kapusonlu-tunik-pantolon-takim": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kapusonlu-uzun-tunik-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kase-kaban": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kazayagi-desen-hirka": {
+      "temperature": "HOT",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-kazayagi-desen-ribana-detayli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 7,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kazayagi-desenli-triko-kaban": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kazayagi-kumas-mixli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kemer-detayli-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kemerli-paca-detayli-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    "ghisa-kemerli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kemerli-takim-4": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-kemerli-tunik-pantolon-takimi": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-keten-kap": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-takim": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-takim-3": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-takim-4": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-takim-7": {
+      "temperature": "DEAD",
+      "lotCount": 6,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-tunik": {
+      "temperature": "HOT",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-keten-tunik-4": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kiraz-desen-hirka": {
+      "temperature": "WARM",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kisa-kap": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kisa-hirka": {
+      "temperature": "WARM",
+      "lotCount": 12,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kisa-tunik-4": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-klasik-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kol-detayli-takim-4": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kol-detayli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kol-detayli-tunik": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kol-detayli-tunik-3": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kollari-bagcikli-trenckot": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kollari-dugmeli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kollari-nakisli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kollari-tas-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kolsuz-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kolsuz-tunik-6": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      }
+    },
+    "ghisa-kolu-dugmeli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kolu-kisa-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      }
+    },
+    "ghisa-kot-kumas-mixlii-takim": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kot-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kot-takim": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kristal-tasli-ceket-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kruaze-triko-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kruvaze-ceket-6": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kruvaze-ceket-pantolon-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kruvaze-yaka-etek-ceket-takim": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-kruvaze-yaka-kemerli-takim": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kruvaze-yaka-takim": {
+      "temperature": "HOT",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kruvaze-yakali-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kupra-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "0": 1,
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-detayli-ceket": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-detayli-kaban-5": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-kurk-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kurk-detayli-takim-4": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-detayli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-hirka": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-yelek": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurk-yelek-3": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kurklu-kap": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kurklu-triko-kaban": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kus-gozu-detayli-kap": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-kusakli-kap": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kusakli-kap-5": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-kusakli-tunik-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kusgozlu-ceket-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-kusgozlu-tunik-pantolon-takimi-3": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-kusgozu-detayli-takim": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-kusgozu-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-lastik-detayli-ceket-etek-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-leopar-desenli-etek": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-leopar-kumas-mixli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-manset-detayli-kisa-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 5,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-metal-puskullu-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-mono-yaka-kaban": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-mono-yaka-kap": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-mono-yaka-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-mono-yaka-takim-1": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-mono-yaka-takim-4": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-ceket": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-detayli-blazer-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-detayli-keten-takim": {
+      "temperature": "HOT",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-detayli-takim-2": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-detayli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-isleme-detayli-keten-takim": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-i\u0307sleme-detayli-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-i\u0307slemeli-keten-elbise": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakis-i\u0307slemeli-keten-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nakisli-tunik-pantolon-takimi": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-nervur-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-nervur-detayli-takim-1": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nervur-detayli-takim-9": {
+      "temperature": "DEAD",
+      "lotCount": 8,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-nervur-dikisli-kot-pantolon": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    "ghisa-omuz-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-omuz-detayli-takim-1": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-omuz-detayli-yelek": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-omzu-tas-i\u0307slemeli-gomlek-tunik": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-onu-dikisli-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-paca-detayli-takim-1": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-paca-detayli-triko-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pantolon": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pantolon-3": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pantolon-8": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "38": 1,
+        "40": 1,
+        "42": 1,
+        "44": 1
+      }
+    },
+    "ghisa-pantolon-10": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pantolon-11": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    "ghisa-pantolon-13": {
+      "temperature": "WARM",
+      "lotCount": 9,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    },
+    "ghisa-pantolon-31": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-parasut-kumas-mixli-elbise": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-parasut-kumas-mixli-takim": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pardosu": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-detayli-etek": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-detayli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-detayli-i\u0307kili-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-kumas-mixli-kap": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-kumas-mixli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payet-kumas-mixli-takim-1": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-payetli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-hirka-4": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-hirka-8": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-mono-yaka-ceket": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "0": 1,
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-payetli-orgu-tunik": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-orgu-tunik-4": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-payetli-tunik-4": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-pensli-etek": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-pilise-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-pilisoley-etek": {
+      "temperature": "WARM",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puantiyeli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-pul-detayli-triko-ceket": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-pul-payetli-triko-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-keten-takim": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-pardosu": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-takim-4": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-takim-8": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-puskul-detayli-takim-9": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-reglan-kol-ceket": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-reglan-kol-triko-tunik": {
+      "temperature": "HOT",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-reglan-kol-triko-tunik-9": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detali-hirka": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayla-hirka": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-asimetrik-takim": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-ceket-4": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-ribana-detayli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 13,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-kaban": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-ribana-detayli-kaban-2": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-ribana-detayli-saten-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-ribana-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-takim-1": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-takim-8": {
+      "temperature": "DEAD",
+      "lotCount": 6,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-4": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-11": {
+      "temperature": "WARM",
+      "lotCount": 15,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-14": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-25": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-29": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-33": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-45": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ribana-detayli-tunik-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-ribanali-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-rolyef-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-ruzgarlik-detayli-takim": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ruzgarlik-detayli-takim-3": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "0": 1,
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ruzgarlik-detayli-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sacak-detayli-triko-hirka": {
+      "temperature": "COOL",
+      "lotCount": 6,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghi\u0307sa-sal": {
+      "temperature": "FIRE",
+      "lotCount": 16,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghi\u0307sa-sal-20": {
+      "temperature": "FIRE",
+      "lotCount": 22,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghi\u0307sa-sal-39": {
+      "temperature": "COOL",
+      "lotCount": 10,
+      "discount": 10,
+      "seriDistribution": {
+        "STD": 1
+      }
+    },
+    "ghisa-sal-yaka-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sal-yaka-detayli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sal-yaka-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sal-yaka-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-salas-kap": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-salas-kap-1": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-saten-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-saten-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-selanik-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-seyyar-yaka-triko-takim": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-i\u0307kili-takim": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-triko-hirka-8": {
+      "temperature": "COOL",
+      "lotCount": 6,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-triko-tunik": {
+      "temperature": "HOT",
+      "lotCount": 14,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-triko-tunik-15": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-tunik-4": {
+      "temperature": "WARM",
+      "lotCount": 12,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-detayli-yelek": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-sifon-etek": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-takim": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-takim-3": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-takim-4": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-takim-5": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-takim-6": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-kumas-mixli-tunik": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-sifon-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-sifonlu-triko-hirka": {
+      "temperature": "COOL",
+      "lotCount": 8,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-simli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 10,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-simli-triko-takim": {
+      "temperature": "WARM",
+      "lotCount": 11,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-suet-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-suet-takim-3": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-2": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-6": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-7": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-8": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-12": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-13": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-15": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-takim-16": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-takim-17": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-18": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-20": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-takim-21": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-24": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-takim-25": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-27": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-31": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-39": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-41": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-53": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-61": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-takim-63": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-jean-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "38": 1,
+        "40": 1,
+        "42": 1,
+        "44": 1
+      }
+    },
+    "ghisa-tas-detayli-elbise": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-jean-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-kolsuz-tunik": {
+      "temperature": "COLD",
+      "lotCount": 13,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-tas-detayli-kot-ceket": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-kot-pantolon": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-tas-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-takim-1": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-takim-3": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-takim-6": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-takim-11": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-takim-15": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-triko-tunik-3": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-detayli-tunik-pantolon-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-tas-i\u0307sleme-detayli-ceket": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307sleme-detayli-jean-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307sleme-detayli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307sleme-detayli-takim-4": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307sleme-detayli-triko-elbise": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-tas-i\u0307sleme-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307sleme-detayli-tunik-1": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307slemeli-jean-ceket": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307slemeli-takim": {
+      "temperature": "DEAD",
+      "lotCount": 5,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-i\u0307slemeli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tas-puskul-detayli-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-bluz": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-ceket-2": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-ceket-pantolon-takimi": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-degaje-yaka-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 5,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-firfirli-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-hirka-24": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-tunik": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-5": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-11": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-13": {
+      "temperature": "DEAD",
+      "lotCount": 13,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-15": {
+      "temperature": "DEAD",
+      "lotCount": 6,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-22": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-detayli-tunik-68": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-detayli-uzun-hirka-1": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-elbise": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-elbise-4": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-etek": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-triko-etek-6": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-etek-9": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-hirka-4": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-hirka-8": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-hirka-9": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kap": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kazayagi-tunik": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-kumas-mixli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kumas-mixli-kisa-hirka": {
+      "temperature": "WARM",
+      "lotCount": 9,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kumas-mixli-saten-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kumas-mixli-saten-takim-1": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-triko-kumas-mixli-tunik": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-mixli-ceket": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-mixli-tunik": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-mixli-tunik-4": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-panco": {
+      "temperature": "WARM",
+      "lotCount": 7,
+      "discount": 0,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-triko-pantolon": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-pantolon-7": {
+      "temperature": "WARM",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-pantolon-15": {
+      "temperature": "DEAD",
+      "lotCount": 6,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-pantolon-21": {
+      "temperature": "COLD",
+      "lotCount": 6,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-triko-pantolon-26": {
+      "temperature": "HOT",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-pantolon-34": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-pardosu": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-suslemeli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-takim": {
+      "temperature": "COOL",
+      "lotCount": 2,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-takim-2": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-takim-4": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-takim-5": {
+      "temperature": "HOT",
+      "lotCount": 6,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-takim-9": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-trenckot": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik-5": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik-7": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik-10": {
+      "temperature": "COOL",
+      "lotCount": 10,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik-13": {
+      "temperature": "COLD",
+      "lotCount": 4,
+      "discount": 20,
+      "seriDistribution": {
+        "STD": 2
+      }
+    },
+    "ghisa-triko-tunik-23": {
+      "temperature": "DEAD",
+      "lotCount": 5,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-tunik-31": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-tunik-40": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-tunik-46": {
+      "temperature": "COOL",
+      "lotCount": 11,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-tunik-62": {
+      "temperature": "DEAD",
+      "lotCount": 6,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-tunik-pantolon-takimi": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {}
+    },
+    "ghisa-triko-uzun-hirka": {
+      "temperature": "COOL",
+      "lotCount": 4,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-uzun-yelek": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-triko-zebra-desen-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-tropikal-desenli-takim": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {
+        "0": 2,
+        "1": 1
+      }
+    },
+    "ghisa-tul-detayli-triko-etek": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-tunik-2": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    },
+    "ghisa-tunik-5": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-10": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-13": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-15": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-18": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-20": {
+      "temperature": "COOL",
+      "lotCount": 5,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-22": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-26": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-35": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-38": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-tunik-44": {
+      "temperature": "HOT",
+      "lotCount": 4,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 3,
+        "3": 3,
+        "4": 1
+      }
+    },
+    "ghisa-tutu-kumas-mixli-ceket": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tutu-kumas-mixli-yelek": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-tuvit-ceket": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uclu-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uclu-takim-2": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uclu-takim-3": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uclu-takim-9": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uclu-takim-17": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-ustten-cepli-ceket-etek-takimi": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-ustten-cepli-kaban": {
+      "temperature": "COLD",
+      "lotCount": 2,
+      "discount": 20,
+      "seriDistribution": {}
+    },
+    "ghisa-ustten-cepli-triko-detayli-hirka": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uzun-cizgili-triko-hirka": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-uzun-triko-hirka": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uzun-tunik": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uzun-tunik-1": {
+      "temperature": "DEAD",
+      "lotCount": 1,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-uzun-tunik-2": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-vatkali-kisa-tunik": {
+      "temperature": "FIRE",
+      "lotCount": 8,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-ceket": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-hirka": {
+      "temperature": "HOT",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-takim-1": {
+      "temperature": "COLD",
+      "lotCount": 3,
+      "discount": 20,
+      "seriDistribution": {
+        "0": 1,
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-takim-7": {
+      "temperature": "COLD",
+      "lotCount": 7,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yaka-detayli-tunik-etek-takimi": {
+      "temperature": "HOT",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-yaka-detayli-yelek": {
+      "temperature": "COOL",
+      "lotCount": 3,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yakasi-i\u0307sleme-detayli-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yakasi-i\u0307slemeli-tunik-pantolon-takimi": {
+      "temperature": "HOT",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yanlari-dugmeli-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yanlari-nervurlu-etek": {
+      "temperature": "DEAD",
+      "lotCount": 4,
+      "discount": 30,
+      "seriDistribution": {}
+    },
+    "ghisa-yanlari-nervurlu-etek-6": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yapistirma-tas-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 9,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yarasa-kol-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yarasa-kol-saten-takim": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-yarasa-kol-takim": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-yelek-pantolon-takim": {
+      "temperature": "WARM",
+      "lotCount": 3,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1
+      }
+    },
+    "ghisa-yirtmac-detayli-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 2,
+      "discount": 30,
+      "seriDistribution": {
+        "38": 2,
+        "40": 2,
+        "42": 1,
+        "44": 1
+      }
+    },
+    "ghisa-yuksek-bel-pantolon": {
+      "temperature": "DEAD",
+      "lotCount": 3,
+      "discount": 30,
+      "seriDistribution": {
+        "1": 2,
+        "2": 1,
+        "3": 1
+      }
+    },
+    "ghisa-yuksek-bel-pantolon-5": {
+      "temperature": "COOL",
+      "lotCount": 1,
+      "discount": 10,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yuksek-bel-pantolon-17": {
+      "temperature": "WARM",
+      "lotCount": 5,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-yuksel-bel-pantolon": {
+      "temperature": "HOT",
+      "lotCount": 9,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 2,
+        "2": 2,
+        "3": 1
+      }
+    },
+    "ghisa-yuvarlak-yaka-tunik": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-zimba-detayli-takim": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisa-zimba-detayli-triko-takim": {
+      "temperature": "COLD",
+      "lotCount": 5,
+      "discount": 20,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisadantel-detayli-takim": {
+      "temperature": "HOT",
+      "lotCount": 2,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisai-triko-tunik": {
+      "temperature": "WARM",
+      "lotCount": 1,
+      "discount": 0,
+      "seriDistribution": {
+        "1": 1,
+        "2": 1
+      }
+    },
+    "ghisatriko-cepli-tunik": {
+      "temperature": "COLD",
+      "lotCount": 1,
+      "discount": 20,
+      "seriDistribution": {}
+    }
+  }
 }
