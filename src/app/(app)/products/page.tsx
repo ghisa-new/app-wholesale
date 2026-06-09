@@ -106,14 +106,16 @@ function ProductsPageInner() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-wider">
-            {t("heroTitle")}
-          </h1>
-          <p className="mt-3 text-gray-300 text-base">{t("heroSubtitle")}</p>
-        </div>
+      {/* Banner */}
+      <section className="relative w-full aspect-[3/1] md:aspect-[4/1] overflow-hidden">
+        <Image
+          src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
+          alt="GHISA"
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
+        />
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

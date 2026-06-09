@@ -150,53 +150,19 @@ const BULK_PRODUCTS_QUERY = `
       pageInfo { hasNextPage endCursor }
       edges {
         node {
-          id
-          title
-          handle
-          description
-          tags
-          availableForSale
-          priceRange {
-            minVariantPrice { amount currencyCode }
-          }
-          compareAtPriceRange {
-            minVariantPrice { amount currencyCode }
-          }
-          images(first: 10) {
-            edges { node { url altText } }
-          }
-          variants(first: 50) {
+          id title handle description tags availableForSale
+          priceRange { minVariantPrice { amount currencyCode } }
+          compareAtPriceRange { minVariantPrice { amount currencyCode } }
+          images(first: 2) { edges { node { url altText } } }
+          variants(first: 1) {
             edges {
               node {
-                id
-                title
-                sku
+                id title sku
                 priceV2 { amount currencyCode }
                 compareAtPriceV2 { amount currencyCode }
                 availableForSale
                 selectedOptions { name value }
                 image { url altText }
-              }
-            }
-          }
-          metafield(namespace: "custom", key: "model_kodu_2") {
-            references(first: 20) {
-              edges {
-                node {
-                  ... on Product {
-                    id
-                    handle
-                    title
-                    featuredImage { url }
-                    variants(first: 1) {
-                      edges {
-                        node {
-                          selectedOptions { name value }
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
