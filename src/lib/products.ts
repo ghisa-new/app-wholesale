@@ -1,17 +1,11 @@
 import { Product, SiblingProduct, WholesaleMeta } from "./types";
 import { shopifyFetch } from "./shopify";
-import { GET_PRODUCT_BY_HANDLE, SEARCH_PRODUCTS } from "./queries";
+import { GET_PRODUCT_BY_HANDLE } from "./queries";
 import fs from "fs";
 import path from "path";
 
 interface ShopifyProductResponse {
   productByHandle: ShopifyRawProduct | null;
-}
-
-interface ShopifySearchResponse {
-  products: {
-    edges: Array<{ node: ShopifyRawProduct }>;
-  };
 }
 
 interface ShopifyRawProduct {
@@ -66,7 +60,7 @@ interface ShopifyRawProduct {
   } | null;
 }
 
-const WHOLESALE_MULTIPLIER = 0.5; // Wholesale = 50% of retail
+const WHOLESALE_MULTIPLIER = 0.5;
 
 function applyWholesalePricing(
   price: { amount: string; currencyCode: string },
@@ -146,33 +140,128 @@ function getProductsData(): ProductsData {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Bulk fetch via Storefront API (250 per page, ~2 calls for 280 products)
+// ---------------------------------------------------------------------------
+
+const BULK_PRODUCTS_QUERY = `
+  query bulkProducts($first: Int!, $after: String) {
+    products(first: $first, after: $after) {
+      pageInfo { hasNextPage endCursor }
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          tags
+          availableForSale
+          priceRange {
+            minVariantPrice { amount currencyCode }
+          }
+          compareAtPriceRange {
+            minVariantPrice { amount currencyCode }
+          }
+          images(first: 10) {
+            edges { node { url altText } }
+          }
+          variants(first: 50) {
+            edges {
+              node {
+                id
+                title
+                sku
+                priceV2 { amount currencyCode }
+                compareAtPriceV2 { amount currencyCode }
+                availableForSale
+                selectedOptions { name value }
+                image { url altText }
+              }
+            }
+          }
+          metafield(namespace: "custom", key: "model_kodu_2") {
+            references(first: 20) {
+              edges {
+                node {
+                  ... on Product {
+                    id
+                    handle
+                    title
+                    featuredImage { url }
+                    variants(first: 1) {
+                      edges {
+                        node {
+                          selectedOptions { name value }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface BulkResponse {
+  products: {
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    edges: Array<{ node: ShopifyRawProduct }>;
+  };
+}
+
+async function fetchAllShopifyProducts(): Promise<ShopifyRawProduct[]> {
+  const all: ShopifyRawProduct[] = [];
+  let cursor: string | null = null;
+  let hasNext = true;
+
+  while (hasNext) {
+    const resp: BulkResponse = await shopifyFetch<BulkResponse>(
+      BULK_PRODUCTS_QUERY,
+      { first: 250, after: cursor },
+    );
+    for (const edge of resp.products.edges) {
+      all.push(edge.node);
+    }
+    hasNext = resp.products.pageInfo.hasNextPage;
+    cursor = resp.products.pageInfo.endCursor;
+  }
+
+  return all;
+}
+
+// ---------------------------------------------------------------------------
+// In-memory cache (5-minute TTL)
+// ---------------------------------------------------------------------------
+
+let cachedProducts: Product[] | null = null;
+let cachedCategories: string[] | null = null;
+let cacheTs = 0;
+const CACHE_TTL = 5 * 60 * 1000;
+
 export async function getWholesaleProducts(): Promise<Product[]> {
+  if (cachedProducts && Date.now() - cacheTs < CACHE_TTL) {
+    return cachedProducts;
+  }
+
   const productsData = getProductsData();
-  const handles = productsData.handles;
+  const handleSet = new Set(productsData.handles);
   const meta = productsData.products || {};
+
+  const allShopify = await fetchAllShopifyProducts();
   const products: Product[] = [];
 
-  // Fetch in parallel, batches of 5
-  for (let i = 0; i < handles.length; i += 5) {
-    const batch = handles.slice(i, i + 5);
-    const results = await Promise.all(
-      batch.map(async (handle) => {
-        try {
-          const data = await shopifyFetch<ShopifyProductResponse>(
-            GET_PRODUCT_BY_HANDLE,
-            { handle }
-          );
-          return data.productByHandle
-            ? transformProduct(data.productByHandle, meta[handle])
-            : null;
-        } catch {
-          console.error(`Failed to fetch product: ${handle}`);
-          return null;
-        }
-      })
-    );
-    products.push(...results.filter((p): p is Product => p !== null));
+  for (const raw of allShopify) {
+    if (!handleSet.has(raw.handle)) continue;
+    products.push(transformProduct(raw, meta[raw.handle]));
   }
+
+  cachedProducts = products;
+  cachedCategories = null;
+  cacheTs = Date.now();
 
   return products;
 }
@@ -196,7 +285,6 @@ export async function getProductByHandle(
   }
 }
 
-// Product type categories derived from tags
 const CATEGORY_TAGS = [
   "takim",
   "tunik",
@@ -231,9 +319,34 @@ export function extractCategories(products: Product[]): string[] {
 }
 
 export async function searchProducts(query: string): Promise<Product[]> {
-  const data = await shopifyFetch<ShopifySearchResponse>(SEARCH_PRODUCTS, {
-    query,
-    first: 20,
-  });
+  const SEARCH_PRODUCTS = `
+    query searchProducts($query: String!, $first: Int!) {
+      products(query: $query, first: $first, sortKey: RELEVANCE) {
+        edges {
+          node {
+            id title handle description tags availableForSale
+            priceRange { minVariantPrice { amount currencyCode } }
+            compareAtPriceRange { minVariantPrice { amount currencyCode } }
+            images(first: 10) { edges { node { url altText } } }
+            variants(first: 50) {
+              edges {
+                node {
+                  id title sku
+                  priceV2 { amount currencyCode }
+                  compareAtPriceV2 { amount currencyCode }
+                  availableForSale
+                  selectedOptions { name value }
+                  image { url altText }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  const data = await shopifyFetch<{
+    products: { edges: Array<{ node: ShopifyRawProduct }> };
+  }>(SEARCH_PRODUCTS, { query, first: 20 });
   return data.products.edges.map((e) => transformProduct(e.node));
 }
