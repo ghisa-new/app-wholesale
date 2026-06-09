@@ -1,0 +1,28 @@
+name: Deploy Wholesale App
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 46.62.246.160
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/apps/app-wholesale
+            git pull origin main
+            docker build -t app-wholesale .
+            docker stop app-wholesale 2>/dev/null || true
+            docker rm app-wholesale 2>/dev/null || true
+            docker run -d \
+              --name app-wholesale \
+              --restart unless-stopped \
+              --network fleet-ghisa \
+              -p 3106:3000 \
+              -v /opt/apps/app-wholesale/data:/app/data \
+              --env-file /opt/apps/app-wholesale/.env \
+              app-wholesale
