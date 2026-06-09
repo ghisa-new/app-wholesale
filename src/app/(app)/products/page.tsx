@@ -107,12 +107,13 @@ function ProductsPageInner() {
   return (
     <div>
       {/* Banner */}
-      <section className="relative w-full aspect-[3/1] md:aspect-[4/1] overflow-hidden">
+      <section className="relative w-full">
         <Image
           src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
           alt="GHISA"
-          fill
-          className="object-cover"
+          width={2000}
+          height={1000}
+          className="w-full h-auto"
           sizes="100vw"
           priority
         />
