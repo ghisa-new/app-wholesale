@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 export type Locale = "tr" | "en" | "ar";
 
@@ -66,6 +73,37 @@ const translations = {
     heroSubtitle: "Toptan siparis taleplerinizi kolayca olusturun",
     language: "Dil",
     currency: "Para Birimi",
+    // Navigation & chrome
+    stores: "Magazalar",
+    faq: "S.S.S.",
+    account: "Hesabim",
+    announcement: "GHISA Toptan — bayilere ozel fiyatlar, seri (lot) bazli siparis",
+    // Footer
+    aboutText:
+      "GHISA, modern ve zarif kadin giyiminde one cikan bir marka. Toptan portali uzerinden bayilerimize ozel koleksiyon ve fiyatlar sunuyoruz.",
+    quickLinks: "Hizli Baglantilar",
+    customerService: "Musteri Hizmetleri",
+    followUs: "Bizi Takip Edin",
+    newsletter: "Bulten",
+    newsletterText: "Yeni koleksiyon ve kampanyalardan ilk siz haberdar olun.",
+    subscribe: "Abone Ol",
+    allRights: "Tum haklari saklidir.",
+    contact: "Iletisim",
+    // Stores
+    storesTitle: "Magazalarimiz",
+    storesSubtitle: "Turkiye genelinde GHISA magazalarini kesfedin.",
+    allCities: "Tum Sehirler",
+    viewOnMap: "Haritada Gor",
+    phone: "Telefon",
+    hours: "Calisma Saatleri",
+    address: "Adres",
+    noStores: "Magaza bulunamadi",
+    storesWord: "magaza",
+    // FAQ
+    faqTitle: "Sikca Sorulan Sorular",
+    faqSubtitle: "Toptan siparisler hakkinda merak edilenler.",
+    faqMoreTitle: "Sorunuz mu var?",
+    faqMoreText: "Aradiginiz yaniti bulamadiysaniz bizimle iletisime gecin.",
   },
   en: {
     appName: "GHISA Wholesale",
@@ -128,6 +166,37 @@ const translations = {
     heroSubtitle: "Create your wholesale order requests easily",
     language: "Language",
     currency: "Currency",
+    // Navigation & chrome
+    stores: "Stores",
+    faq: "FAQ",
+    account: "Account",
+    announcement: "GHISA Wholesale — exclusive dealer pricing, ordered by lot (seri)",
+    // Footer
+    aboutText:
+      "GHISA is a leading brand in modern, elegant womenswear. Our wholesale portal offers dealers exclusive collections and pricing.",
+    quickLinks: "Quick Links",
+    customerService: "Customer Service",
+    followUs: "Follow Us",
+    newsletter: "Newsletter",
+    newsletterText: "Be the first to hear about new collections and campaigns.",
+    subscribe: "Subscribe",
+    allRights: "All rights reserved.",
+    contact: "Contact",
+    // Stores
+    storesTitle: "Our Stores",
+    storesSubtitle: "Discover GHISA stores across Türkiye.",
+    allCities: "All Cities",
+    viewOnMap: "View on Map",
+    phone: "Phone",
+    hours: "Opening Hours",
+    address: "Address",
+    noStores: "No stores found",
+    storesWord: "stores",
+    // FAQ
+    faqTitle: "Frequently Asked Questions",
+    faqSubtitle: "Everything about wholesale ordering.",
+    faqMoreTitle: "Still have questions?",
+    faqMoreText: "If you couldn't find what you were looking for, get in touch.",
   },
   ar: {
     appName: "غيسا بالجملة",
@@ -190,6 +259,37 @@ const translations = {
     heroSubtitle: "أنشئ طلبات الجملة الخاصة بك بسهولة",
     language: "اللغة",
     currency: "العملة",
+    // Navigation & chrome
+    stores: "المتاجر",
+    faq: "الأسئلة الشائعة",
+    account: "حسابي",
+    announcement: "غيسا بالجملة — أسعار خاصة للموزعين، الطلب حسب المجموعة",
+    // Footer
+    aboutText:
+      "غيسا علامة تجارية رائدة في الأزياء النسائية العصرية والأنيقة. توفر بوابة البيع بالجملة لموزعينا مجموعات وأسعاراً حصرية.",
+    quickLinks: "روابط سريعة",
+    customerService: "خدمة العملاء",
+    followUs: "تابعنا",
+    newsletter: "النشرة البريدية",
+    newsletterText: "كن أول من يعرف عن المجموعات والحملات الجديدة.",
+    subscribe: "اشترك",
+    allRights: "جميع الحقوق محفوظة.",
+    contact: "اتصل بنا",
+    // Stores
+    storesTitle: "متاجرنا",
+    storesSubtitle: "اكتشف متاجر غيسا في جميع أنحاء تركيا.",
+    allCities: "جميع المدن",
+    viewOnMap: "عرض على الخريطة",
+    phone: "الهاتف",
+    hours: "ساعات العمل",
+    address: "العنوان",
+    noStores: "لا توجد متاجر",
+    storesWord: "متجر",
+    // FAQ
+    faqTitle: "الأسئلة الشائعة",
+    faqSubtitle: "كل ما يتعلق بالطلب بالجملة.",
+    faqMoreTitle: "لا تزال لديك أسئلة؟",
+    faqMoreText: "إذا لم تجد ما تبحث عنه، تواصل معنا.",
   },
 } as const;
 
@@ -228,6 +328,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   );
 
   const isRtl = locale === "ar";
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.documentElement.dir = isRtl ? "rtl" : "ltr";
+  }, [locale, isRtl]);
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t, isRtl }}>

@@ -46,6 +46,7 @@ export interface Product {
   description: string;
   descriptionHtml?: string;
   tags: string[];
+  productType: string;
   availableForSale: boolean;
   price: Money;
   compareAtPrice: Money | null;

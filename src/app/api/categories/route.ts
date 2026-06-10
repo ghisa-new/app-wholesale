@@ -6,12 +6,9 @@ export async function GET() {
   try {
     const products = await getWholesaleProducts();
     const categories = extractCategories(products);
-    return NextResponse.json({ products, categories });
+    return NextResponse.json({ categories });
   } catch (error) {
-    console.error("Products fetch error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch products", products: [], categories: [] },
-      { status: 500 }
-    );
+    console.error("Categories fetch error:", error);
+    return NextResponse.json({ categories: [] }, { status: 500 });
   }
 }

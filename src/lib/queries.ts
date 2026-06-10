@@ -5,6 +5,7 @@ const PRODUCT_FIELDS = `
   handle
   description
   tags
+  productType
   availableForSale
   priceRange {
     minVariantPrice {

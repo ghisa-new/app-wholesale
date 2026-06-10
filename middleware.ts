@@ -8,18 +8,31 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const COOKIE_NAME = "wholesale_token";
 
-// These paths do not require authentication
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/products", "/products", "/"];
+// These paths do not require authentication (public browsing + read-only data).
+// Only checkout actions (/cart, /api/order) require a logged-in dealer.
+const PUBLIC_PATHS = [
+  "/",
+  "/login",
+  "/products",
+  "/stores",
+  "/faq",
+  "/api/auth/login",
+  "/api/products",
+  "/api/categories",
+  "/api/exchange-rate",
+  "/api/stores",
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow static assets
+  // Allow static assets (images, fonts, icons served from /public)
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
-    pathname.endsWith(".svg") ||
-    pathname.endsWith(".ico")
+    /\.(svg|png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|txt|xml|map)$/i.test(
+      pathname
+    )
   ) {
     return NextResponse.next();
   }

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { useCurrency } from "@/lib/currency";
 import { Product } from "@/lib/types";
+import { Category, normalizeType } from "@/lib/categories";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -27,7 +28,7 @@ function ProductsPageInner() {
   const { formatPrice } = useCurrency();
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<SortOption>("newest");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -53,11 +54,8 @@ function ProductsPageInner() {
 
   const filtered = useMemo(() => {
     if (!selectedCategory) return products;
-    return products.filter((p) =>
-      p.tags.some(
-        (tag) => tag.toLowerCase() === selectedCategory.toLowerCase()
-      )
-    );
+    const target = normalizeType(selectedCategory);
+    return products.filter((p) => normalizeType(p.productType) === target);
   }, [products, selectedCategory]);
 
   const sorted = useMemo(() => {
@@ -126,25 +124,25 @@ function ProductsPageInner() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCategory("")}
-                className={`px-3 py-1.5 text-sm rounded-lg border ${
+                className={`px-4 py-2 text-xs uppercase tracking-[0.1em] border transition-colors ${
                   !selectedCategory
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-gray-200 text-gray-700 hover:border-gray-400"
+                    ? "border-ink bg-ink text-white"
+                    : "border-line text-ink-soft hover:border-ink"
                 }`}
               >
                 {t("allCategories")}
               </button>
               {categories.map((cat) => (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 text-sm rounded-lg border capitalize ${
-                    selectedCategory === cat
-                      ? "border-blue-600 bg-blue-600 text-white"
-                      : "border-gray-200 text-gray-700 hover:border-gray-400"
+                  key={cat.slug}
+                  onClick={() => setSelectedCategory(cat.slug)}
+                  className={`px-4 py-2 text-xs uppercase tracking-[0.1em] border transition-colors ${
+                    normalizeType(selectedCategory) === cat.slug
+                      ? "border-ink bg-ink text-white"
+                      : "border-line text-ink-soft hover:border-ink"
                   }`}
                 >
-                  {cat}
+                  {cat.label}
                 </button>
               ))}
             </div>
@@ -153,7 +151,7 @@ function ProductsPageInner() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortOption)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="border border-line px-3 py-2 text-sm text-ink-soft bg-white focus:outline-none focus:border-ink"
             >
               <option value="newest">{t("sortNewest")}</option>
               <option value="price-asc">{t("sortPriceLow")}</option>
@@ -197,7 +195,7 @@ function ProductCard({
 
   return (
     <Link href={`/products/${product.handle}`} className="group block">
-      <div className="aspect-[3/4] relative overflow-hidden bg-gray-100 rounded-lg">
+      <div className="aspect-[3/4] relative overflow-hidden bg-gray-100">
         {product.images[0] && (
           <Image
             src={product.images[0].url}
@@ -208,7 +206,7 @@ function ProductCard({
           />
         )}
         {hasCampaign && (
-          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded uppercase tracking-wider">
+          <span className="absolute top-2 left-2 bg-sale text-white text-[10px] px-2 py-1 uppercase tracking-wider">
             %{product.campaignDiscount}
           </span>
         )}
@@ -220,7 +218,7 @@ function ProductCard({
         <div className="mt-1 flex items-center gap-2">
           <span
             className={`text-sm ${
-              hasCampaign ? "text-red-500 font-semibold" : "text-gray-900"
+              hasCampaign ? "text-sale font-semibold" : "text-gray-900"
             }`}
           >
             {formatPrice(parseFloat(product.price.amount))}

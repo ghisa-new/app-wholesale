@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { I18nProvider, useI18n } from "@/lib/i18n";
+import { I18nProvider } from "@/lib/i18n";
 import { CurrencyProvider } from "@/lib/currency";
 import { CartProvider } from "@/lib/cart";
 import Header from "./header";
+import Footer from "./footer";
 
 interface User {
   id: number;
@@ -17,7 +18,6 @@ interface User {
 
 function ShellContent({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const { t } = useI18n();
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -37,18 +37,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col min-h-screen bg-[var(--background)]">
       <Header user={user} onLogout={() => setUser(null)} />
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-gray-200 bg-white mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-lg font-bold text-gray-900 tracking-wider">
-              GHISA
-            </p>
-            <p className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} Ghisa. {t("subtitle")}.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

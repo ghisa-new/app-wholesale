@@ -149,10 +149,8 @@ export default function ProductDetailPage({
               <button
                 key={i}
                 onClick={() => setSelectedImage(i)}
-                className={`shrink-0 w-16 h-20 relative border-2 rounded ${
-                  selectedImage === i
-                    ? "border-blue-600"
-                    : "border-transparent"
+                className={`shrink-0 w-16 h-20 relative border-2 ${
+                  selectedImage === i ? "border-ink" : "border-transparent"
                 }`}
               >
                 <Image
@@ -165,7 +163,7 @@ export default function ProductDetailPage({
               </button>
             ))}
           </div>
-          <div className="flex-1 aspect-[3/4] relative bg-gray-100 rounded-lg overflow-hidden">
+          <div className="flex-1 aspect-[3/4] relative bg-gray-100 overflow-hidden">
             {product.images[selectedImage] && (
               <Image
                 src={product.images[selectedImage].url}
@@ -193,7 +191,7 @@ export default function ProductDetailPage({
           <div className="flex items-center gap-3">
             <span
               className={`text-2xl font-semibold ${
-                hasCampaign ? "text-red-500" : "text-gray-900"
+                hasCampaign ? "text-sale" : "text-gray-900"
               }`}
             >
               {formatPrice(unitPrice)}
@@ -204,7 +202,7 @@ export default function ProductDetailPage({
               </span>
             )}
             {hasCampaign && (
-              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded uppercase">
+              <span className="bg-sale text-white text-xs px-2 py-0.5 uppercase">
                 %{product.campaignDiscount}
               </span>
             )}
@@ -217,7 +215,7 @@ export default function ProductDetailPage({
                 <Link
                   key={s.id}
                   href={`/products/${s.handle}`}
-                  className="w-10 h-12 relative border border-gray-200 hover:border-blue-600 overflow-hidden rounded"
+                  className="w-10 h-12 relative border border-line hover:border-ink overflow-hidden"
                   title={s.color || s.title}
                 >
                   {s.featuredImage && (
@@ -245,10 +243,10 @@ export default function ProductDetailPage({
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`px-3 py-1.5 text-sm rounded-lg border ${
+                    className={`px-4 py-2 text-xs uppercase tracking-[0.1em] border transition-colors ${
                       selectedColor === color
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-gray-200 text-gray-700 hover:border-gray-400"
+                        ? "border-ink bg-ink text-white"
+                        : "border-line text-ink-soft hover:border-ink"
                     }`}
                   >
                     {color}
@@ -282,10 +280,10 @@ export default function ProductDetailPage({
               <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">
                 {t("lotQuantity")}
               </label>
-              <div className="flex items-center border border-gray-200 rounded-lg">
+              <div className="flex items-center border border-line">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-3 py-2 hover:bg-gray-100 rounded-l-lg"
+                  className="px-3 py-2 hover:bg-surface"
                 >
                   -
                 </button>
@@ -294,7 +292,7 @@ export default function ProductDetailPage({
                 </span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="px-3 py-2 hover:bg-gray-100 rounded-r-lg"
+                  className="px-3 py-2 hover:bg-surface"
                 >
                   +
                 </button>
@@ -304,11 +302,11 @@ export default function ProductDetailPage({
             <button
               onClick={handleAddToCart}
               disabled={!canAdd}
-              className={`flex-1 py-3 text-sm uppercase tracking-wider rounded-lg font-semibold transition self-end ${
+              className={`flex-1 py-3 text-xs uppercase tracking-[0.1em] font-medium transition self-end ${
                 added
-                  ? "bg-green-600 text-white"
+                  ? "bg-stock text-white"
                   : canAdd
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  ? "bg-ink text-white hover:opacity-90"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
             >

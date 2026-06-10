@@ -94,7 +94,7 @@ export default function CartPage() {
         <p className="text-gray-500 mt-2">{t("orderSuccessDetail")}</p>
         <Link
           href="/products"
-          className="inline-block mt-8 bg-blue-600 text-white px-8 py-3 text-sm uppercase tracking-wider rounded-lg hover:bg-blue-700 transition font-semibold"
+          className="inline-block mt-8 btn-ink px-8 py-3"
         >
           {t("continueShopping")}
         </Link>
@@ -109,9 +109,9 @@ export default function CartPage() {
       </h1>
 
       {!user && (
-        <div className="bg-blue-50 border border-blue-200 p-4 mb-6 rounded-lg text-sm text-blue-800">
+        <div className="bg-surface border border-line p-4 mb-6 text-sm text-ink-soft">
           {t("loginRequired")}{" "}
-          <Link href="/login" className="text-blue-600 underline font-medium">
+          <Link href="/login" className="text-ink underline font-medium">
             {t("login")}
           </Link>
         </div>
@@ -122,7 +122,7 @@ export default function CartPage() {
           <p className="text-gray-500">{t("emptyCart")}</p>
           <Link
             href="/products"
-            className="inline-block mt-6 bg-blue-600 text-white px-8 py-3 text-sm uppercase tracking-wider rounded-lg hover:bg-blue-700 transition font-semibold"
+            className="inline-block mt-6 btn-ink px-8 py-3"
           >
             {t("continueShopping")}
           </Link>
@@ -131,7 +131,7 @@ export default function CartPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
             {items.map((item) => (
-              <div key={item.variantId} className="flex gap-3 p-3 bg-white rounded-lg border border-gray-200">
+              <div key={item.variantId} className="flex gap-3 p-3 bg-white border border-line">
                 {item.image && (
                   <div className="w-20 h-24 relative shrink-0 bg-gray-100 rounded">
                     <Image
@@ -208,7 +208,7 @@ export default function CartPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white p-4 border border-gray-200 rounded-lg">
+            <div className="bg-white p-4 border border-line">
               <div className="flex justify-between text-lg font-bold mb-4">
                 <span>{t("total")}</span>
                 <span>{formatPrice(getCartTotal())}</span>
@@ -223,7 +223,7 @@ export default function CartPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t("orderNotesPlaceholder")}
                   rows={3}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                  className="w-full border border-line px-3 py-2 text-sm focus:outline-none focus:border-ink resize-none"
                 />
               </div>
 
@@ -234,7 +234,7 @@ export default function CartPage() {
               <button
                 onClick={handlePlaceOrder}
                 disabled={!user || submitting}
-                className="w-full bg-blue-600 text-white py-3 text-sm uppercase tracking-wider rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-semibold"
+                className="btn-ink w-full py-3 disabled:opacity-50"
               >
                 {submitting ? "..." : t("placeOrder")}
               </button>

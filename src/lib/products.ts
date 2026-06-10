@@ -15,6 +15,7 @@ interface ShopifyRawProduct {
   description: string;
   descriptionHtml?: string;
   tags: string[];
+  productType: string;
   availableForSale: boolean;
   priceRange: {
     minVariantPrice: { amount: string; currencyCode: string };
@@ -104,6 +105,7 @@ function transformProduct(
     description: raw.description,
     descriptionHtml: raw.descriptionHtml,
     tags: raw.tags,
+    productType: raw.productType,
     availableForSale: raw.availableForSale,
     price: wholesalePrice,
     compareAtPrice: discount > 0 ? wholesaleBase : null,
@@ -150,7 +152,7 @@ const BULK_PRODUCTS_QUERY = `
       pageInfo { hasNextPage endCursor }
       edges {
         node {
-          id title handle description tags availableForSale
+          id title handle description tags productType availableForSale
           priceRange { minVariantPrice { amount currencyCode } }
           compareAtPriceRange { minVariantPrice { amount currencyCode } }
           images(first: 2) { edges { node { url altText } } }
@@ -204,7 +206,6 @@ async function fetchAllShopifyProducts(): Promise<ShopifyRawProduct[]> {
 // ---------------------------------------------------------------------------
 
 let cachedProducts: Product[] | null = null;
-let cachedCategories: string[] | null = null;
 let cacheTs = 0;
 const CACHE_TTL = 5 * 60 * 1000;
 
@@ -226,7 +227,6 @@ export async function getWholesaleProducts(): Promise<Product[]> {
   }
 
   cachedProducts = products;
-  cachedCategories = null;
   cacheTs = Date.now();
 
   return products;
@@ -251,46 +251,13 @@ export async function getProductByHandle(
   }
 }
 
-const CATEGORY_TAGS = [
-  "takim",
-  "tunik",
-  "hirka",
-  "kaban",
-  "mont",
-  "triko",
-  "elbise",
-  "gomlek",
-  "pantolon",
-  "etek",
-  "yelek",
-  "bluz",
-  "ceket",
-  "sal",
-];
-
-export function extractCategories(products: Product[]): string[] {
-  const tagCounts = new Map<string, number>();
-  for (const p of products) {
-    for (const tag of p.tags) {
-      const lower = tag.toLowerCase();
-      if (CATEGORY_TAGS.includes(lower)) {
-        tagCounts.set(lower, (tagCounts.get(lower) || 0) + 1);
-      }
-    }
-  }
-  return [...tagCounts.entries()]
-    .filter(([, count]) => count >= 2)
-    .sort((a, b) => b[1] - a[1])
-    .map(([tag]) => tag);
-}
-
 export async function searchProducts(query: string): Promise<Product[]> {
   const SEARCH_PRODUCTS = `
     query searchProducts($query: String!, $first: Int!) {
       products(query: $query, first: $first, sortKey: RELEVANCE) {
         edges {
           node {
-            id title handle description tags availableForSale
+            id title handle description tags productType availableForSale
             priceRange { minVariantPrice { amount currencyCode } }
             compareAtPriceRange { minVariantPrice { amount currencyCode } }
             images(first: 10) { edges { node { url altText } } }

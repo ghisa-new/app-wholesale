@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 export type CurrencyCode = "TRY" | "USD";
 
@@ -9,12 +16,13 @@ interface CurrencyContextType {
   setCurrency: (c: CurrencyCode) => void;
   formatPrice: (amount: number) => string;
   convertPrice: (tryAmount: number) => number;
+  rate: number;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
-// Approximate TRY->USD rate
-const TRY_TO_USD = 0.026;
+// Fallback TRY->USD multiplier, used until the live rate loads (or if it fails).
+const FALLBACK_TRY_TO_USD = 0.026;
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
@@ -24,6 +32,26 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return "TRY";
   });
 
+  // Live TRY->USD rate, fetched from /api/exchange-rate (open.er-api.com).
+  const [rate, setRate] = useState<number>(FALLBACK_TRY_TO_USD);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/exchange-rate")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && typeof data?.rate === "number" && data.rate > 0) {
+          setRate(data.rate);
+        }
+      })
+      .catch(() => {
+        // keep fallback rate
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const setCurrency = useCallback((c: CurrencyCode) => {
     setCurrencyState(c);
     localStorage.setItem("wholesale_currency", c);
@@ -31,15 +59,15 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   const convertPrice = useCallback(
     (tryAmount: number) => {
-      if (currency === "USD") return tryAmount * TRY_TO_USD;
+      if (currency === "USD") return tryAmount * rate;
       return tryAmount;
     },
-    [currency]
+    [currency, rate]
   );
 
   const formatPrice = useCallback(
     (tryAmount: number) => {
-      const amount = currency === "USD" ? tryAmount * TRY_TO_USD : tryAmount;
+      const amount = currency === "USD" ? tryAmount * rate : tryAmount;
       if (currency === "USD") {
         return new Intl.NumberFormat("en-US", {
           style: "currency",
@@ -51,12 +79,12 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         currency: "TRY",
       }).format(amount);
     },
-    [currency]
+    [currency, rate]
   );
 
   return (
     <CurrencyContext.Provider
-      value={{ currency, setCurrency, formatPrice, convertPrice }}
+      value={{ currency, setCurrency, formatPrice, convertPrice, rate }}
     >
       {children}
     </CurrencyContext.Provider>
