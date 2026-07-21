@@ -115,6 +115,9 @@ export default function LoginPage() {
               info@ghisa.com
             </a>
           </p>
+          <a href="/forgot" className="block text-center text-sm text-gray-500 hover:text-gray-900 mt-3">
+            Şifremi unuttum
+          </a>
         </form>
       </div>
     </div>

@@ -69,4 +69,6 @@ export interface CartItem {
   image: string | null;
   color: string;
   seriDistribution: Record<string, number>;
+  /** NEBIM base sku (MODEL-COLOR, no size) — per-size sku = baseSku + '-' + size */
+  baseSku?: string;
 }

@@ -3,6 +3,21 @@ import { shopifyFetch } from "./shopify";
 import { GET_PRODUCT_BY_HANDLE } from "./queries";
 import fs from "fs";
 import path from "path";
+import { getDiscountOverrides } from "./discounts";
+
+// Admin discount overrides are read fresh (tiny SQLite table) with a short
+// TTL so edits take effect immediately without a cache-bust dance.
+let overrideCache: { map: Map<string, number>; at: number } | null = null;
+function discountOverrideFor(handle: string): number | undefined {
+  try {
+    if (!overrideCache || Date.now() - overrideCache.at > 5000) {
+      overrideCache = { map: getDiscountOverrides(), at: Date.now() };
+    }
+    return overrideCache.map.get(handle);
+  } catch {
+    return undefined;
+  }
+}
 
 interface ShopifyProductResponse {
   productByHandle: ShopifyRawProduct | null;
@@ -93,7 +108,7 @@ function transformProduct(
     };
   });
 
-  const discount = meta?.discount ?? 0;
+  const discount = discountOverrideFor(raw.handle) ?? meta?.discount ?? 0;
   const retailPrice = raw.priceRange.minVariantPrice;
   const wholesaleBase = applyWholesalePricing(retailPrice, 0);
   const wholesalePrice = applyWholesalePricing(retailPrice, discount);

@@ -196,6 +196,14 @@ export default function Header({ user, onLogout }: HeaderProps) {
               </select>
 
               {/* Account (desktop) */}
+              {user?.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="hidden sm:inline text-xs uppercase tracking-[0.1em] font-bold text-ink hover:opacity-70"
+                >
+                  Yönetim
+                </Link>
+              )}
               {user ? (
                 <button
                   onClick={handleLogout}

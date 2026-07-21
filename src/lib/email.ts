@@ -21,7 +21,8 @@ const transporter = nodemailer.createTransport({
 export async function sendOrderEmail(
   user: OrderUser,
   items: CartItem[],
-  notes: string
+  notes: string,
+  orderId?: number
 ) {
   const totalAmount = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -99,7 +100,29 @@ export async function sendOrderEmail(
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to: process.env.ORDER_RECIPIENT,
-    subject: `Toptan Siparis Talebi - ${user.company} - ${user.name}`,
+    subject: `Toptan Siparis Talebi #${orderId ?? "?"} - ${user.company} - ${user.name}`,
     html,
+  });
+}
+
+export async function sendResetEmail(to: string, name: string, link: string) {
+  await transporter.sendMail({
+    from: process.env.SMTP_USER,
+    to,
+    subject: "GHISA Toptan - Sifre Sifirlama",
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;">
+        <h2 style="color:#111827;">Sifre Sifirlama</h2>
+        <p>Merhaba ${name},</p>
+        <p>GHISA toptan portali hesabiniz icin sifre sifirlama talebi aldik.
+        Asagidaki baglanti <b>1 saat</b> gecerlidir:</p>
+        <p style="margin:24px 0;">
+          <a href="${link}" style="background:#111827;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">
+            Yeni Sifre Belirle
+          </a>
+        </p>
+        <p style="color:#6b7280;font-size:13px;">Bu talebi siz yapmadiysaniz bu e-postayi yok sayabilirsiniz.</p>
+      </div>
+    `,
   });
 }

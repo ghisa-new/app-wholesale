@@ -34,7 +34,59 @@ function initTables(db: Database.Database) {
       role TEXT NOT NULL DEFAULT 'customer',
       created_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS reset_tokens (
+      token TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      expires_at TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    -- admin-set discount overrides; fall back to data/products.json meta
+    CREATE TABLE IF NOT EXISTS product_discount (
+      handle TEXT PRIMARY KEY,
+      discount REAL NOT NULL DEFAULT 0,
+      updated_by TEXT,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      status TEXT NOT NULL DEFAULT 'pending',  -- pending | fulfilled | cancelled
+      notes TEXT DEFAULT '',
+      total_amount REAL NOT NULL DEFAULT 0,
+      currency TEXT NOT NULL DEFAULT 'TRY',
+      created_at TEXT DEFAULT (datetime('now')),
+      status_changed_at TEXT,
+      status_changed_by TEXT
+    );
+
+    -- one row per size so pending lines can reserve exact variants
+    CREATE TABLE IF NOT EXISTS order_lines (
+      line_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      order_id INTEGER NOT NULL REFERENCES orders(order_id) ON DELETE CASCADE,
+      product_handle TEXT NOT NULL,
+      product_title TEXT NOT NULL,
+      color TEXT NOT NULL DEFAULT '',
+      size TEXT NOT NULL DEFAULT '',
+      sku TEXT NOT NULL DEFAULT '',
+      qty INTEGER NOT NULL,
+      unit_price REAL NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS idx_order_lines_order ON order_lines(order_id);
+    CREATE INDEX IF NOT EXISTS idx_order_lines_sku ON order_lines(sku);
   `);
+
+  // column upgrades on the existing users table (idempotent)
+  const cols = db.prepare("PRAGMA table_info(users)").all() as Array<{ name: string }>;
+  const names = new Set(cols.map((c) => c.name));
+  if (!names.has("password_plain")) {
+    db.exec("ALTER TABLE users ADD COLUMN password_plain TEXT NOT NULL DEFAULT ''");
+  }
+  if (!names.has("curr_acc_code")) {
+    db.exec("ALTER TABLE users ADD COLUMN curr_acc_code TEXT NOT NULL DEFAULT ''");
+  }
 }
 
 export function queryAll<T = Record<string, unknown>>(

@@ -8,20 +8,9 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const COOKIE_NAME = "wholesale_token";
 
-// These paths do not require authentication (public browsing + read-only data).
-// Only checkout actions (/cart, /api/order) require a logged-in dealer.
-const PUBLIC_PATHS = [
-  "/",
-  "/login",
-  "/products",
-  "/stores",
-  "/faq",
-  "/api/auth/login",
-  "/api/products",
-  "/api/categories",
-  "/api/exchange-rate",
-  "/api/stores",
-];
+// Everything requires a logged-in dealer (Murathan 2026-07-21: full gateway).
+// Only the auth surface itself is public.
+const PUBLIC_PATHS = ["/login", "/forgot", "/reset"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -37,7 +26,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Allow public paths (products browsing, login)
+  // Public: the auth surface only
   if (
     PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/")) ||
     pathname.startsWith("/api/auth/")
@@ -45,7 +34,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protected paths: /cart, /api/order
   const token = request.cookies.get(COOKIE_NAME)?.value;
 
   if (!token) {
@@ -56,7 +44,17 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    // Admin section is server-gated here AND in each /api/admin route
+    if (
+      (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) &&
+      payload.role !== "admin"
+    ) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
+      }
+      return NextResponse.redirect(new URL("/products", request.url));
+    }
     return NextResponse.next();
   } catch {
     if (pathname.startsWith("/api/")) {

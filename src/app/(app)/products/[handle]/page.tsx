@@ -89,6 +89,32 @@ export default function ProductDetailPage({
     return parts.length > 1 ? parts.slice(0, -1).join("-") : firstSku;
   }, [product]);
 
+  // model code = base sku without the color segment (MODEL-COLOR → MODEL)
+  const modelCode = useMemo(() => {
+    if (!sku) return null;
+    const parts = sku.split("-");
+    return parts.length > 1 ? parts.slice(0, -1).join("-") : sku;
+  }, [sku]);
+
+  // LIVE Merkez stock per color|size, minus pending-order reservations
+  const [stock, setStock] = useState<Record<
+    string,
+    { central: number; reserved: number; available: number }
+  > | null>(null);
+  useEffect(() => {
+    if (!modelCode) return;
+    let alive = true;
+    fetch(`/api/stock/${encodeURIComponent(modelCode)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (alive && d?.bySize) setStock(d.bySize);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [modelCode]);
+
   function handleAddToCart() {
     if (!product) return;
     const variant = hasColors
@@ -113,11 +139,33 @@ export default function ProductDetailPage({
       image: product.images[0]?.url || null,
       color: selectedColor || "",
       seriDistribution: seriDist,
+      baseSku: variant.sku
+        ? variant.sku.split("-").slice(0, -1).join("-")
+        : sku || "",
     });
 
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }
+
+  // NEBIM color code of the selected color, from that variant's sku
+  const currentColorCode = useMemo(() => {
+    if (!product) return null;
+    const variant = hasColors
+      ? product.variants.find((v) => {
+          const c = v.selectedOptions.find(
+            (o) =>
+              o.name.toLowerCase() === "color" ||
+              o.name.toLowerCase() === "renk"
+          )?.value;
+          return c === (selectedColor || v.selectedOptions[0]?.value);
+        })
+      : product.variants[0];
+    const vsku = variant?.sku;
+    if (!vsku) return null;
+    const parts = vsku.split("-");
+    return parts.length >= 2 ? parts[parts.length - 2] : null;
+  }, [product, hasColors, selectedColor]);
 
   const canAdd = (!hasColors || !!selectedColor);
   const currentColor =
@@ -266,6 +314,40 @@ export default function ProductDetailPage({
                 .flatMap(([size, qty]) => Array(qty).fill(size))
                 .join("-")}{" "}
               ({totalPieces} {t("pieces")})
+            </div>
+          )}
+
+          {/* Live Merkez availability for the selected color */}
+          {stock && currentColorCode && (
+            <div className="bg-white border border-gray-200 p-3 rounded-lg text-sm">
+              <span className="font-medium text-gray-900 uppercase tracking-wide text-xs">
+                Merkez stok (canlı)
+              </span>
+              <div className="mt-1.5 flex flex-wrap gap-2">
+                {Object.entries(stock)
+                  .filter(([k]) => k.split("|")[0] === currentColorCode)
+                  .sort((a, b) => a[0].localeCompare(b[0]))
+                  .map(([k, v]) => {
+                    const size = k.split("|")[1];
+                    return (
+                      <span
+                        key={k}
+                        className={`px-2 py-1 rounded border text-xs tabular-nums ${
+                          v.available > 0
+                            ? "border-gray-200 text-gray-700"
+                            : "border-red-200 text-red-500 bg-red-50"
+                        }`}
+                        title={
+                          v.reserved > 0
+                            ? `${v.central} merkez − ${v.reserved} rezerve`
+                            : undefined
+                        }
+                      >
+                        {size}: {v.available}
+                      </span>
+                    );
+                  })}
+              </div>
             </div>
           )}
 
