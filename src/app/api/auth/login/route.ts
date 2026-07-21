@@ -73,7 +73,9 @@ export async function POST(request: Request) {
 
     response.cookies.set(COOKIE_NAME, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      // INSECURE_HTTP=1: serving on a bare IP over http (pre-domain phase) —
+      // Secure cookies would be dropped by the browser and login would loop
+      secure: process.env.NODE_ENV === "production" && process.env.INSECURE_HTTP !== "1",
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
