@@ -22,7 +22,19 @@ export async function POST(request: Request) {
       company: string;
       phone: string;
       role: string;
-    }>("SELECT * FROM users WHERE email = ? COLLATE NOCASE", [email]);
+    }>("SELECT * FROM users WHERE email = ? COLLATE NOCASE", [email]) ??
+      // bare username = e-mail local part (murathan -> murathan@...)
+      (!String(email).includes("@")
+        ? queryOne<{
+            id: number;
+            email: string;
+            password_hash: string;
+            name: string;
+            company: string;
+            phone: string;
+            role: string;
+          }>("SELECT * FROM users WHERE email LIKE ? || '@%' COLLATE NOCASE", [email])
+        : undefined);
 
     if (!user) {
       return NextResponse.json(
