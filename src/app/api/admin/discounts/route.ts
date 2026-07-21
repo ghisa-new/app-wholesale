@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import { getDiscountOverrides, setDiscount } from "@/lib/discounts";
+import { getDiscountOverrides, setDiscount, baseSkuOf } from "@/lib/discounts";
 import { getWholesaleProducts } from "@/lib/products";
 
 async function requireAdmin(request: Request) {
@@ -19,6 +19,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       products: products.map((p) => ({
         handle: p.handle,
+        sku: baseSkuOf(p),
         title: p.title,
         productType: p.productType,
         price: p.price,

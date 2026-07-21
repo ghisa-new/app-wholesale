@@ -24,3 +24,12 @@ export function setDiscount(handle: string, discount: number, by: string) {
     [handle, d, by]
   );
 }
+
+/** Base sku (MODEL-COLOR, size stripped) of a product's first variant. */
+export function baseSkuOf(product: {
+  variants?: Array<{ sku?: string | null }>;
+}): string {
+  const sku = product.variants?.[0]?.sku || "";
+  const parts = sku.split("-");
+  return parts.length > 1 ? parts.slice(0, -1).join("-") : sku;
+}

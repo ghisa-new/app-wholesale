@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { getUserFromRequest } from "@/lib/auth";
-import { getDiscountOverrides, setDiscount } from "@/lib/discounts";
+import { getDiscountOverrides, setDiscount, baseSkuOf } from "@/lib/discounts";
 import { getWholesaleProducts } from "@/lib/products";
 
 async function requireAdmin(request: Request) {
@@ -18,14 +18,13 @@ export async function GET(request: Request) {
     const products = await getWholesaleProducts();
     const overrides = getDiscountOverrides();
     const rows = products.map((p) => ({
-      handle: p.handle,
-      urun: p.title,
-      kategori: p.productType,
-      fiyat: parseFloat(p.price.amount),
+      sku: baseSkuOf(p),
+      name: p.title,
+      price: parseFloat(p.price.amount),
       discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
     }));
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws["!cols"] = [{ wch: 40 }, { wch: 40 }, { wch: 16 }, { wch: 10 }, { wch: 10 }];
+    ws["!cols"] = [{ wch: 20 }, { wch: 44 }, { wch: 10 }, { wch: 10 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "urunler");
     const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
@@ -56,15 +55,28 @@ export async function POST(request: Request) {
     const sheet = wb.Sheets[wb.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet);
 
+    // sku (MODEL-COLOR) -> handle
+    const products = await getWholesaleProducts();
+    const byBaseSku = new Map<string, string>();
+    for (const pr of products) {
+      const bs = baseSkuOf(pr).trim().toUpperCase();
+      if (bs) byBaseSku.set(bs, pr.handle);
+    }
+
     let applied = 0;
     const errors: string[] = [];
     for (const row of rows) {
-      const handle = String(row.handle ?? "").trim();
+      const sku = String(row.sku ?? row.SKU ?? row.Sku ?? "").trim().toUpperCase();
       const raw = row.discount ?? row.indirim ?? row.Discount;
-      if (!handle || raw === undefined || raw === null || raw === "") continue;
+      if (!sku || raw === undefined || raw === null || raw === "") continue;
+      const handle = byBaseSku.get(sku);
+      if (!handle) {
+        errors.push(`${sku}: ürün bulunamadı`);
+        continue;
+      }
       const d = Number(raw);
       if (isNaN(d) || d < 0 || d > 100) {
-        errors.push(`${handle}: geçersiz değer "${raw}"`);
+        errors.push(`${sku}: geçersiz değer "${raw}"`);
         continue;
       }
       setDiscount(handle, d, `${user.email} (excel)`);

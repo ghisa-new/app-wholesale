@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 interface DiscountRow {
   handle: string;
+  sku: string;
   title: string;
   productType: string;
   price: { amount: string; currencyCode: string };
@@ -141,7 +142,8 @@ function DiscountsTab() {
     (r) =>
       !q.trim() ||
       r.title.toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")) ||
-      r.handle.includes(q.toLowerCase())
+      r.handle.includes(q.toLowerCase()) ||
+      r.sku.toUpperCase().includes(q.toUpperCase())
   );
 
   return (
@@ -178,7 +180,7 @@ function DiscountsTab() {
         />
         {msg && <span className="text-sm text-gray-600">{msg}</span>}
         <span className="text-xs text-gray-400 ml-auto">
-          Excel akışı: indir → &quot;discount&quot; sütununu doldur → yükle
+          Excel: sku · name · price · discount — &quot;discount&quot; sütununu doldur, yükle
         </span>
       </div>
       {loading ? (
@@ -199,7 +201,7 @@ function DiscountsTab() {
                 <tr key={r.handle} className="border-b border-gray-50">
                   <td className="px-3 py-1.5">
                     <div className="font-medium">{r.title}</div>
-                    <div className="text-[10px] text-gray-400">{r.handle}</div>
+                    <div className="text-[10px] font-mono text-gray-400">{r.sku || r.handle}</div>
                   </td>
                   <td className="px-3 py-1.5 text-gray-500">{r.productType}</td>
                   <td className="px-3 py-1.5 text-right tabular-nums">
