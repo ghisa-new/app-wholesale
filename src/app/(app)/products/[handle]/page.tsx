@@ -186,8 +186,12 @@ export default function ProductDetailPage({
   const colorLabel = (c: string) => colorMap?.[c] ?? c;
 
 
+  // customers may order at most 5 lots per color (and never more than stock)
+  const MAX_LOTS = 5;
   const selectedCap =
-    currentColorCode && colorMax ? colorMax[currentColorCode] : undefined;
+    currentColorCode && colorMax
+      ? Math.min(colorMax[currentColorCode] ?? 0, MAX_LOTS)
+      : MAX_LOTS;
   const outOfStock = selectedCap !== undefined && selectedCap <= 0;
   const canAdd = (!hasColors || !!selectedColor) && !outOfStock;
   useEffect(() => {
@@ -390,13 +394,7 @@ export default function ProductDetailPage({
                 </span>
                 <button
                   onClick={() =>
-                    setQuantity((q) => {
-                      const cap =
-                        currentColorCode && colorMax
-                          ? colorMax[currentColorCode]
-                          : undefined;
-                      return cap !== undefined ? Math.min(q + 1, Math.max(cap, 1)) : q + 1;
-                    })
+                    setQuantity((q) => Math.min(q + 1, Math.max(selectedCap, 1)))
                   }
                   className="px-3 py-2 hover:bg-surface"
                 >

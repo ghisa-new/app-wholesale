@@ -22,6 +22,8 @@ const TXT = {
     regInvalid: "Invalid registration key",
     connErr: "Connection error",
     badCreds: "E-mail or password incorrect",
+    tooMany: "Too many attempts. Please try again later.",
+    loginFailed: "Sign in failed",
   },
   tr: {
     portal: "Toptan Satış Portalı",
@@ -39,6 +41,8 @@ const TXT = {
     regInvalid: "Kayıt anahtarı geçersiz",
     connErr: "Bağlantı hatası",
     badCreds: "E-posta veya şifre hatalı",
+    tooMany: "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin.",
+    loginFailed: "Giriş başarısız",
   },
 } as const;
 
@@ -91,7 +95,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Giris basarisiz");
+        setError(res.status === 429 ? t.tooMany : res.status === 401 ? t.badCreds : t.loginFailed);
         return;
       }
 

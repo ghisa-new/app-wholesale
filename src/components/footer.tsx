@@ -75,11 +75,6 @@ export default function Footer() {
                   {t("stores")}
                 </Link>
               </li>
-              <li>
-                <Link href="/faq" className="hover:text-ink">
-                  {t("faq")}
-                </Link>
-              </li>
             </ul>
           </div>
 

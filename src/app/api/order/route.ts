@@ -26,6 +26,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
+    // hard cap: at most 5 lots per cart line (mirrors the product-page limit)
+    const MAX_LOTS = 5;
+    if (items.some((it) => (Number(it.quantity) || 0) > MAX_LOTS)) {
+      return NextResponse.json(
+        { error: `En fazla ${MAX_LOTS} seri sipariş edebilirsiniz.` },
+        { status: 400 }
+      );
+    }
+
     // a reachable contact channel is mandatory before ordering
     const contactRow = queryOne<{
       email: string;
