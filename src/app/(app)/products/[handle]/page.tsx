@@ -23,6 +23,7 @@ export default function ProductDetailPage({
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
+  const [colorMap, setColorMap] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
@@ -37,6 +38,7 @@ export default function ProductDetailPage({
       })
       .then((data) => {
         setProduct(data.product);
+        setColorMap(data.colorMap ?? null);
         // Auto-select color if only one
         const colors = getColors(data.product);
         if (colors.length === 1) setSelectedColor(colors[0]);
@@ -167,6 +169,8 @@ export default function ProductDetailPage({
     return parts.length >= 2 ? parts[parts.length - 2] : null;
   }, [product, hasColors, selectedColor]);
 
+  const colorLabel = (c: string) => colorMap?.[c] ?? c;
+
   const canAdd = (!hasColors || !!selectedColor);
   const currentColor =
     selectedColor || (colors.length === 1 ? colors[0] : null);
@@ -235,25 +239,39 @@ export default function ProductDetailPage({
             <p className="text-sm text-gray-500">{currentColor}</p>
           )}
 
-          {/* Price */}
-          <div className="flex items-center gap-3">
-            <span
-              className={`text-2xl font-semibold ${
-                hasCampaign ? "text-sale" : "text-gray-900"
-              }`}
-            >
-              {formatPrice(unitPrice)}
-            </span>
-            {hasCampaign && product.compareAtPrice && (
-              <span className="text-lg text-gray-400 line-through">
-                {formatPrice(parseFloat(product.compareAtPrice.amount))}
+          {/* Price — unit price labelled explicitly; the LOT price is what
+              is actually paid, so it gets the emphasis */}
+          <div className="space-y-1.5">
+            <div className="flex items-baseline gap-2">
+              <span
+                className={`text-xl font-medium ${
+                  hasCampaign ? "text-sale" : "text-gray-700"
+                }`}
+              >
+                {formatPrice(unitPrice)}
               </span>
-            )}
-            {hasCampaign && (
-              <span className="bg-sale text-white text-xs px-2 py-0.5 uppercase">
-                %{product.campaignDiscount}
+              <span className="text-xs uppercase tracking-[0.1em] text-gray-400">
+                / {t("perItemPrice")}
               </span>
-            )}
+              {hasCampaign && product.compareAtPrice && (
+                <span className="text-sm text-gray-400 line-through">
+                  {formatPrice(parseFloat(product.compareAtPrice.amount))}
+                </span>
+              )}
+              {hasCampaign && (
+                <span className="bg-sale text-white text-xs px-2 py-0.5 uppercase">
+                  %{product.campaignDiscount}
+                </span>
+              )}
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-semibold text-gray-900">
+                {formatPrice(lotPrice)}
+              </span>
+              <span className="text-xs uppercase tracking-[0.1em] text-gray-500">
+                {t("lotPriceLabel")} ({totalPieces} {t("pieces")})
+              </span>
+            </div>
           </div>
 
           {/* Sibling colors */}
@@ -297,7 +315,7 @@ export default function ProductDetailPage({
                         : "border-line text-ink-soft hover:border-ink"
                     }`}
                   >
-                    {color}
+                    {colorLabel(color)}
                   </button>
                 ))}
               </div>

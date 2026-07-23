@@ -170,7 +170,19 @@ export default function CartPage() {
                       </p>
                     )}
                   <p className="text-sm text-gray-900 mt-1">
-                    {formatPrice(item.price)}
+                    <span className="font-semibold">{formatPrice(item.price)}</span>{" "}
+                    <span className="text-xs uppercase text-gray-400">{t("lotPriceLabel")}</span>
+                    {(() => {
+                      const pcs = Object.values(item.seriDistribution || {}).reduce(
+                        (s: number, q: number) => s + q,
+                        0
+                      );
+                      return pcs > 0 ? (
+                        <span className="text-xs text-gray-400">
+                          {" "}({formatPrice(item.price / pcs)} / {t("perItemPrice")})
+                        </span>
+                      ) : null;
+                    })()}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-xs text-gray-500 uppercase">
