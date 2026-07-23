@@ -60,7 +60,7 @@ interface Order {
 const fmt = (n: number) => n.toLocaleString("tr-TR");
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<"indirim" | "musteri" | "siparis">("indirim");
+  const [tab, setTab] = useState<"indirim" | "musteri" | "siparis" | "ceviri">("indirim");
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
@@ -71,6 +71,7 @@ export default function AdminPage() {
             ["indirim", "İndirimler"],
             ["musteri", "Müşteriler"],
             ["siparis", "Siparişler"],
+            ["ceviri", "Çeviriler"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -87,6 +88,7 @@ export default function AdminPage() {
       {tab === "indirim" && <DiscountsTab />}
       {tab === "musteri" && <CustomersTab />}
       {tab === "siparis" && <OrdersTab />}
+      {tab === "ceviri" && <TranslateTab />}
     </div>
   );
 }
@@ -511,6 +513,81 @@ function OrdersTab() {
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+
+// ── Çeviriler ────────────────────────────────────────────────────────────────
+
+interface TxState {
+  progress: {
+    running: boolean;
+    total: number;
+    done: number;
+    errors: string[];
+    finishedAt: string | null;
+  };
+  stats: Array<{ locale: string; c: number }>;
+}
+
+function TranslateTab() {
+  const [st, setSt] = useState<TxState | null>(null);
+  const load = useCallback(async () => {
+    const res = await fetch("/api/admin/translate");
+    if (res.ok) setSt(await res.json());
+  }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(load, 4000);
+    return () => clearInterval(t);
+  }, [load]);
+
+  const start = async () => {
+    await fetch("/api/admin/translate", { method: "POST" });
+    load();
+  };
+
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <p className="text-sm text-gray-600">
+          Ürün adları ve açıklamaları Gemini Flash ile İngilizce + Arapça&apos;ya
+          çevrilir ve saklanır. Yalnızca Türkçe içeriği değişen ürünler yeniden
+          çevrilir; müşteri sitede dil değiştirdiğinde çeviriler anında görünür.
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={start}
+            disabled={st?.progress.running}
+            className="px-4 py-2 bg-gray-900 text-white text-sm font-bold rounded-lg disabled:opacity-50"
+          >
+            {st?.progress.running ? "Çeviri sürüyor…" : "Çevirileri Güncelle"}
+          </button>
+          {st?.progress.running && (
+            <span className="text-sm tabular-nums">
+              {st.progress.done} / {st.progress.total}
+            </span>
+          )}
+          {!st?.progress.running && st?.progress.finishedAt && (
+            <span className="text-xs text-gray-400">Son çalışma: {st.progress.finishedAt.slice(0, 16).replace("T", " ")}</span>
+          )}
+        </div>
+        <div className="flex gap-2 text-xs">
+          {(st?.stats ?? []).map((r) => (
+            <span key={r.locale} className="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1">
+              {r.locale.toUpperCase()}: {r.c} ürün çevrildi
+            </span>
+          ))}
+        </div>
+        {st && st.progress.errors.length > 0 && (
+          <div className="text-xs text-red-600 max-h-32 overflow-y-auto">
+            {st.progress.errors.map((e, i) => (
+              <div key={i}>{e}</div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

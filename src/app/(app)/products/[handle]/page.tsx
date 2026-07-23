@@ -19,7 +19,7 @@ export default function ProductDetailPage({
   params: Promise<{ handle: string }>;
 }) {
   const { handle } = use(params);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
@@ -30,7 +30,7 @@ export default function ProductDetailPage({
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/products/${handle}`)
+    fetch(`/api/products/${handle}?locale=${locale}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
@@ -43,7 +43,7 @@ export default function ProductDetailPage({
       })
       .catch(() => setProduct(null))
       .finally(() => setLoading(false));
-  }, [handle]);
+  }, [handle, locale]);
 
   function getColors(p: Product): string[] {
     return [

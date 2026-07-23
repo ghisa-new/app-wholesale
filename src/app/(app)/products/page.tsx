@@ -24,7 +24,7 @@ export default function ProductsPage() {
 }
 
 function ProductsPageInner() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { formatPrice } = useCurrency();
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,7 +40,7 @@ function ProductsPageInner() {
   }, [searchParams]);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch(`/api/products?locale=${locale}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
@@ -51,7 +51,7 @@ function ProductsPageInner() {
         setCategories([]);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [locale]);
 
   const filtered = useMemo(() => {
     let base = products;
@@ -270,34 +270,69 @@ function ProductCard({
 }
 
 
-// Teaser video hero — plays ~15s muted, then cross-fades to the banner image.
+// Hero slider — slide 0: teaser video, slide 1: banner image. Auto-advances
+// to the banner when the 15s video finishes; arrows + dots for manual swap.
 function HeroBanner() {
-  const [showVideo, setShowVideo] = useState(true);
+  const [slide, setSlide] = useState(0);
+  const [auto, setAuto] = useState(true); // manual interaction stops auto-advance
   useEffect(() => {
-    const t = setTimeout(() => setShowVideo(false), 15000);
+    if (!auto || slide !== 0) return;
+    const t = setTimeout(() => setSlide(1), 15000);
     return () => clearTimeout(t);
-  }, []);
+  }, [auto, slide]);
+  const go = (i: number) => {
+    setAuto(false);
+    setSlide(i);
+  };
   return (
-    <section className="relative w-full overflow-hidden">
-      <Image
-        src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
-        alt="GHISA"
-        width={2000}
-        height={1000}
-        className="w-full h-auto"
-        sizes="100vw"
-        priority
-      />
+    <section className="relative w-full overflow-hidden group">
+      <div className={slide === 1 ? "" : "invisible"}>
+        <Image
+          src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
+          alt="GHISA"
+          width={2000}
+          height={1000}
+          className="w-full h-auto"
+          sizes="100vw"
+          priority
+        />
+      </div>
       <video
         src="/hero-teaser.mp4"
         autoPlay
         muted
         playsInline
-        onEnded={() => setShowVideo(false)}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-          showVideo ? "opacity-100" : "opacity-0 pointer-events-none"
+        onEnded={() => auto && setSlide(1)}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+          slide === 0 ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
+      {/* arrows */}
+      {[0, 1].map((dir) => (
+        <button
+          key={dir}
+          aria-label={dir === 0 ? "Önceki" : "Sonraki"}
+          onClick={() => go(slide === 0 ? 1 : 0)}
+          className={`absolute top-1/2 -translate-y-1/2 ${
+            dir === 0 ? "left-3" : "right-3"
+          } w-9 h-9 rounded-full bg-black/30 hover:bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}
+        >
+          {dir === 0 ? "‹" : "›"}
+        </button>
+      ))}
+      {/* dots */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+        {[0, 1].map((i) => (
+          <button
+            key={i}
+            aria-label={`Slayt ${i + 1}`}
+            onClick={() => go(i)}
+            className={`w-2.5 h-2.5 rounded-full transition-colors ${
+              slide === i ? "bg-white" : "bg-white/40 hover:bg-white/70"
+            }`}
+          />
+        ))}
+      </div>
     </section>
   );
 }

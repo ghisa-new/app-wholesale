@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getProductByHandle } from "@/lib/products";
+import { translationFor } from "@/lib/translate";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ handle: string }> }
 ) {
   const { handle } = await params;
@@ -15,7 +16,12 @@ export async function GET(
         { status: 404 }
       );
     }
-    return NextResponse.json({ product });
+    const locale = new URL(request.url).searchParams.get("locale") || "tr";
+    const tx = product ? translationFor(product.handle, locale) : null;
+    const localized = product && tx
+      ? { ...product, title: tx.title, descriptionHtml: tx.description_html || product.descriptionHtml }
+      : product;
+    return NextResponse.json({ product: localized });
   } catch (error) {
     console.error("Product fetch error:", error);
     return NextResponse.json(
