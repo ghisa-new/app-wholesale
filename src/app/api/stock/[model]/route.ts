@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import { getCentralStockByModel, getReservedBySku } from "@/lib/nebim-stock";
+import { getReservedBySku } from "@/lib/nebim-stock";
+import { getLiveStockByModel } from "@/lib/nebim-live";
 
-// GET /api/stock/[model] — LIVE Merkez (1-1-1) stock per color+size for one
-// model code, minus units reserved by this portal's pending orders.
+// GET /api/stock/[model] — TRUE-LIVE stock (IIS IntegratorService proc, not
+// the nightly SQL snapshot) for Merkez + e-com combined, minus units reserved
+// by this portal's pending orders.
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ model: string }> }
@@ -13,8 +15,9 @@ export async function GET(
 
   try {
     const { model } = await params;
-    const rows = await getCentralStockByModel(model.toUpperCase());
-    const skus = rows.map((r) => `${model.toUpperCase()}-${r.color}-${r.size}`);
+    const code = model.toUpperCase();
+    const rows = await getLiveStockByModel(code);
+    const skus = rows.map((r) => `${code}-${r.color}-${r.size}`);
     const reserved = getReservedBySku(skus);
 
     const bySize: Record<
@@ -22,17 +25,17 @@ export async function GET(
       { central: number; reserved: number; available: number }
     > = {};
     for (const r of rows) {
-      const sku = `${model.toUpperCase()}-${r.color}-${r.size}`;
+      const sku = `${code}-${r.color}-${r.size}`;
       const res = reserved.get(sku) ?? 0;
       bySize[`${r.color}|${r.size}`] = {
-        central: Number(r.qty) || 0,
+        central: r.qty,
         reserved: res,
-        available: Math.max((Number(r.qty) || 0) - res, 0),
+        available: Math.max(r.qty - res, 0),
       };
     }
-    return NextResponse.json({ model: model.toUpperCase(), bySize, at: Date.now() });
+    return NextResponse.json({ model: code, bySize, live: true, at: Date.now() });
   } catch (err) {
-    console.error("Stock fetch error:", err);
+    console.error("Live stock fetch error:", err);
     return NextResponse.json({ error: "Stok okunamadı" }, { status: 500 });
   }
 }

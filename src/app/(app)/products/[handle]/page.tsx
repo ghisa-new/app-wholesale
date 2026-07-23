@@ -348,7 +348,7 @@ export default function ProductDetailPage({
           {stock && currentColorCode && (
             <div className="bg-white border border-gray-200 p-3 rounded-lg text-sm">
               <span className="font-medium text-gray-900 uppercase tracking-wide text-xs">
-                Merkez stok (canlı)
+                Depo stok — canlı (Merkez + E-ticaret)
               </span>
               <div className="mt-1.5 flex flex-wrap gap-2">
                 {Object.entries(stock)
