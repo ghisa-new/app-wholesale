@@ -51,7 +51,7 @@ async function fetchFromCell(): Promise<EligibilityRow[]> {
   const res = await fetch(`${CELL_URL}/call/get_wholesale_eligibility`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
+    body: JSON.stringify({ min_lots: 5 }), // Murathan 2026-07-23: only full 5+ seri products are offered
     signal: AbortSignal.timeout(240000),
   });
   if (!res.ok) throw new Error(`cell ${res.status}`);
