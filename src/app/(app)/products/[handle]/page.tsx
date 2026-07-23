@@ -367,40 +367,6 @@ export default function ProductDetailPage({
             </div>
           )}
 
-          {/* Live Merkez availability for the selected color */}
-          {isAdmin && stock && currentColorCode && (
-            <div className="bg-white border border-gray-200 p-3 rounded-lg text-sm">
-              <span className="font-medium text-gray-900 uppercase tracking-wide text-xs">
-                Depo stok — canlı (Merkez + E-ticaret)
-              </span>
-              <div className="mt-1.5 flex flex-wrap gap-2">
-                {Object.entries(stock)
-                  .filter(([k]) => k.split("|")[0] === currentColorCode)
-                  .sort((a, b) => a[0].localeCompare(b[0]))
-                  .map(([k, v]) => {
-                    const size = k.split("|")[1];
-                    return (
-                      <span
-                        key={k}
-                        className={`px-2 py-1 rounded border text-xs tabular-nums ${
-                          v.available > 0
-                            ? "border-gray-200 text-gray-700"
-                            : "border-red-200 text-red-500 bg-red-50"
-                        }`}
-                        title={
-                          v.reserved > 0
-                            ? `${v.central} merkez − ${v.reserved} rezerve`
-                            : undefined
-                        }
-                      >
-                        {sizeLabel(size)}: {v.available}
-                      </span>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-
           {/* Lot info */}
           <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm text-amber-800">
             {t("lotInfo")}

@@ -31,7 +31,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/products");
+      window.location.assign("/products");
     } catch {
       setError("Baglanti hatasi");
     } finally {

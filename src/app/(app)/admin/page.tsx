@@ -106,6 +106,8 @@ export default function AdminPage() {
 function DiscountsTab() {
   const [rows, setRows] = useState<DiscountRow[]>([]);
   const [q, setQ] = useState("");
+  const [sortCol, setSortCol] = useState<string>("title");
+  const [sortAsc, setSortAsc] = useState(true);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -148,13 +150,55 @@ function DiscountsTab() {
     }
   };
 
-  const shown = rows.filter(
-    (r) =>
-      !q.trim() ||
-      r.title.toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")) ||
-      r.handle.includes(q.toLowerCase()) ||
-      r.sku.toUpperCase().includes(q.toUpperCase())
-  );
+  const TEMP_ORDER = ["FIRE", "HOT", "WARM", "COOL", "COLD", "DEAD", "DORMANT"];
+  const handleSort = (col: string) => {
+    if (sortCol === col) setSortAsc(!sortAsc);
+    else {
+      setSortCol(col);
+      setSortAsc(true);
+    }
+  };
+  const shown = rows
+    .filter(
+      (r) =>
+        !q.trim() ||
+        r.title.toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")) ||
+        r.handle.includes(q.toLowerCase()) ||
+        r.sku.toUpperCase().includes(q.toUpperCase())
+    )
+    .sort((a, b) => {
+      let va: string | number;
+      let vb: string | number;
+      switch (sortCol) {
+        case "temperature":
+          va = a.temperature ? TEMP_ORDER.indexOf(a.temperature) : 99;
+          vb = b.temperature ? TEMP_ORDER.indexOf(b.temperature) : 99;
+          break;
+        case "lots":
+          va = a.lots ?? -1;
+          vb = b.lots ?? -1;
+          break;
+        case "price":
+          va = parseFloat(a.price.amount);
+          vb = parseFloat(b.price.amount);
+          break;
+        case "discount":
+          va = a.discount;
+          vb = b.discount;
+          break;
+        case "productType":
+          va = a.productType || "";
+          vb = b.productType || "";
+          break;
+        default:
+          va = a.title;
+          vb = b.title;
+      }
+      if (typeof va === "string" && typeof vb === "string") {
+        return sortAsc ? va.localeCompare(vb, "tr") : vb.localeCompare(va, "tr");
+      }
+      return sortAsc ? Number(va) - Number(vb) : Number(vb) - Number(va);
+    });
 
   return (
     <div>
@@ -200,12 +244,27 @@ function DiscountsTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-[11px] uppercase text-gray-400 border-b border-gray-200">
-                <th className="px-3 py-2">Ürün</th>
-                <th className="px-3 py-2">Kategori</th>
-                <th className="px-3 py-2">Sıcaklık</th>
-                <th className="px-3 py-2 text-right">Seri</th>
-                <th className="px-3 py-2 text-right">Toptan Fiyat</th>
-                <th className="px-3 py-2 text-right">İndirim %</th>
+                {(
+                  [
+                    ["title", "Ürün", ""],
+                    ["productType", "Kategori", ""],
+                    ["temperature", "Sıcaklık", ""],
+                    ["lots", "Seri", "text-right"],
+                    ["price", "Toptan Fiyat", "text-right"],
+                    ["discount", "İndirim %", "text-right"],
+                  ] as const
+                ).map(([key, label, align]) => (
+                  <th
+                    key={key}
+                    onClick={() => handleSort(key)}
+                    className={`px-3 py-2 cursor-pointer select-none hover:text-gray-700 ${align}`}
+                  >
+                    {label}
+                    {sortCol === key && (
+                      <span className="ml-0.5 text-blue-600">{sortAsc ? "▲" : "▼"}</span>
+                    )}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
