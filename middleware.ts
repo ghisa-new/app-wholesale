@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
-    /\.(svg|png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|txt|xml|map)$/i.test(
+    /\.(svg|png|jpe?g|webp|avif|gif|ico|woff2?|ttf|otf|txt|xml|map|mp4|webm)$/i.test(
       pathname
     )
   ) {
