@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { queryOne, run } from "@/lib/db";
 import { sendResetEmail } from "@/lib/email";
+import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+
 
 // POST { email } — always answers 200 (no account enumeration); if the email
 // exists, a 1-hour reset link is sent.
 export async function POST(request: Request) {
   try {
+    sweep();
+    const _ip = clientIp(request);
+    if (!rateLimit(`forgot:${_ip}`, 5, 900000)) {
+      return NextResponse.json({ error: "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin." }, { status: 429 });
+    }
     const { email } = (await request.json()) as { email?: string };
     const clean = (email || "").trim().toLowerCase();
     if (!clean) return NextResponse.json({ ok: true });

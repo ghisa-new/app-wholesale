@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import { compare } from "bcryptjs";
 import { queryOne } from "@/lib/db";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
+import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+
 
 export async function POST(request: Request) {
   try {
+    sweep();
+    const _ip = clientIp(request);
+    if (!rateLimit(`login:${_ip}`, 20, 600000)) {
+      return NextResponse.json({ error: "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin." }, { status: 429 });
+    }
     const { email, password } = await request.json();
 
     if (!email || !password) {

@@ -3,10 +3,17 @@ import { hashSync } from "bcryptjs";
 import { queryOne, run } from "@/lib/db";
 import { getRegisterToken } from "@/lib/settings";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
+import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+
 
 // POST {token} — gate check only; POST {token, email, password, ...} — register
 export async function POST(request: Request) {
   try {
+    sweep();
+    const _ip = clientIp(request);
+    if (!rateLimit(`register:${_ip}`, 8, 600000)) {
+      return NextResponse.json({ error: "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin." }, { status: 429 });
+    }
     const b = (await request.json()) as Record<string, string>;
     const token = (b.token || "").trim();
     if (!token || token !== getRegisterToken()) {

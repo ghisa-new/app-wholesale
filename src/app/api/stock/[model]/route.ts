@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { getReservedBySku } from "@/lib/nebim-stock";
 import { getLiveStockByModel } from "@/lib/nebim-live";
+import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+
+// short cache so browsing doesn't hammer NEBIM IIS; live enough for stock
+const stockCache = new Map<string, { data: unknown; at: number }>();
+const STOCK_TTL = 90_000;
 
 // GET /api/stock/[model] — TRUE-LIVE stock (IIS IntegratorService proc, not
 // the nightly SQL snapshot) for Merkez + e-com combined, minus units reserved
@@ -13,9 +18,22 @@ export async function GET(
   const user = await getUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  sweep();
+  if (!rateLimit(`stock:${clientIp(request)}`, 120, 60_000)) {
+    return NextResponse.json({ error: "Çok fazla istek" }, { status: 429 });
+  }
+
   try {
     const { model } = await params;
     const code = model.toUpperCase();
+    const cached = stockCache.get(code);
+    if (cached && Date.now() - cached.at < STOCK_TTL) {
+      const d = cached.data as { model: string; bySize: unknown; colorMax: unknown; at: number };
+      if (user.role !== "admin") {
+        return NextResponse.json({ model: d.model, colorMax: d.colorMax, live: true, at: d.at });
+      }
+      return NextResponse.json(d);
+    }
     const rows = await getLiveStockByModel(code);
     const skus = rows.map((r) => `${code}-${r.color}-${r.size}`);
     const reserved = getReservedBySku(skus);
@@ -52,10 +70,13 @@ export async function GET(
       colorMax[color] = Number.isFinite(max) ? max : 0;
     }
 
+    // cache the FULL (admin) payload; customers get a trimmed view from it
+    const full = { model: code, bySize, colorMax, live: true, at: Date.now() };
+    stockCache.set(code, { data: full, at: Date.now() });
     if (user.role !== "admin") {
-      return NextResponse.json({ model: code, colorMax, live: true, at: Date.now() });
+      return NextResponse.json({ model: code, colorMax, live: true, at: full.at });
     }
-    return NextResponse.json({ model: code, bySize, colorMax, live: true, at: Date.now() });
+    return NextResponse.json(full);
   } catch (err) {
     console.error("Live stock fetch error:", err);
     return NextResponse.json({ error: "Stok okunamadı" }, { status: 500 });

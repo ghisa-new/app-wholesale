@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { hashSync } from "bcryptjs";
 import { queryOne, run } from "@/lib/db";
+import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+
 
 // POST { token, password }
 export async function POST(request: Request) {
   try {
+    sweep();
+    const _ip = clientIp(request);
+    if (!rateLimit(`reset:${_ip}`, 10, 900000)) {
+      return NextResponse.json({ error: "Çok fazla deneme. Lütfen biraz sonra tekrar deneyin." }, { status: 429 });
+    }
     const { token, password } = (await request.json()) as {
       token?: string;
       password?: string;
