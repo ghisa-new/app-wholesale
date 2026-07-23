@@ -239,7 +239,7 @@ export default function ProductDetailPage({
               </button>
             ))}
           </div>
-          <div className="flex-1 aspect-[3/4] relative bg-gray-100 overflow-hidden">
+          <div className="flex-1 aspect-[2/3] relative bg-gray-100 overflow-hidden">
             {product.images[selectedImage] && (
               <Image
                 src={product.images[selectedImage].url}

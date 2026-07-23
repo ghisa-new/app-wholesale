@@ -239,7 +239,7 @@ function ProductCard({
 
   return (
     <Link href={`/products/${product.handle}`} className="group block">
-      <div className="aspect-[3/4] relative overflow-hidden bg-gray-100">
+      <div className="aspect-[2/3] relative overflow-hidden bg-gray-100">
         {product.images[0] && (
           <Image
             src={product.images[0].url}

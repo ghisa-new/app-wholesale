@@ -163,6 +163,14 @@ export default function Header({ user, onLogout }: HeaderProps) {
               </select>
 
               {/* Account (desktop) */}
+              {user && (
+                <Link
+                  href="/orders"
+                  className="hidden sm:inline text-xs uppercase tracking-[0.1em] text-ink-soft hover:text-ink"
+                >
+                  Siparişlerim
+                </Link>
+              )}
               {user?.role === "admin" && (
                 <Link
                   href="/admin"
