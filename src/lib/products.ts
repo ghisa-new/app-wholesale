@@ -271,16 +271,31 @@ export async function getWholesaleProducts(): Promise<Product[]> {
 export async function getProductByHandle(
   handle: string
 ): Promise<Product | null> {
-  const productsData = getProductsData();
-  const meta = productsData.products?.[handle];
   try {
     const data = await shopifyFetch<ShopifyProductResponse>(
       GET_PRODUCT_BY_HANDLE,
       { handle }
     );
-    return data.productByHandle
-      ? transformProduct(data.productByHandle, meta)
-      : null;
+    const raw = data.productByHandle;
+    if (!raw) return null;
+
+    // same dynamic eligibility as the list — the March meta file is only the
+    // last-resort fallback (its seri data is stale; missing meta previously
+    // rendered "1 pcs" lots)
+    const elig = await getEligibilityMap();
+    const sku = raw.variants?.edges?.[0]?.node?.sku || "";
+    const parts = sku.split("-");
+    const baseSku = (parts.length > 1 ? parts.slice(0, -1).join("-") : sku).toUpperCase();
+    const e = elig && baseSku ? elig.get(baseSku) : undefined;
+    const meta = e
+      ? {
+          temperature: e.temp,
+          lotCount: e.lots,
+          discount: 0,
+          seriDistribution: seriFromSizes(e.sizes),
+        }
+      : getProductsData().products?.[handle];
+    return transformProduct(raw, meta);
   } catch {
     console.error(`Failed to fetch product: ${handle}`);
     return null;
