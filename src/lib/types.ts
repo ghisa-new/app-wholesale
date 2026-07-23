@@ -74,3 +74,18 @@ export interface CartItem {
   /** NEBIM base sku (MODEL-COLOR, no size) — per-size sku = baseSku + '-' + size */
   baseSku?: string;
 }
+
+/** GHISA numeric size codes -> standard TR sizes (same mapping as the retail
+ *  theme's transform-size-value snippet). */
+export const SIZE_EQUIV: Record<string, string> = {
+  "0": "36",
+  "1": "38-40",
+  "2": "42-44",
+  "3": "46-48",
+  "4": "50-52",
+};
+
+export function sizeLabel(size: string): string {
+  const eq = SIZE_EQUIV[size];
+  return eq ? `${size} (${eq})` : size;
+}

@@ -6,6 +6,7 @@ import { useCurrency } from "@/lib/currency";
 import { useCart } from "@/lib/cart";
 import { Product } from "@/lib/types";
 import { parseProductDescription } from "@/lib/description-parser";
+import { sizeLabel, SIZE_EQUIV } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -332,6 +333,14 @@ export default function ProductDetailPage({
                 .flatMap(([size, qty]) => Array(qty).fill(size))
                 .join("-")}{" "}
               ({totalPieces} {t("pieces")})
+              {seriEntries.some(([size]) => SIZE_EQUIV[size]) && (
+                <span className="block mt-1 text-xs text-gray-500">
+                  {seriEntries
+                    .filter(([size]) => SIZE_EQUIV[size])
+                    .map(([size]) => `${size} = ${SIZE_EQUIV[size]}`)
+                    .join(" · ")}
+                </span>
+              )}
             </div>
           )}
 
@@ -361,7 +370,7 @@ export default function ProductDetailPage({
                             : undefined
                         }
                       >
-                        {size}: {v.available}
+                        {sizeLabel(size)}: {v.available}
                       </span>
                     );
                   })}
