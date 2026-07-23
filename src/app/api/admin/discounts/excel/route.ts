@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { getUserFromRequest } from "@/lib/auth";
 import { getDiscountOverrides, setDiscount, baseSkuOf } from "@/lib/discounts";
+import { getEligibilityMap } from "@/lib/eligibility";
 import { getWholesaleProducts } from "@/lib/products";
 
 async function requireAdmin(request: Request) {
@@ -17,14 +18,21 @@ export async function GET(request: Request) {
   try {
     const products = await getWholesaleProducts();
     const overrides = getDiscountOverrides();
-    const rows = products.map((p) => ({
-      sku: baseSkuOf(p),
-      name: p.title,
-      price: parseFloat(p.price.amount),
-      discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
-    }));
+    const elig = await getEligibilityMap();
+    const rows = products.map((p) => {
+      const sku = baseSkuOf(p);
+      const e = elig?.get(sku.toUpperCase());
+      return {
+        sku,
+        name: p.title,
+        price: parseFloat(p.price.amount),
+        temperature: e?.temp ?? "",
+        lots: e?.lots ?? "",
+        discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
+      };
+    });
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws["!cols"] = [{ wch: 20 }, { wch: 44 }, { wch: 10 }, { wch: 10 }];
+    ws["!cols"] = [{ wch: 20 }, { wch: 44 }, { wch: 10 }, { wch: 12 }, { wch: 8 }, { wch: 10 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "urunler");
     const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;

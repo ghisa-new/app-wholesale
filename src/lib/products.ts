@@ -4,6 +4,7 @@ import { GET_PRODUCT_BY_HANDLE } from "./queries";
 import fs from "fs";
 import path from "path";
 import { getDiscountOverrides } from "./discounts";
+import { getEligibilityMap, seriFromSizes } from "./eligibility";
 
 // Admin discount overrides are read fresh (tiny SQLite table) with a short
 // TTL so edits take effect immediately without a cache-bust dance.
@@ -229,16 +230,36 @@ export async function getWholesaleProducts(): Promise<Product[]> {
     return cachedProducts;
   }
 
-  const productsData = getProductsData();
-  const handleSet = new Set(productsData.handles);
-  const meta = productsData.products || {};
-
   const allShopify = await fetchAllShopifyProducts();
   const products: Product[] = [];
 
-  for (const raw of allShopify) {
-    if (!handleSet.has(raw.handle)) continue;
-    products.push(transformProduct(raw, meta[raw.handle]));
+  // dynamic eligibility from cell-product-intel; static products.json is
+  // only the emergency fallback when the cell AND its cached copy are gone
+  const elig = await getEligibilityMap();
+  if (elig) {
+    for (const raw of allShopify) {
+      const sku = raw.variants?.edges?.[0]?.node?.sku || "";
+      const parts = sku.split("-");
+      const baseSku = (parts.length > 1 ? parts.slice(0, -1).join("-") : sku).toUpperCase();
+      const e = baseSku ? elig.get(baseSku) : undefined;
+      if (!e) continue;
+      products.push(
+        transformProduct(raw, {
+          temperature: e.temp,
+          lotCount: e.lots,
+          discount: 0,
+          seriDistribution: seriFromSizes(e.sizes),
+        })
+      );
+    }
+  } else {
+    const productsData = getProductsData();
+    const handleSet = new Set(productsData.handles);
+    const meta = productsData.products || {};
+    for (const raw of allShopify) {
+      if (!handleSet.has(raw.handle)) continue;
+      products.push(transformProduct(raw, meta[raw.handle]));
+    }
   }
 
   cachedProducts = products;

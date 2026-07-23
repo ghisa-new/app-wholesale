@@ -11,6 +11,8 @@ interface DiscountRow {
   sku: string;
   title: string;
   productType: string;
+  temperature: string | null;
+  lots: number | null;
   price: { amount: string; currencyCode: string };
   discount: number;
   overridden: boolean;
@@ -194,6 +196,8 @@ function DiscountsTab() {
               <tr className="text-left text-[11px] uppercase text-gray-400 border-b border-gray-200">
                 <th className="px-3 py-2">Ürün</th>
                 <th className="px-3 py-2">Kategori</th>
+                <th className="px-3 py-2">Sıcaklık</th>
+                <th className="px-3 py-2 text-right">Seri</th>
                 <th className="px-3 py-2 text-right">Toptan Fiyat</th>
                 <th className="px-3 py-2 text-right">İndirim %</th>
               </tr>
@@ -206,6 +210,10 @@ function DiscountsTab() {
                     <div className="text-[10px] font-mono text-gray-400">{r.sku || r.handle}</div>
                   </td>
                   <td className="px-3 py-1.5 text-gray-500">{r.productType}</td>
+                  <td className="px-3 py-1.5">
+                    {r.temperature && <TempChip temp={r.temperature} />}
+                  </td>
+                  <td className="px-3 py-1.5 text-right tabular-nums text-gray-500">{r.lots ?? "-"}</td>
                   <td className="px-3 py-1.5 text-right tabular-nums">
                     {parseFloat(r.price.amount).toLocaleString("tr-TR")} {r.price.currencyCode}
                   </td>
@@ -589,5 +597,24 @@ function TranslateTab() {
         )}
       </div>
     </div>
+  );
+}
+
+
+const TEMP_COLORS: Record<string, string> = {
+  FIRE: "bg-red-100 text-red-700",
+  HOT: "bg-orange-100 text-orange-700",
+  WARM: "bg-amber-100 text-amber-700",
+  COOL: "bg-sky-100 text-sky-700",
+  COLD: "bg-blue-100 text-blue-700",
+  DEAD: "bg-gray-200 text-gray-600",
+  DORMANT: "bg-gray-100 text-gray-400",
+};
+
+function TempChip({ temp }: { temp: string }) {
+  return (
+    <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold ${TEMP_COLORS[temp] ?? "bg-gray-100 text-gray-500"}`}>
+      {temp}
+    </span>
   );
 }

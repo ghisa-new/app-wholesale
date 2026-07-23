@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { getDiscountOverrides, setDiscount, baseSkuOf } from "@/lib/discounts";
+import { getEligibilityMap } from "@/lib/eligibility";
 import { getWholesaleProducts } from "@/lib/products";
 
 async function requireAdmin(request: Request) {
@@ -16,16 +17,23 @@ export async function GET(request: Request) {
   try {
     const products = await getWholesaleProducts();
     const overrides = getDiscountOverrides();
+    const elig = await getEligibilityMap();
     return NextResponse.json({
-      products: products.map((p) => ({
-        handle: p.handle,
-        sku: baseSkuOf(p),
-        title: p.title,
-        productType: p.productType,
-        price: p.price,
-        discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
-        overridden: overrides.has(p.handle),
-      })),
+      products: products.map((p) => {
+        const sku = baseSkuOf(p);
+        const e = elig?.get(sku.toUpperCase());
+        return {
+          handle: p.handle,
+          sku,
+          title: p.title,
+          productType: p.productType,
+          price: p.price,
+          temperature: e?.temp ?? null,
+          lots: e?.lots ?? null,
+          discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
+          overridden: overrides.has(p.handle),
+        };
+      }),
     });
   } catch (err) {
     console.error("Admin discounts list error:", err);
