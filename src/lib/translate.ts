@@ -9,7 +9,7 @@ import { getWholesaleProducts, getProductByHandle } from "./products";
  * a batch run from the panel and edit results later (edits become overrides).
  */
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-flash-latest"; // versioned names age out for new API keys
 const LOCALES = ["en", "ar"] as const;
 export type TxLocale = (typeof LOCALES)[number];
 
