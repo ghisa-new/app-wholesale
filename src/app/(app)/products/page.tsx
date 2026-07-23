@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState, useMemo } from "react";
+import { Suspense, useEffect, useState, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { useCurrency } from "@/lib/currency";
@@ -31,6 +31,9 @@ function ProductsPageInner() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<SortOption>("newest");
+  const PAGE = 48;
+  const [visibleCount, setVisibleCount] = useState(48);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [season, setSeason] = useState<"" | "ss" | "aw">("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
@@ -96,6 +99,28 @@ function ProductsPageInner() {
         return items;
     }
   }, [filtered, sort]);
+
+  // infinite scroll: render in pages of 48; the sentinel below the grid loads
+  // the next page. Reset when any filter/sort changes.
+  useEffect(() => {
+    setVisibleCount(PAGE);
+  }, [selectedCategory, season, sort, products]);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisibleCount((c) => Math.min(c + PAGE, sorted.length));
+        }
+      },
+      { rootMargin: "600px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [sorted.length]);
+
 
   if (loading) {
     return (
@@ -184,13 +209,18 @@ function ProductsPageInner() {
           <p className="text-center text-gray-500 py-12">{t("noProducts")}</p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {sorted.map((product) => (
+            {sorted.slice(0, visibleCount).map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 formatPrice={formatPrice}
               />
             ))}
+          </div>
+        )}
+        {visibleCount < sorted.length && (
+          <div ref={sentinelRef} className="py-8 text-center text-xs text-gray-400">
+            {visibleCount} / {sorted.length}
           </div>
         )}
       </section>
