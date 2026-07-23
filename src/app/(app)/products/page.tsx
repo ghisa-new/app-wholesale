@@ -31,6 +31,7 @@ function ProductsPageInner() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState<SortOption>("newest");
+  const [season, setSeason] = useState<"" | "ss" | "aw">("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
@@ -53,10 +54,12 @@ function ProductsPageInner() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (!selectedCategory) return products;
+    let base = products;
+    if (season) base = base.filter((p) => p.season === season);
+    if (!selectedCategory) return base;
     const target = normalizeType(selectedCategory);
-    return products.filter((p) => normalizeType(p.productType) === target);
-  }, [products, selectedCategory]);
+    return base.filter((p) => normalizeType(p.productType) === target);
+  }, [products, selectedCategory, season]);
 
   const sorted = useMemo(() => {
     const items = [...filtered];
@@ -104,18 +107,8 @@ function ProductsPageInner() {
 
   return (
     <div>
-      {/* Banner */}
-      <section className="relative w-full">
-        <Image
-          src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
-          alt="GHISA"
-          width={2000}
-          height={1000}
-          className="w-full h-auto"
-          sizes="100vw"
-          priority
-        />
-      </section>
+      {/* Hero: teaser video, then the banner after 15s */}
+      <HeroBanner />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
@@ -147,6 +140,27 @@ function ProductsPageInner() {
               ))}
             </div>
           )}
+          <div className="flex gap-2 w-full sm:w-auto">
+            {(
+              [
+                ["", "Tümü"],
+                ["ss", "İlkbahar / Yaz"],
+                ["aw", "Sonbahar / Kış"],
+              ] as const
+            ).map(([val, label]) => (
+              <button
+                key={val}
+                onClick={() => setSeason(val)}
+                className={`px-4 py-2 text-xs uppercase tracking-[0.1em] border transition-colors ${
+                  season === val
+                    ? "border-ink bg-ink text-white"
+                    : "border-line text-ink-soft hover:border-ink"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <div className="ml-auto">
             <select
               value={sort}
@@ -252,5 +266,38 @@ function ProductCard({
         )}
       </div>
     </Link>
+  );
+}
+
+
+// Teaser video hero — plays ~15s muted, then cross-fades to the banner image.
+function HeroBanner() {
+  const [showVideo, setShowVideo] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setShowVideo(false), 15000);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <section className="relative w-full overflow-hidden">
+      <Image
+        src="https://ghisa.com/cdn/shop/files/Artboard_55_b5d0bc53-8947-44b7-aab9-480365c6214a.jpg?v=1774956667&width=2000"
+        alt="GHISA"
+        width={2000}
+        height={1000}
+        className="w-full h-auto"
+        sizes="100vw"
+        priority
+      />
+      <video
+        src="/hero-teaser.mp4"
+        autoPlay
+        muted
+        playsInline
+        onEnded={() => setShowVideo(false)}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+          showVideo ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      />
+    </section>
   );
 }

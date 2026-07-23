@@ -33,3 +33,25 @@ export function baseSkuOf(product: {
   const parts = sku.split("-");
   return parts.length > 1 ? parts.slice(0, -1).join("-") : sku;
 }
+
+import fs from "fs";
+import path from "path";
+
+// item model code -> "ss" | "aw" (NEBIM season attribute buckets, year-free)
+let seasonMap: Record<string, string> | null = null;
+export function seasonOfModel(baseSku: string): "ss" | "aw" | null {
+  if (!seasonMap) {
+    try {
+      seasonMap = JSON.parse(
+        fs.readFileSync(path.join(process.cwd(), "data", "season-map.json"), "utf-8")
+      );
+    } catch {
+      seasonMap = {};
+    }
+  }
+  // baseSku = MODEL-COLOR -> model
+  const parts = baseSku.split("-");
+  const model = parts.length > 1 ? parts.slice(0, -1).join("-") : baseSku;
+  const v = seasonMap?.[model];
+  return v === "ss" || v === "aw" ? v : null;
+}

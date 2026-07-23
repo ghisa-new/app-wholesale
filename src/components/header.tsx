@@ -120,40 +120,7 @@ export default function Header({ user, onLogout }: HeaderProps) {
                 {t("products")}
               </Link>
 
-              {categories.length > 0 && (
-                <div className="relative group">
-                  <button className={`${navLink("", false)} flex items-center gap-1`}>
-                    {t("categories")}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="w-3 h-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                      />
-                    </svg>
-                  </button>
-                  <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 hidden group-hover:block z-50">
-                    <div className="bg-white border border-line shadow-lg py-2 min-w-[180px]">
-                      {categories.map((cat) => (
-                        <Link
-                          key={cat.slug}
-                          href={`/products?category=${cat.slug}`}
-                          className="block px-5 py-2 text-xs uppercase tracking-[0.1em] text-ink-soft hover:bg-surface hover:text-ink"
-                        >
-                          {cat.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+              
 
               <Link href="/stores" className={navLink("/stores", isActive("/stores"))}>
                 {t("stores")}
@@ -276,24 +243,7 @@ export default function Header({ user, onLogout }: HeaderProps) {
                 </Link>
               </div>
 
-              {categories.length > 0 && (
-                <div className="border-t border-line pt-4">
-                  <p className="label-eyebrow text-gray-400 mb-3">
-                    {t("categories")}
-                  </p>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
-                    {categories.map((cat) => (
-                      <Link
-                        key={cat.slug}
-                        href={`/products?category=${cat.slug}`}
-                        className="text-sm text-ink-soft hover:text-ink"
-                      >
-                        {cat.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
+              
 
               <div className="border-t border-line pt-4">
                 {user ? (

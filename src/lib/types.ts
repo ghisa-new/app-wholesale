@@ -41,6 +41,8 @@ export interface WholesaleMeta {
 
 export interface Product {
   id: string;
+  /** year-free season bucket from NEBIM: ss = İlkbahar/Yaz, aw = Sonbahar/Kış */
+  season?: "ss" | "aw" | null;
   title: string;
   handle: string;
   description: string;
