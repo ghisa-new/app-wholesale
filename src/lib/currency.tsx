@@ -27,9 +27,9 @@ const FALLBACK_TRY_TO_USD = 0.026;
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("wholesale_currency") as CurrencyCode) || "TRY";
+      return (localStorage.getItem("wholesale_currency") as CurrencyCode) || "USD";
     }
-    return "TRY";
+    return "USD";
   });
 
   // Live TRY->USD rate, fetched from /api/exchange-rate (open.er-api.com).

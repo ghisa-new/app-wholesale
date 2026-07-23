@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const user = await getUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const orders = queryAll<Record<string, unknown>>(
-    `SELECT order_id, status, notes, total_amount, discount_pct, discount_amount, created_at
+    `SELECT order_id, status, notes, total_amount, discount_pct, discount_amount, datetime(created_at, '+3 hours') AS created_at
      FROM orders WHERE user_id = ? ORDER BY order_id DESC LIMIT 100`,
     [user.id]
   );

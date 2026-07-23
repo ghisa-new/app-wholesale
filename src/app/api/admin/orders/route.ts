@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   try {
     const orders = queryAll<Record<string, unknown>>(
       `SELECT o.order_id, o.status, o.notes, o.total_amount, o.currency, o.discount_pct, o.discount_amount,
-              o.created_at, o.status_changed_at, o.status_changed_by,
+              datetime(o.created_at, '+3 hours') AS created_at, o.status_changed_at, o.status_changed_by,
               u.email, u.name, u.company, u.curr_acc_code
        FROM orders o JOIN users u ON u.id = o.user_id
        ORDER BY o.order_id DESC LIMIT 200`

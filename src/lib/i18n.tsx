@@ -309,7 +309,7 @@ interface I18nContextType {
 }
 
 const I18nContext = createContext<I18nContextType>({
-  locale: "tr",
+  locale: "en",
   setLocale: () => {},
   t: (key) => key,
   isRtl: false,
@@ -318,7 +318,7 @@ const I18nContext = createContext<I18nContextType>({
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("wholesale_locale") as Locale) || "tr";
+      return (localStorage.getItem("wholesale_locale") as Locale) || "en";
     }
     return "tr";
   });

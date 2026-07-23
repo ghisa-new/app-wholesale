@@ -2,7 +2,8 @@ import PDFDocument from "pdfkit";
 import path from "path";
 import fs from "fs";
 import { queryAll, queryOne } from "./db";
-import { translationFor } from "./translate";
+import { translationFor, memoryLookup } from "./translate";
+import { getTryPerUsd } from "./exchange";
 import { sizeLabel } from "./types";
 
 /**
@@ -55,7 +56,7 @@ interface LineRow {
 
 function loadOrder(orderId: number): { order: OrderRow; lines: LineRow[] } | null {
   const order = queryOne<OrderRow>(
-    `SELECT o.order_id, o.status, o.notes, o.total_amount, o.discount_pct, o.discount_amount, o.created_at,
+    `SELECT o.order_id, o.status, o.notes, o.total_amount, o.discount_pct, o.discount_amount, datetime(o.created_at, '+3 hours') AS created_at,
             u.email, u.name, u.company, u.phone, u.whatsapp, u.telegram, u.contact_email, u.curr_acc_code
      FROM orders o JOIN users u ON u.id = o.user_id WHERE o.order_id = ?`,
     [orderId]
@@ -116,15 +117,15 @@ const L = {
     color: "Renk",
     size: "Beden",
     qty: "Adet",
-    unit: "Birim ₺",
+    unit: "Birim $",
     disc: "İnd.%",
-    amount: "Tutar ₺",
+    amount: "Tutar $",
     subtotal: "Ara Toplam:",
     orderDisc: (d: number) => `Sipariş İndirimi (%${d}):`,
     grand: "GENEL TOPLAM:",
     notes: "Notlar:",
     disclaimer:
-      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar TL olup KDV durumu sipariş onayında netleşir.",
+      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar USD olup belirtilen kurla hesaplanmıştır; KDV durumu sipariş onayında netleşir.",
   },
   en: {
     proforma: "PROFORMA INVOICE",
@@ -136,27 +137,30 @@ const L = {
     color: "Color",
     size: "Size",
     qty: "Qty",
-    unit: "Unit ₺",
+    unit: "Unit $",
     disc: "Disc.%",
-    amount: "Total ₺",
+    amount: "Total $",
     subtotal: "Subtotal:",
     orderDisc: (d: number) => `Order Discount (${d}%):`,
     grand: "GRAND TOTAL:",
     notes: "Notes:",
     disclaimer:
-      "This document is a proforma invoice and is not a fiscal document. Prices are in Turkish Lira (TRY); VAT is confirmed on order approval.",
+      "This document is a proforma invoice and is not a fiscal document. Prices are in USD at the stated exchange rate; VAT is confirmed on order approval.",
   },
 } as const;
 
 export async function buildOrderPdf(
   orderId: number,
   kind: "pick" | "proforma",
-  lang: "tr" | "en" = "tr"
+  lang: "tr" | "en" = "tr",
+  includeTry = false
 ): Promise<Buffer | null> {
   const data = loadOrder(orderId);
   if (!data) return null;
   const { order, lines } = data;
   const t = L[lang];
+  const tryPerUsd = kind === "proforma" ? await getTryPerUsd() : 1;
+  const usd = (tl: number) => tl / tryPerUsd;
 
   // English proforma uses the translated product names where available
   if (lang === "en") {
@@ -169,6 +173,8 @@ export async function buildOrderPdf(
         const tx = translationFor(handle, "en");
         if (tx?.title) l.product_title = tx.title;
       }
+      const c = memoryLookup(l.color, "en");
+      if (c) l.color = c;
     }
   }
 
@@ -224,18 +230,18 @@ export async function buildOrderPdf(
   y += 8;
 
   // ── lines ──
-  const IMG_W = 34;
-  const ROW_H = 46;
+  const IMG_W = 52;
+  const ROW_H = 72;
   const drawHeader = (extraCols: boolean) => {
     doc.font("B").fontSize(8).fillColor("#666");
-    doc.text(t.product, 84, y);
+    doc.text(t.product, 100, y);
     doc.text(t.color, 300, y);
     doc.text(t.size, 360, y);
     doc.text(t.qty, 412, y, { width: 34, align: "right" });
     if (extraCols) {
-      doc.text(t.unit, 448, y, { width: 50, align: "right" });
+      doc.text(t.unit, 442, y, { width: 56, align: "right" });
       doc.text(t.disc, 500, y, { width: 26, align: "right" });
-      doc.text(t.amount, 528, y, { width: 40, align: "right" });
+      doc.text(t.amount, 522, y, { width: 46, align: "right" });
     }
     y += 14;
     doc.moveTo(40, y - 3).lineTo(568, y - 3).strokeColor("#ddd").stroke();
@@ -252,6 +258,8 @@ export async function buildOrderPdf(
 
   const money = (n: number) =>
     n.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const moneyUsd = (n: number) =>
+    "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   let subtotal = 0;
   const renderLines = (ls: LineRow[], extraCols: boolean) => {
@@ -260,23 +268,28 @@ export async function buildOrderPdf(
       const img = images.get(l.line_id);
       if (img) {
         try {
-          doc.image(img, 40, y, { fit: [IMG_W, ROW_H - 6] });
+          doc.image(img, 40, y, { fit: [IMG_W, ROW_H - 8] });
         } catch {
           /* corrupt image — skip */
         }
       }
       doc.font("R").fontSize(9);
-      doc.text(l.product_title.slice(0, 55), 84, y + 4, { width: 210 });
-      doc.text(l.color, 300, y + 4, { width: 56 });
-      doc.text(sizeLabel(l.size), 360, y + 4, { width: 50 });
-      doc.text(String(l.qty), 412, y + 4, { width: 34, align: "right" });
+      doc.text(l.product_title.slice(0, 55), 100, y + 6, { width: 194 });
+      doc.text(l.color, 300, y + 6, { width: 56 });
+      doc.text(sizeLabel(l.size), 360, y + 6, { width: 50 });
+      doc.text(String(l.qty), 412, y + 6, { width: 34, align: "right" });
       if (extraCols) {
         const pu = l.unit_price;
         const lineTotal = pu * l.qty * (1 - (l.discount_pct || 0) / 100);
         subtotal += lineTotal;
-        doc.text(money(pu), 448, y + 4, { width: 50, align: "right" });
-        doc.text(l.discount_pct ? String(l.discount_pct) : "-", 500, y + 4, { width: 26, align: "right" });
-        doc.text(money(lineTotal), 528, y + 4, { width: 40, align: "right" });
+        doc.text(moneyUsd(usd(pu)), 442, y + 6, { width: 56, align: "right" });
+        doc.text(l.discount_pct ? String(l.discount_pct) : "-", 500, y + 6, { width: 26, align: "right" });
+        doc.text(moneyUsd(usd(lineTotal)), 522, y + 6, { width: 46, align: "right" });
+        if (includeTry) {
+          doc.fontSize(7).fillColor("#999");
+          doc.text(`${money(lineTotal)} ₺`, 522, y + 18, { width: 46, align: "right" });
+          doc.fontSize(9).fillColor("#000");
+        }
       }
       y += ROW_H;
       doc.moveTo(40, y - 4).lineTo(568, y - 4).strokeColor("#f0f0f0").stroke();
@@ -313,22 +326,38 @@ export async function buildOrderPdf(
     const grand = Math.max(subtotal * (1 - orderDisc / 100) - discAmt, 0);
     doc.font("R").fontSize(10);
     doc.text(t.subtotal, 380, y, { width: 110, align: "right" });
-    doc.text(`${money(subtotal)} ₺`, 492, y, { width: 76, align: "right" });
+    doc.text(moneyUsd(usd(subtotal)), 492, y, { width: 76, align: "right" });
     y += 16;
     if (orderDisc > 0) {
       doc.text(t.orderDisc(orderDisc), 340, y, { width: 150, align: "right" });
-      doc.text(`-${money(subtotal * (orderDisc / 100))} ₺`, 492, y, { width: 76, align: "right" });
+      doc.text(`-${moneyUsd(usd(subtotal * (orderDisc / 100)))}`, 492, y, { width: 76, align: "right" });
       y += 16;
     }
     if (discAmt > 0) {
       doc.text(lang === "en" ? "Discount:" : "İndirim:", 380, y, { width: 110, align: "right" });
-      doc.text(`-${money(discAmt)} ₺`, 492, y, { width: 76, align: "right" });
+      doc.text(`-${moneyUsd(usd(discAmt))}`, 492, y, { width: 76, align: "right" });
       y += 16;
     }
     doc.font("B").fontSize(12);
     doc.text(t.grand, 360, y, { width: 130, align: "right" });
-    doc.text(`${money(grand)} ₺`, 492, y, { width: 76, align: "right" });
-    y += 30;
+    doc.text(moneyUsd(usd(grand)), 492, y, { width: 76, align: "right" });
+    y += 16;
+    if (includeTry) {
+      doc.font("R").fontSize(10).fillColor("#555");
+      doc.text(lang === "en" ? "in Turkish Lira:" : "Türk Lirası karşılığı:", 340, y, { width: 150, align: "right" });
+      doc.text(`${money(grand)} ₺`, 492, y, { width: 76, align: "right" });
+      doc.fillColor("#000");
+      y += 16;
+    }
+    doc.font("R").fontSize(8).fillColor("#888");
+    doc.text(
+      lang === "en"
+        ? `Exchange rate: 1 USD = ${money(tryPerUsd)} TRY`
+        : `Kur: 1 USD = ${money(tryPerUsd)} TL`,
+      380, y, { width: 188, align: "right" }
+    );
+    doc.fillColor("#000");
+    y += 18;
     doc.font("R").fontSize(8).fillColor("#888").text(t.disclaimer, 40, y, { width: 520 });
     doc.fillColor("#000");
   }

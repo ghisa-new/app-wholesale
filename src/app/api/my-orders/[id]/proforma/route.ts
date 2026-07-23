@@ -18,8 +18,10 @@ export async function GET(
   if (!owner || (owner.user_id !== user.id && user.role !== "admin")) {
     return NextResponse.json({ error: "Bulunamadı" }, { status: 404 });
   }
-  const lang = new URL(request.url).searchParams.get("lang") === "en" ? "en" : "tr";
-  const pdf = await buildOrderPdf(Number(id), "proforma", lang);
+  const url = new URL(request.url);
+  const lang = url.searchParams.get("lang") === "en" ? "en" : "tr";
+  const includeTry = url.searchParams.get("try") === "1";
+  const pdf = await buildOrderPdf(Number(id), "proforma", lang, includeTry);
   if (!pdf) return NextResponse.json({ error: "Bulunamadı" }, { status: 404 });
   return new NextResponse(new Uint8Array(pdf), {
     headers: {

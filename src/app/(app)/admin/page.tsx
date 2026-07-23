@@ -609,6 +609,7 @@ const ORDER_LABEL: Record<string, string> = {
 function OrdersTab() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [open, setOpen] = useState<number | null>(null);
+  const [withTry, setWithTry] = useState(false);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/orders");
@@ -737,17 +738,21 @@ function OrdersTab() {
                 </label>
                 <span className="text-sm font-bold tabular-nums">Toplam: {fmt(o.total_amount)} ₺</span>
                 <a
-                  href={`/api/admin/orders/${o.order_id}/proforma?lang=tr`}
+                  href={`/api/admin/orders/${o.order_id}/proforma?lang=tr${withTry ? "&try=1" : ""}`}
                   className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg"
                 >
                   📄 Proforma (TR)
                 </a>
                 <a
-                  href={`/api/admin/orders/${o.order_id}/proforma?lang=en`}
+                  href={`/api/admin/orders/${o.order_id}/proforma?lang=en${withTry ? "&try=1" : ""}`}
                   className="px-3 py-1.5 bg-gray-700 text-white text-xs font-bold rounded-lg"
                 >
                   📄 Proforma (EN)
                 </a>
+                <label className="text-xs text-gray-500 flex items-center gap-1">
+                  <input type="checkbox" checked={withTry} onChange={(e) => setWithTry(e.target.checked)} />
+                  ₺ karşılığını da göster
+                </label>
               </div>
 
               {o.notes && <p className="text-xs text-gray-500 my-2">Not: {o.notes}</p>}

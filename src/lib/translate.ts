@@ -282,3 +282,15 @@ export function translationStats() {
   );
 }
 
+
+/** Direct translation-memory lookup (no LLM call) — used for short strings
+ *  like color names that were already translated for the product pages. */
+export function memoryLookup(text: string, locale: "en" | "ar"): string | null {
+  if (!text) return null;
+  ensureTable();
+  const row = queryOne<{ translated_text: string }>(
+    "SELECT translated_text FROM tx_memory WHERE locale = ? AND source_hash = ?",
+    [locale, textHash(text)]
+  );
+  return row?.translated_text ?? null;
+}
