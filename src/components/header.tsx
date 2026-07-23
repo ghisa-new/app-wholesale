@@ -125,9 +125,7 @@ export default function Header({ user, onLogout }: HeaderProps) {
               <Link href="/stores" className={navLink("/stores", isActive("/stores"))}>
                 {t("stores")}
               </Link>
-              <Link href="/faq" className={navLink("/faq", isActive("/faq"))}>
-                {t("faq")}
-              </Link>
+
             </nav>
 
             {/* Right: controls */}
@@ -242,12 +240,6 @@ export default function Header({ user, onLogout }: HeaderProps) {
                   className="block text-sm uppercase tracking-[0.12em] text-ink"
                 >
                   {t("stores")}
-                </Link>
-                <Link
-                  href="/faq"
-                  className="block text-sm uppercase tracking-[0.12em] text-ink"
-                >
-                  {t("faq")}
                 </Link>
               </div>
 
