@@ -21,7 +21,7 @@ export async function GET(request: Request) {
        ORDER BY o.order_id DESC LIMIT 200`
     );
     const lines = queryAll<Record<string, unknown>>(
-      `SELECT order_id, product_handle, product_title, color, size, sku, qty, unit_price
+      `SELECT order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code
        FROM order_lines
        WHERE order_id IN (SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 200)`
     );

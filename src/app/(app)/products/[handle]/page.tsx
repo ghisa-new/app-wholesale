@@ -100,6 +100,14 @@ export default function ProductDetailPage({
   }, [sku]);
 
   // LIVE Merkez stock per color|size, minus pending-order reservations
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [colorMax, setColorMax] = useState<Record<string, number> | null>(null);
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setIsAdmin(d?.user?.role === "admin"))
+      .catch(() => {});
+  }, []);
   const [stock, setStock] = useState<Record<
     string,
     { central: number; reserved: number; available: number }
@@ -107,10 +115,15 @@ export default function ProductDetailPage({
   useEffect(() => {
     if (!modelCode) return;
     let alive = true;
-    fetch(`/api/stock/${encodeURIComponent(modelCode)}`)
+    const sizesQs = Object.keys(seriDist).length
+      ? `?sizes=${encodeURIComponent(Object.keys(seriDist).join(","))}`
+      : "";
+    fetch(`/api/stock/${encodeURIComponent(modelCode)}${sizesQs}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (alive && d?.bySize) setStock(d.bySize);
+        if (!alive || !d) return;
+        if (d.bySize) setStock(d.bySize);
+        if (d.colorMax) setColorMax(d.colorMax);
       })
       .catch(() => {});
     return () => {
@@ -172,7 +185,17 @@ export default function ProductDetailPage({
 
   const colorLabel = (c: string) => colorMap?.[c] ?? c;
 
-  const canAdd = (!hasColors || !!selectedColor);
+
+  const selectedCap =
+    currentColorCode && colorMax ? colorMax[currentColorCode] : undefined;
+  const outOfStock = selectedCap !== undefined && selectedCap <= 0;
+  const canAdd = (!hasColors || !!selectedColor) && !outOfStock;
+  useEffect(() => {
+    if (selectedCap !== undefined && selectedCap > 0) {
+      setQuantity((q) => Math.min(q, selectedCap));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCap]);
   const currentColor =
     selectedColor || (colors.length === 1 ? colors[0] : null);
 
@@ -345,7 +368,7 @@ export default function ProductDetailPage({
           )}
 
           {/* Live Merkez availability for the selected color */}
-          {stock && currentColorCode && (
+          {isAdmin && stock && currentColorCode && (
             <div className="bg-white border border-gray-200 p-3 rounded-lg text-sm">
               <span className="font-medium text-gray-900 uppercase tracking-wide text-xs">
                 Depo stok — canlı (Merkez + E-ticaret)
@@ -400,7 +423,15 @@ export default function ProductDetailPage({
                   {quantity}
                 </span>
                 <button
-                  onClick={() => setQuantity((q) => q + 1)}
+                  onClick={() =>
+                    setQuantity((q) => {
+                      const cap =
+                        currentColorCode && colorMax
+                          ? colorMax[currentColorCode]
+                          : undefined;
+                      return cap !== undefined ? Math.min(q + 1, Math.max(cap, 1)) : q + 1;
+                    })
+                  }
                   className="px-3 py-2 hover:bg-surface"
                 >
                   +

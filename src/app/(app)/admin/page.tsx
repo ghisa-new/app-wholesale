@@ -44,7 +44,13 @@ interface OrderLine {
   sku: string;
   qty: number;
   unit_price: number;
+  warehouse_code?: string;
 }
+
+const WH_SHORT: Record<string, string> = {
+  "1-1-1": "Merkez",
+  "1-2-23": "E-Ticaret",
+};
 interface Order {
   order_id: number;
   status: string;
@@ -469,16 +475,20 @@ function OrdersTab() {
                     <th className="py-1">Ürün</th>
                     <th>Renk</th>
                     <th>Beden</th>
+                    <th>Depo</th>
                     <th className="text-right">Adet</th>
                     <th className="text-right">Birim</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {o.lines.map((l, i) => (
+                  {[...o.lines]
+                    .sort((a, b) => (a.warehouse_code || "z").localeCompare(b.warehouse_code || "z"))
+                    .map((l, i) => (
                     <tr key={i} className="border-t border-gray-100">
                       <td className="py-1">{l.product_title}</td>
                       <td>{l.color}</td>
                       <td>{l.size}</td>
+                      <td className="text-gray-500">{WH_SHORT[l.warehouse_code || ""] ?? (l.warehouse_code || "—")}</td>
                       <td className="text-right tabular-nums">{l.qty}</td>
                       <td className="text-right tabular-nums">{fmt(l.unit_price)} ₺</td>
                     </tr>

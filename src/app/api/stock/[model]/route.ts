@@ -33,7 +33,29 @@ export async function GET(
         available: Math.max(r.qty - res, 0),
       };
     }
-    return NextResponse.json({ model: code, bySize, live: true, at: Date.now() });
+
+    // customers never see quantities — only how many LOTS they may order per
+    // color (min available across the seri's sizes; a missing size = 0)
+    const url = new URL(request.url);
+    const seriSizes = (url.searchParams.get("sizes") || "").split(",").filter(Boolean);
+    const colors = [...new Set(rows.map((r) => r.color))];
+    const colorMax: Record<string, number> = {};
+    for (const color of colors) {
+      const sizes = seriSizes.length
+        ? seriSizes
+        : rows.filter((r) => r.color === color).map((r) => r.size);
+      let max = Infinity;
+      for (const size of sizes) {
+        const cell = bySize[`${color}|${size}`];
+        max = Math.min(max, cell?.available ?? 0);
+      }
+      colorMax[color] = Number.isFinite(max) ? max : 0;
+    }
+
+    if (user.role !== "admin") {
+      return NextResponse.json({ model: code, colorMax, live: true, at: Date.now() });
+    }
+    return NextResponse.json({ model: code, bySize, colorMax, live: true, at: Date.now() });
   } catch (err) {
     console.error("Live stock fetch error:", err);
     return NextResponse.json({ error: "Stok okunamadı" }, { status: 500 });

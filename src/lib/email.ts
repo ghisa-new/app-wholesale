@@ -18,11 +18,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const WH_LABELS: Record<string, string> = {
+  "1-1-1": "MERKEZ DEPO (1-1-1)",
+  "1-2-23": "E-TICARET DEPO (1-2-23)",
+  "?": "DEPO BELIRLENEMEDI (entegrator kapali)",
+  "": "DEPO BELIRLENEMEDI",
+};
+
 export async function sendOrderEmail(
   user: OrderUser,
   items: CartItem[],
   notes: string,
-  orderId?: number
+  orderId?: number,
+  whGroups?: Record<string, Array<{ title: string; color: string; size: string; qty: number }>>
 ) {
   const totalAmount = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -94,6 +102,33 @@ export async function sendOrderEmail(
       </table>
 
       ${notes ? `<h3 style="color:#111827;">Notlar</h3><p style="background:#f5f5f5;padding:12px;border-radius:4px;">${notes}</p>` : ""}
+
+      ${
+        whGroups && Object.keys(whGroups).length
+          ? `<h3 style="color:#111827;">Depo Bazinda Toplama Listesi</h3>` +
+            Object.entries(whGroups)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(
+                ([wh, lines]) => `
+        <h4 style="color:#374151;margin:14px 0 6px;">${WH_LABELS[wh] ?? wh} — ${lines.reduce((s2, l) => s2 + l.qty, 0)} adet</h4>
+        <table style="border-collapse:collapse;width:100%;">
+          <thead><tr style="background:#f3f4f6;">
+            <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Urun</th>
+            <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Renk</th>
+            <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Beden</th>
+            <th style="padding:6px;text-align:right;border:1px solid #e5e7eb;">Adet</th>
+          </tr></thead>
+          <tbody>${lines
+            .map(
+              (l) =>
+                `<tr><td style="padding:6px;border:1px solid #e5e7eb;">${l.title}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.color}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.size}</td><td style="padding:6px;border:1px solid #e5e7eb;text-align:right;">${l.qty}</td></tr>`
+            )
+            .join("")}</tbody>
+        </table>`
+              )
+              .join("")
+          : ""
+      }
     </div>
   `;
 

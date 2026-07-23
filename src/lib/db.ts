@@ -87,6 +87,10 @@ function initTables(db: Database.Database) {
   if (!names.has("curr_acc_code")) {
     db.exec("ALTER TABLE users ADD COLUMN curr_acc_code TEXT NOT NULL DEFAULT ''");
   }
+  const lineCols = db.prepare("PRAGMA table_info(order_lines)").all() as Array<{ name: string }>;
+  if (!lineCols.some((c) => c.name === "warehouse_code")) {
+    db.exec("ALTER TABLE order_lines ADD COLUMN warehouse_code TEXT NOT NULL DEFAULT ''");
+  }
 }
 
 export function queryAll<T = Record<string, unknown>>(

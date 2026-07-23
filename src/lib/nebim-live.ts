@@ -107,3 +107,38 @@ export async function getLiveStockByModel(
   }
   return [];
 }
+
+export interface LiveWarehouseStock {
+  warehouse: string; // "1-1-1" | "1-2-23"
+  color: string;
+  size: string;
+  qty: number;
+}
+
+/** Live per-variant stock per warehouse (Merkez and e-com separately). */
+export async function getLiveStockPerWarehouse(
+  productCode: string
+): Promise<LiveWarehouseStock[]> {
+  if (!USER || !PASS) throw new Error("NEBIM_INTEGRATOR_USER/PASSWORD yok");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      if (!sessionBase) sessionBase = await connect();
+      const rows = await runStockProc(productCode, sessionBase);
+      const agg = new Map<string, number>();
+      for (const r of rows) {
+        const k = `${r.WarehouseCode}|${r.ColorCode}|${r.Size}`;
+        agg.set(k, (agg.get(k) ?? 0) + (Number(r.RawQty) || 0));
+      }
+      return [...agg.entries()]
+        .filter(([, qty]) => qty > 0)
+        .map(([k, qty]) => {
+          const [warehouse, color, size] = k.split("|");
+          return { warehouse, color, size, qty };
+        });
+    } catch (e) {
+      sessionBase = null;
+      if (attempt === 1) throw e;
+    }
+  }
+  return [];
+}
