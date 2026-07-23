@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import { getDiscountOverrides, setDiscount, baseSkuOf } from "@/lib/discounts";
+import { getDiscountOverrides, setDiscount, setProductOverride } from "@/lib/discounts";
 import { getEligibilityMap } from "@/lib/eligibility";
-import { getWholesaleProducts } from "@/lib/products";
+import { getAdminCatalog } from "@/lib/products";
 
 async function requireAdmin(request: Request) {
   const user = await getUserFromRequest(request);
@@ -10,33 +10,22 @@ async function requireAdmin(request: Request) {
   return user;
 }
 
-// GET — product list with current effective discount
+// GET — the ENTIRE retail catalog with sale-state + discount annotations
 export async function GET(request: Request) {
   const user = await requireAdmin(request);
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   try {
-    const products = await getWholesaleProducts();
+    const rows = await getAdminCatalog();
     const overrides = getDiscountOverrides();
-    const elig = await getEligibilityMap();
     return NextResponse.json({
-      products: products.map((p) => {
-        const sku = baseSkuOf(p);
-        const e = elig?.get(sku.toUpperCase());
-        return {
-          handle: p.handle,
-          sku,
-          title: p.title,
-          productType: p.productType,
-          price: p.price,
-          temperature: e?.temp ?? null,
-          lots: e?.lots ?? null,
-          discount: overrides.get(p.handle) ?? p.campaignDiscount ?? 0,
-          overridden: overrides.has(p.handle),
-        };
-      }),
+      products: rows.map((r) => ({
+        ...r,
+        discount: overrides.get(r.handle) ?? 0,
+        overridden: overrides.has(r.handle),
+      })),
     });
   } catch (err) {
-    console.error("Admin discounts list error:", err);
+    console.error("Admin catalog error:", err);
     return NextResponse.json({ error: "Liste alınamadı" }, { status: 500 });
   }
 }
@@ -46,12 +35,18 @@ export async function PUT(request: Request) {
   const user = await requireAdmin(request);
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   try {
-    const { handle, discount } = (await request.json()) as {
+    const { handle, discount, saleState } = (await request.json()) as {
       handle?: string;
       discount?: number;
+      saleState?: "on" | "off" | "auto";
     };
-    if (!handle || typeof discount !== "number" || discount < 0 || discount > 100) {
-      return NextResponse.json({ error: "handle ve 0-100 arası discount gerekli" }, { status: 400 });
+    if (!handle) return NextResponse.json({ error: "handle gerekli" }, { status: 400 });
+    if (saleState) {
+      setProductOverride(handle, saleState, user.email);
+      return NextResponse.json({ ok: true });
+    }
+    if (typeof discount !== "number" || discount < 0 || discount > 100) {
+      return NextResponse.json({ error: "0-100 arası discount gerekli" }, { status: 400 });
     }
     setDiscount(handle, discount, user.email);
     return NextResponse.json({ ok: true });

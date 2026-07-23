@@ -14,6 +14,10 @@ interface DiscountRow {
   temperature: string | null;
   lots: number | null;
   price: { amount: string; currencyCode: string };
+  image: string | null;
+  autoEligible: boolean;
+  override: "on" | "off" | null;
+  onSale: boolean;
   discount: number;
   overridden: boolean;
 }
@@ -26,6 +30,9 @@ interface Customer {
   role: string;
   curr_acc_code: string;
   password_plain: string;
+  whatsapp: string;
+  telegram: string;
+  contact_email: string;
   created_at: string;
 }
 interface Stats {
@@ -38,12 +45,14 @@ interface Stats {
   lastInvoiceDate: string | null;
 }
 interface OrderLine {
+  line_id: number;
   product_title: string;
   color: string;
   size: string;
   sku: string;
   qty: number;
   unit_price: number;
+  discount_pct: number;
   warehouse_code?: string;
 }
 
@@ -56,6 +65,7 @@ interface Order {
   status: string;
   notes: string;
   total_amount: number;
+  discount_pct: number;
   created_at: string;
   status_changed_at: string | null;
   status_changed_by: string | null;
@@ -76,7 +86,7 @@ export default function AdminPage() {
       <div className="flex gap-1 mb-5">
         {(
           [
-            ["indirim", "İndirimler"],
+            ["indirim", "Ürünler"],
             ["musteri", "Müşteriler"],
             ["siparis", "Siparişler"],
             ["ceviri", "Çeviriler"],
@@ -136,6 +146,18 @@ function DiscountsTab() {
     }
   };
 
+  const setSale = async (r: DiscountRow) => {
+    // cycle: auto → (opposite of current effective state) → auto
+    const next: "on" | "off" | "auto" =
+      r.override !== null ? "auto" : r.onSale ? "off" : "on";
+    const res = await fetch("/api/admin/discounts", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ handle: r.handle, saleState: next }),
+    });
+    if (res.ok) load();
+  };
+
   const upload = async (f: File) => {
     const fd = new FormData();
     fd.append("file", f);
@@ -189,6 +211,10 @@ function DiscountsTab() {
         case "productType":
           va = a.productType || "";
           vb = b.productType || "";
+          break;
+        case "onSale":
+          va = a.onSale ? 0 : 1;
+          vb = b.onSale ? 0 : 1;
           break;
         default:
           va = a.title;
@@ -246,12 +272,14 @@ function DiscountsTab() {
               <tr className="text-left text-[11px] uppercase text-gray-400 border-b border-gray-200">
                 {(
                   [
+                    ["image", "", ""],
                     ["title", "Ürün", ""],
                     ["productType", "Kategori", ""],
                     ["temperature", "Sıcaklık", ""],
                     ["lots", "Seri", "text-right"],
                     ["price", "Toptan Fiyat", "text-right"],
                     ["discount", "İndirim %", "text-right"],
+                    ["onSale", "Durum", ""],
                   ] as const
                 ).map(([key, label, align]) => (
                   <th
@@ -269,7 +297,25 @@ function DiscountsTab() {
             </thead>
             <tbody>
               {shown.map((r) => (
-                <tr key={r.handle} className="border-b border-gray-50">
+                <tr
+                  key={r.handle}
+                  className={`border-b border-gray-50 ${
+                    r.onSale ? "" : "opacity-45 grayscale bg-gray-50"
+                  }`}
+                >
+                  <td className="px-2 py-1">
+                    {r.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={r.image.includes("?") ? `${r.image}&width=80` : `${r.image}?width=80`}
+                        alt=""
+                        className="w-9 h-11 object-cover rounded"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-9 h-11 bg-gray-100 rounded" />
+                    )}
+                  </td>
                   <td className="px-3 py-1.5">
                     <div className="font-medium">{r.title}</div>
                     <div className="text-[10px] font-mono text-gray-400">{r.sku || r.handle}</div>
@@ -284,6 +330,24 @@ function DiscountsTab() {
                   </td>
                   <td className="px-3 py-1.5 text-right">
                     <DiscountInput value={r.discount} overridden={r.overridden} onSave={(d) => save(r.handle, d)} />
+                  </td>
+                  <td className="px-3 py-1.5">
+                    <button
+                      onClick={() => setSale(r)}
+                      className={`text-[10px] font-bold rounded-full px-2 py-0.5 border ${
+                        r.onSale
+                          ? "bg-green-50 border-green-300 text-green-700"
+                          : "bg-gray-100 border-gray-300 text-gray-500"
+                      }`}
+                      title={
+                        r.override
+                          ? `Manuel: ${r.override === "on" ? "satışta" : "arşiv"} — tıkla: otomatiğe dön`
+                          : `Otomatik: ${r.autoEligible ? "uygun" : "stok/kural dışı"} — tıkla: ${r.onSale ? "arşivle" : "satışa al"}`
+                      }
+                    >
+                      {r.onSale ? "Satışta" : "Arşiv"}
+                      {r.override && " ✎"}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -418,6 +482,12 @@ function CustomersTab() {
                 <code className="text-xs bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5" title="Şifre">
                   🔑 {c.password_plain || "—"}
                 </code>
+                {c.whatsapp && (
+                  <span className="text-[11px] bg-green-50 border border-green-200 rounded px-1.5 py-0.5">📱 {c.whatsapp}</span>
+                )}
+                {c.telegram && (
+                  <span className="text-[11px] bg-sky-50 border border-sky-200 rounded px-1.5 py-0.5">✈️ {c.telegram}</span>
+                )}
                 {c.curr_acc_code ? (
                   <button
                     onClick={() => loadStats(c.curr_acc_code)}
@@ -498,6 +568,15 @@ function OrdersTab() {
     load();
   }, [load]);
 
+  const lineAction = async (orderId: number, body: Record<string, unknown>) => {
+    await fetch("/api/admin/orders", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderId, ...body }),
+    });
+    load();
+  };
+
   const setStatus = async (orderId: number, status: string) => {
     await fetch("/api/admin/orders", {
       method: "PATCH",
@@ -536,26 +615,74 @@ function OrdersTab() {
                     <th>Beden</th>
                     <th>Depo</th>
                     <th className="text-right">Adet</th>
-                    <th className="text-right">Birim</th>
+                    <th className="text-right">Birim ₺</th>
+                    <th className="text-right">İnd.%</th>
+                    <th className="text-right">Tutar ₺</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {[...o.lines]
                     .sort((a, b) => (a.warehouse_code || "z").localeCompare(b.warehouse_code || "z"))
-                    .map((l, i) => (
-                    <tr key={i} className="border-t border-gray-100">
-                      <td className="py-1">{l.product_title}</td>
-                      <td>{l.color}</td>
-                      <td>{l.size}</td>
-                      <td className="text-gray-500">{WH_SHORT[l.warehouse_code || ""] ?? (l.warehouse_code || "—")}</td>
-                      <td className="text-right tabular-nums">{l.qty}</td>
-                      <td className="text-right tabular-nums">{fmt(l.unit_price)} ₺</td>
-                    </tr>
-                  ))}
+                    .map((l) => (
+                      <tr key={l.line_id} className="border-t border-gray-100">
+                        <td className="py-1">{l.product_title}</td>
+                        <td>{l.color}</td>
+                        <td>{l.size}</td>
+                        <td className="text-gray-500">{WH_SHORT[l.warehouse_code || ""] ?? (l.warehouse_code || "—")}</td>
+                        <td className="text-right">
+                          <InlineNum
+                            value={l.qty}
+                            onSave={(v) => lineAction(o.order_id, { action: "setQty", lineId: l.line_id, qty: v })}
+                          />
+                        </td>
+                        <td className="text-right tabular-nums">{fmt(l.unit_price)}</td>
+                        <td className="text-right">
+                          <InlineNum
+                            value={l.discount_pct || 0}
+                            onSave={(v) =>
+                              lineAction(o.order_id, { action: "lineDiscount", lineId: l.line_id, lineDiscountPct: v })
+                            }
+                          />
+                        </td>
+                        <td className="text-right tabular-nums">
+                          {fmt(Math.round(l.qty * l.unit_price * (1 - (l.discount_pct || 0) / 100) * 100) / 100)}
+                        </td>
+                        <td className="text-right">
+                          <button
+                            onClick={() => lineAction(o.order_id, { action: "deleteLine", lineId: l.line_id })}
+                            className="text-red-400 hover:text-red-600 text-xs"
+                            title="Satırı sil"
+                          >
+                            ✕
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
-              {o.notes && <p className="text-xs text-gray-500 mb-3">Not: {o.notes}</p>}
-              <div className="flex gap-2">
+
+              <AddLineForm onAdd={(al) => lineAction(o.order_id, { action: "addLine", addLine: al })} />
+
+              <div className="flex flex-wrap items-center gap-3 mt-3">
+                <label className="text-xs text-gray-500 flex items-center gap-1">
+                  Sipariş indirimi %:
+                  <InlineNum
+                    value={o.discount_pct || 0}
+                    onSave={(v) => lineAction(o.order_id, { action: "orderDiscount", orderDiscountPct: v })}
+                  />
+                </label>
+                <span className="text-sm font-bold tabular-nums">Toplam: {fmt(o.total_amount)} ₺</span>
+                <a
+                  href={`/api/admin/orders/${o.order_id}/proforma`}
+                  className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg"
+                >
+                  📄 Proforma PDF
+                </a>
+              </div>
+
+              {o.notes && <p className="text-xs text-gray-500 my-2">Not: {o.notes}</p>}
+              <div className="flex gap-2 mt-2">
                 {o.status === "pending" && (
                   <>
                     <button
@@ -685,5 +812,67 @@ function TempChip({ temp }: { temp: string }) {
     <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold ${TEMP_COLORS[temp] ?? "bg-gray-100 text-gray-500"}`}>
       {temp}
     </span>
+  );
+}
+
+
+function InlineNum({ value, onSave }: { value: number; onSave: (v: number) => void }) {
+  const [v, setV] = useState(String(value));
+  useEffect(() => setV(String(value)), [value]);
+  const commit = () => {
+    const n = parseFloat(v);
+    if (!isNaN(n) && n >= 0 && n !== value) onSave(n);
+  };
+  return (
+    <input
+      value={v}
+      onChange={(e) => setV(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => e.key === "Enter" && commit()}
+      className="w-14 text-right border border-gray-300 rounded px-1 py-0.5 tabular-nums bg-white"
+    />
+  );
+}
+
+function AddLineForm({
+  onAdd,
+}: {
+  onAdd: (l: { title: string; color?: string; size?: string; sku?: string; qty: number; unitPrice: number }) => void;
+}) {
+  const [f, setF] = useState({ title: "", color: "", size: "", sku: "", qty: "1", unitPrice: "" });
+  return (
+    <div className="flex flex-wrap items-end gap-1.5 text-xs bg-white border border-dashed border-gray-300 rounded-lg p-2">
+      <span className="font-bold text-gray-500 mr-1">+ Satır ekle:</span>
+      {(
+        [
+          ["title", "Ürün adı", "w-44"],
+          ["sku", "SKU", "w-32"],
+          ["color", "Renk", "w-20"],
+          ["size", "Beden", "w-16"],
+          ["qty", "Adet", "w-14"],
+          ["unitPrice", "Birim ₺", "w-20"],
+        ] as const
+      ).map(([k, ph, w]) => (
+        <input
+          key={k}
+          value={f[k]}
+          onChange={(e) => setF((s2) => ({ ...s2, [k]: e.target.value }))}
+          placeholder={ph}
+          className={`border border-gray-300 rounded px-1.5 py-1 ${w}`}
+        />
+      ))}
+      <button
+        onClick={() => {
+          const qty = parseInt(f.qty) || 0;
+          const up = parseFloat(f.unitPrice) || 0;
+          if (!f.title || qty <= 0 || up <= 0) return;
+          onAdd({ title: f.title, color: f.color, size: f.size, sku: f.sku.toUpperCase(), qty, unitPrice: up });
+          setF({ title: "", color: "", size: "", sku: "", qty: "1", unitPrice: "" });
+        }}
+        className="px-2.5 py-1 bg-gray-900 text-white font-bold rounded"
+      >
+        Ekle
+      </button>
+    </div>
   );
 }

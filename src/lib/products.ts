@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { getDiscountOverrides } from "./discounts";
 import { getEligibilityMap, seriFromSizes } from "./eligibility";
+import { getProductOverrides } from "./discounts";
 
 // Admin discount overrides are read fresh (tiny SQLite table) with a short
 // TTL so edits take effect immediately without a cache-bust dance.
@@ -236,19 +237,22 @@ export async function getWholesaleProducts(): Promise<Product[]> {
   // dynamic eligibility from cell-product-intel; static products.json is
   // only the emergency fallback when the cell AND its cached copy are gone
   const elig = await getEligibilityMap();
+  const overrides = getProductOverrides();
   if (elig) {
     for (const raw of allShopify) {
+      const ov = overrides.get(raw.handle);
+      if (ov === "off") continue; // admin archived
       const sku = raw.variants?.edges?.[0]?.node?.sku || "";
       const parts = sku.split("-");
       const baseSku = (parts.length > 1 ? parts.slice(0, -1).join("-") : sku).toUpperCase();
       const e = baseSku ? elig.get(baseSku) : undefined;
-      if (!e) continue;
+      if (!e && ov !== "on") continue; // not auto-eligible and not forced on
       products.push(
         transformProduct(raw, {
-          temperature: e.temp,
-          lotCount: e.lots,
+          temperature: e?.temp ?? "",
+          lotCount: e?.lots ?? 0,
           discount: 0,
-          seriDistribution: seriFromSizes(e.sizes),
+          seriDistribution: e ? seriFromSizes(e.sizes) : {},
         })
       );
     }
@@ -333,4 +337,51 @@ export async function searchProducts(query: string): Promise<Product[]> {
     products: { edges: Array<{ node: ShopifyRawProduct }> };
   }>(SEARCH_PRODUCTS, { query, first: 20 });
   return data.products.edges.map((e) => transformProduct(e.node));
+}
+
+
+export interface AdminCatalogRow {
+  handle: string;
+  sku: string;
+  title: string;
+  productType: string;
+  price: { amount: string; currencyCode: string };
+  image: string | null;
+  temperature: string | null;
+  lots: number | null;
+  autoEligible: boolean;
+  override: "on" | "off" | null;
+  onSale: boolean;
+}
+
+/** EVERY retail Shopify product with sale-state annotations for the admin
+ *  Ürünler tab: auto eligibility + manual override + effective onSale. */
+export async function getAdminCatalog(): Promise<AdminCatalogRow[]> {
+  const allShopify = await fetchAllShopifyProducts();
+  const elig = await getEligibilityMap();
+  const overrides = getProductOverrides();
+  const rows: AdminCatalogRow[] = [];
+  for (const raw of allShopify) {
+    const sku = raw.variants?.edges?.[0]?.node?.sku || "";
+    const parts = sku.split("-");
+    const baseSku = (parts.length > 1 ? parts.slice(0, -1).join("-") : sku).toUpperCase();
+    const e = elig && baseSku ? elig.get(baseSku) : undefined;
+    const ov = overrides.get(raw.handle) ?? null;
+    const onSale = ov === "off" ? false : ov === "on" ? true : Boolean(e);
+    const p = transformProduct(raw, undefined);
+    rows.push({
+      handle: raw.handle,
+      sku: baseSku,
+      title: raw.title,
+      productType: raw.productType,
+      price: p.price,
+      image: p.images?.[0]?.url ?? null,
+      temperature: e?.temp ?? null,
+      lots: e?.lots ?? null,
+      autoEligible: Boolean(e),
+      override: ov,
+      onSale,
+    });
+  }
+  return rows;
 }

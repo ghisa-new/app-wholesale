@@ -50,6 +50,14 @@ function initTables(db: Database.Database) {
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
+    -- admin manual on/off-sale overrides on top of the automatic eligibility
+    CREATE TABLE IF NOT EXISTS product_override (
+      handle TEXT PRIMARY KEY,
+      state TEXT NOT NULL,               -- 'on' | 'off'
+      updated_by TEXT,
+      updated_at TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS orders (
       order_id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL REFERENCES users(id),
@@ -88,8 +96,24 @@ function initTables(db: Database.Database) {
     db.exec("ALTER TABLE users ADD COLUMN curr_acc_code TEXT NOT NULL DEFAULT ''");
   }
   const lineCols = db.prepare("PRAGMA table_info(order_lines)").all() as Array<{ name: string }>;
-  if (!lineCols.some((c) => c.name === "warehouse_code")) {
+  const lineNames = new Set(lineCols.map((c) => c.name));
+  if (!lineNames.has("warehouse_code")) {
     db.exec("ALTER TABLE order_lines ADD COLUMN warehouse_code TEXT NOT NULL DEFAULT ''");
+  }
+  if (!lineNames.has("image_url")) {
+    db.exec("ALTER TABLE order_lines ADD COLUMN image_url TEXT NOT NULL DEFAULT ''");
+  }
+  if (!lineNames.has("discount_pct")) {
+    db.exec("ALTER TABLE order_lines ADD COLUMN discount_pct REAL NOT NULL DEFAULT 0");
+  }
+  for (const col of ["whatsapp", "telegram", "contact_email"]) {
+    if (!names.has(col)) {
+      db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT NOT NULL DEFAULT ''`);
+    }
+  }
+  const orderCols = db.prepare("PRAGMA table_info(orders)").all() as Array<{ name: string }>;
+  if (!orderCols.some((c) => c.name === "discount_pct")) {
+    db.exec("ALTER TABLE orders ADD COLUMN discount_pct REAL NOT NULL DEFAULT 0");
   }
 }
 

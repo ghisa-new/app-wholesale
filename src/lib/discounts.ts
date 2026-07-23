@@ -55,3 +55,26 @@ export function seasonOfModel(baseSku: string): "ss" | "aw" | null {
   const v = seasonMap?.[model];
   return v === "ss" || v === "aw" ? v : null;
 }
+
+export type OverrideState = "on" | "off";
+
+export function getProductOverrides(): Map<string, OverrideState> {
+  const rows = queryAll<{ handle: string; state: string }>(
+    "SELECT handle, state FROM product_override"
+  );
+  return new Map(rows.map((r) => [r.handle, r.state as OverrideState]));
+}
+
+export function setProductOverride(handle: string, state: OverrideState | "auto", by: string) {
+  if (state === "auto") {
+    run("DELETE FROM product_override WHERE handle = ?", [handle]);
+    return;
+  }
+  run(
+    `INSERT INTO product_override (handle, state, updated_by, updated_at)
+     VALUES (?, ?, ?, datetime('now'))
+     ON CONFLICT(handle) DO UPDATE SET state = excluded.state,
+       updated_by = excluded.updated_by, updated_at = datetime('now')`,
+    [handle, state, by]
+  );
+}

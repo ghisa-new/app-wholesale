@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { sendOrderEmail } from "@/lib/email";
 import { CartItem } from "@/lib/types";
-import { getDb, run } from "@/lib/db";
+import { getDb, run, queryOne } from "@/lib/db";
+import { buildOrderPdf } from "@/lib/order-pdf";
+import { hasRealContact } from "@/app/api/account/contact/route";
 import { getLiveStockByModel, getLiveStockPerWarehouse } from "@/lib/nebim-live";
 import { getReservedBySku } from "@/lib/nebim-stock";
 
@@ -22,6 +24,24 @@ export async function POST(request: Request) {
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    // a reachable contact channel is mandatory before ordering
+    const contactRow = queryOne<{
+      email: string;
+      whatsapp: string;
+      telegram: string;
+      contact_email: string;
+    }>("SELECT email, whatsapp, telegram, contact_email FROM users WHERE id = ?", [user.id]);
+    if (!contactRow || !hasRealContact(contactRow)) {
+      return NextResponse.json(
+        {
+          error: "contact_required",
+          message:
+            "Sipariş verebilmek için en az bir iletişim kanalı (WhatsApp, e-posta veya Telegram) kaydetmelisiniz.",
+        },
+        { status: 403 }
+      );
     }
 
     // server-side stock enforcement: requested units per variant must fit the
@@ -123,15 +143,17 @@ export async function POST(request: Request) {
           );
           continue;
         }
+        const piecesInLot = sizes.reduce((s2, [, q]) => s2 + (Number(q) || 0), 0) || 1;
+        const perUnit = Math.round((it.price / piecesInLot) * 100) / 100;
         for (const [size, perSeri] of sizes) {
           const qty = (Number(perSeri) || 0) * it.quantity;
           if (qty <= 0) continue;
           const sku = it.baseSku ? `${it.baseSku}-${size}` : "";
           for (const [wh, units] of allocate(sku, qty)) {
             run(
-              `INSERT INTO order_lines (order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-              [id, it.productHandle, it.productTitle, it.color || "", size, sku, units, it.price, wh]
+              `INSERT INTO order_lines (order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code, image_url)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+              [id, it.productHandle, it.productTitle, it.color || "", size, sku, units, perUnit, wh, it.image || ""]
             );
           }
         }
@@ -151,6 +173,13 @@ export async function POST(request: Request) {
       (whGroups[key] ??= []).push({ title: l.product_title, color: l.color, size: l.size, qty: l.qty });
     }
 
+    let pickPdf: Buffer | null = null;
+    try {
+      pickPdf = await buildOrderPdf(orderId, "pick");
+    } catch (pdfErr) {
+      console.error("Pick PDF failed (mail goes without attachment):", pdfErr);
+    }
+
     try {
       await sendOrderEmail(
         {
@@ -162,7 +191,8 @@ export async function POST(request: Request) {
         items,
         notes || "",
         orderId,
-        whGroups
+        whGroups,
+        pickPdf
       );
     } catch (mailErr) {
       // the order is saved either way — mail failure must not lose it

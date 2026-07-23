@@ -30,7 +30,8 @@ export async function sendOrderEmail(
   items: CartItem[],
   notes: string,
   orderId?: number,
-  whGroups?: Record<string, Array<{ title: string; color: string; size: string; qty: number }>>
+  whGroups?: Record<string, Array<{ title: string; color: string; size: string; qty: number }>>,
+  pdf?: Buffer | null
 ) {
   const totalAmount = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -137,6 +138,9 @@ export async function sendOrderEmail(
     to: process.env.ORDER_RECIPIENT,
     subject: `Toptan Siparis Talebi #${orderId ?? "?"} - ${user.company} - ${user.name}`,
     html,
+    attachments: pdf
+      ? [{ filename: `ghisa-siparis-${orderId ?? "x"}.pdf`, content: pdf }]
+      : [],
   });
 }
 

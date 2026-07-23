@@ -25,6 +25,21 @@ export default function CartPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [notes, setNotes] = useState("");
+  const [contact, setContact] = useState({ whatsapp: "", telegram: "", email: "" });
+  const [hasContact, setHasContact] = useState(true);
+  useEffect(() => {
+    fetch("/api/account/contact")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) return;
+        setContact({ whatsapp: d.whatsapp || "", telegram: d.telegram || "", email: d.email || "" });
+        setHasContact(Boolean(d.hasContact));
+      })
+      .catch(() => {});
+  }, []);
+  const contactFilled = Boolean(
+    contact.whatsapp.trim() || contact.telegram.trim() || contact.email.trim()
+  );
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -50,6 +65,14 @@ export default function CartPage() {
     setError("");
 
     try {
+      // persist contact channels first (an order without a reachable channel
+      // is rejected server-side)
+      await fetch("/api/account/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contact),
+      }).catch(() => {});
+
       const res = await fetch("/api/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -230,6 +253,34 @@ export default function CartPage() {
                 <label className="block text-sm text-gray-700 mb-1">
                   {t("orderNotes")}
                 </label>
+                {/* İletişim bilgileri — sipariş için en az biri zorunlu */}
+                <div className="mb-4 border border-gray-200 rounded-lg p-3 bg-white">
+                  <p className="text-xs font-bold uppercase tracking-wide text-gray-500 mb-2">
+                    İletişim (en az biri zorunlu)
+                  </p>
+                  <div className="space-y-2">
+                    {(
+                      [
+                        ["whatsapp", "WhatsApp numarası"],
+                        ["email", "E-posta"],
+                        ["telegram", "Telegram kullanıcı adı"],
+                      ] as const
+                    ).map(([k, ph]) => (
+                      <input
+                        key={k}
+                        value={contact[k]}
+                        onChange={(e) => setContact((c) => ({ ...c, [k]: e.target.value }))}
+                        placeholder={ph}
+                        className="w-full border border-gray-300 rounded px-2.5 py-2 text-sm"
+                      />
+                    ))}
+                  </div>
+                  {!contactFilled && (
+                    <p className="text-xs text-red-600 mt-2">
+                      Sipariş verebilmek için en az bir iletişim kanalı girmelisiniz.
+                    </p>
+                  )}
+                </div>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
@@ -245,7 +296,7 @@ export default function CartPage() {
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={!user || submitting}
+                disabled={!user || submitting || !contactFilled}
                 className="btn-ink w-full py-3 disabled:opacity-50"
               >
                 {submitting ? "..." : t("placeOrder")}
