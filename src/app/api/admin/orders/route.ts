@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   try {
     const orders = queryAll<Record<string, unknown>>(
-      `SELECT o.order_id, o.status, o.notes, o.total_amount, o.currency, o.discount_pct,
+      `SELECT o.order_id, o.status, o.notes, o.total_amount, o.currency, o.discount_pct, o.discount_amount,
               o.created_at, o.status_changed_at, o.status_changed_by,
               u.email, u.name, u.company, u.curr_acc_code
        FROM orders o JOIN users u ON u.id = o.user_id
@@ -40,13 +40,17 @@ export async function GET(request: Request) {
 }
 
 function recomputeTotal(orderId: number) {
-  const row = queryOne<{ sub: number; disc: number }>(
+  const row = queryOne<{ sub: number; disc: number; damt: number }>(
     `SELECT COALESCE(SUM(qty * unit_price * (1 - COALESCE(discount_pct,0)/100.0)), 0) AS sub,
-            (SELECT COALESCE(discount_pct,0) FROM orders WHERE order_id = ?) AS disc
+            (SELECT COALESCE(discount_pct,0) FROM orders WHERE order_id = ?) AS disc,
+            (SELECT COALESCE(discount_amount,0) FROM orders WHERE order_id = ?) AS damt
      FROM order_lines WHERE order_id = ?`,
-    [orderId, orderId]
+    [orderId, orderId, orderId]
   )!;
-  const total = Math.round(row.sub * (1 - row.disc / 100) * 100) / 100;
+  const total = Math.max(
+    Math.round((row.sub * (1 - row.disc / 100) - row.damt) * 100) / 100,
+    0
+  );
   run("UPDATE orders SET total_amount = ? WHERE order_id = ?", [total, orderId]);
   return total;
 }
@@ -101,6 +105,9 @@ export async function PATCH(request: Request) {
     } else if (b.action === "orderDiscount") {
       const d = Math.min(Math.max(Number(b.orderDiscountPct) || 0, 0), 100);
       run("UPDATE orders SET discount_pct = ? WHERE order_id = ?", [d, orderId]);
+    } else if (b.action === "orderDiscountAmount") {
+      const d = Math.max(Number((b as Record<string, unknown>).orderDiscountAmount) || 0, 0);
+      run("UPDATE orders SET discount_amount = ? WHERE order_id = ?", [d, orderId]);
     } else if (b.action === "addLine" && b.addLine) {
       const a = b.addLine;
       if (!a.title || !a.qty || !a.unitPrice) {

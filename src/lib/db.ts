@@ -112,8 +112,12 @@ function initTables(db: Database.Database) {
     }
   }
   const orderCols = db.prepare("PRAGMA table_info(orders)").all() as Array<{ name: string }>;
-  if (!orderCols.some((c) => c.name === "discount_pct")) {
+  const orderNames = new Set(orderCols.map((c) => c.name));
+  if (!orderNames.has("discount_pct")) {
     db.exec("ALTER TABLE orders ADD COLUMN discount_pct REAL NOT NULL DEFAULT 0");
+  }
+  if (!orderNames.has("discount_amount")) {
+    db.exec("ALTER TABLE orders ADD COLUMN discount_amount REAL NOT NULL DEFAULT 0");
   }
 }
 

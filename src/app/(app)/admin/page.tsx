@@ -66,6 +66,7 @@ interface Order {
   notes: string;
   total_amount: number;
   discount_pct: number;
+  discount_amount: number;
   created_at: string;
   status_changed_at: string | null;
   status_changed_by: string | null;
@@ -118,6 +119,7 @@ function DiscountsTab() {
   const [q, setQ] = useState("");
   const [sortCol, setSortCol] = useState<string>("title");
   const [sortAsc, setSortAsc] = useState(true);
+  const [showDisabled, setShowDisabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
@@ -181,6 +183,7 @@ function DiscountsTab() {
     }
   };
   const shown = rows
+    .filter((r) => showDisabled || r.onSale)
     .filter(
       (r) =>
         !q.trim() ||
@@ -258,6 +261,14 @@ function DiscountsTab() {
             e.target.value = "";
           }}
         />
+        <label className="flex items-center gap-1.5 text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={showDisabled}
+            onChange={(e) => setShowDisabled(e.target.checked)}
+          />
+          Arşivdekileri göster
+        </label>
         {msg && <span className="text-sm text-gray-600">{msg}</span>}
         <span className="text-xs text-gray-400 ml-auto">
           Excel: sku · name · price · discount — &quot;discount&quot; sütununu doldur, yükle
@@ -666,7 +677,12 @@ function OrdersTab() {
                     .sort((a, b) => (a.warehouse_code || "z").localeCompare(b.warehouse_code || "z"))
                     .map((l) => (
                       <tr key={l.line_id} className="border-t border-gray-100">
-                        <td className="py-1">{l.product_title}</td>
+                        <td className="py-1">
+                          {l.product_title}
+                          {l.sku && (
+                            <span className="block text-[10px] font-mono text-gray-400">{l.sku}</span>
+                          )}
+                        </td>
                         <td>{l.color}</td>
                         <td>{l.size}</td>
                         <td className="text-gray-500">{WH_SHORT[l.warehouse_code || ""] ?? (l.warehouse_code || "—")}</td>
@@ -712,12 +728,25 @@ function OrdersTab() {
                     onSave={(v) => lineAction(o.order_id, { action: "orderDiscount", orderDiscountPct: v })}
                   />
                 </label>
+                <label className="text-xs text-gray-500 flex items-center gap-1">
+                  İndirim ₺:
+                  <InlineNum
+                    value={o.discount_amount || 0}
+                    onSave={(v) => lineAction(o.order_id, { action: "orderDiscountAmount", orderDiscountAmount: v })}
+                  />
+                </label>
                 <span className="text-sm font-bold tabular-nums">Toplam: {fmt(o.total_amount)} ₺</span>
                 <a
-                  href={`/api/admin/orders/${o.order_id}/proforma`}
+                  href={`/api/admin/orders/${o.order_id}/proforma?lang=tr`}
                   className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg"
                 >
-                  📄 Proforma PDF
+                  📄 Proforma (TR)
+                </a>
+                <a
+                  href={`/api/admin/orders/${o.order_id}/proforma?lang=en`}
+                  className="px-3 py-1.5 bg-gray-700 text-white text-xs font-bold rounded-lg"
+                >
+                  📄 Proforma (EN)
                 </a>
               </div>
 

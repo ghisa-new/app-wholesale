@@ -2,6 +2,7 @@ import PDFDocument from "pdfkit";
 import path from "path";
 import fs from "fs";
 import { queryAll, queryOne } from "./db";
+import { translationFor } from "./translate";
 import { sizeLabel } from "./types";
 
 /**
@@ -27,6 +28,7 @@ interface OrderRow {
   notes: string;
   total_amount: number;
   discount_pct: number;
+  discount_amount: number;
   created_at: string;
   email: string;
   name: string;
@@ -53,7 +55,7 @@ interface LineRow {
 
 function loadOrder(orderId: number): { order: OrderRow; lines: LineRow[] } | null {
   const order = queryOne<OrderRow>(
-    `SELECT o.order_id, o.status, o.notes, o.total_amount, o.discount_pct, o.created_at,
+    `SELECT o.order_id, o.status, o.notes, o.total_amount, o.discount_pct, o.discount_amount, o.created_at,
             u.email, u.name, u.company, u.phone, u.whatsapp, u.telegram, u.contact_email, u.curr_acc_code
      FROM orders o JOIN users u ON u.id = o.user_id WHERE o.order_id = ?`,
     [orderId]
@@ -67,11 +69,9 @@ function loadOrder(orderId: number): { order: OrderRow; lines: LineRow[] } | nul
   return { order, lines };
 }
 
-async function fetchImage(url: string): Promise<Buffer | null> {
-  if (!url) return null;
+async function fetchOne(url: string): Promise<Buffer | null> {
   try {
-    const sized = url.includes("?") ? `${url}&width=200` : `${url}?width=200`;
-    const res = await fetch(sized, { signal: AbortSignal.timeout(10000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
     if (!res.ok) return null;
     const buf = Buffer.from(await res.arrayBuffer());
     // pdfkit accepts JPEG/PNG only
@@ -83,18 +83,99 @@ async function fetchImage(url: string): Promise<Buffer | null> {
   }
 }
 
+/** stored url first; older orders (no image_url) fall back to the verioku CDN
+ *  by base sku (MODEL-COLOR), then the low-quality model photo */
+async function fetchImage(line: { image_url: string; sku: string }): Promise<Buffer | null> {
+  const candidates: string[] = [];
+  if (line.image_url) {
+    candidates.push(
+      line.image_url.includes("?") ? `${line.image_url}&width=200` : `${line.image_url}?width=200`
+    );
+  }
+  if (line.sku) {
+    const baseSku = line.sku.split("-").slice(0, -1).join("-");
+    const model = baseSku.split("-").slice(0, -1).join("-") || baseSku;
+    if (baseSku) candidates.push(`https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`);
+    if (model) candidates.push(`https://verioku.com/low-quality/${encodeURIComponent(model)}/${encodeURIComponent(model)}.jpeg`);
+  }
+  for (const url of candidates) {
+    const buf = await fetchOne(url);
+    if (buf) return buf;
+  }
+  return null;
+}
+
+const L = {
+  tr: {
+    proforma: "PROFORMA FATURA",
+    pick: "SİPARİŞ TOPLAMA LİSTESİ",
+    orderNo: "Sipariş No",
+    date: "Tarih",
+    customer: "Müşteri",
+    product: "Ürün",
+    color: "Renk",
+    size: "Beden",
+    qty: "Adet",
+    unit: "Birim ₺",
+    disc: "İnd.%",
+    amount: "Tutar ₺",
+    subtotal: "Ara Toplam:",
+    orderDisc: (d: number) => `Sipariş İndirimi (%${d}):`,
+    grand: "GENEL TOPLAM:",
+    notes: "Notlar:",
+    disclaimer:
+      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar TL olup KDV durumu sipariş onayında netleşir.",
+  },
+  en: {
+    proforma: "PROFORMA INVOICE",
+    pick: "ORDER PICKING LIST",
+    orderNo: "Order No",
+    date: "Date",
+    customer: "Customer",
+    product: "Product",
+    color: "Color",
+    size: "Size",
+    qty: "Qty",
+    unit: "Unit ₺",
+    disc: "Disc.%",
+    amount: "Total ₺",
+    subtotal: "Subtotal:",
+    orderDisc: (d: number) => `Order Discount (${d}%):`,
+    grand: "GRAND TOTAL:",
+    notes: "Notes:",
+    disclaimer:
+      "This document is a proforma invoice and is not a fiscal document. Prices are in Turkish Lira (TRY); VAT is confirmed on order approval.",
+  },
+} as const;
+
 export async function buildOrderPdf(
   orderId: number,
-  kind: "pick" | "proforma"
+  kind: "pick" | "proforma",
+  lang: "tr" | "en" = "tr"
 ): Promise<Buffer | null> {
   const data = loadOrder(orderId);
   if (!data) return null;
   const { order, lines } = data;
+  const t = L[lang];
+
+  // English proforma uses the translated product names where available
+  if (lang === "en") {
+    for (const l of lines) {
+      const handle = queryOne<{ product_handle: string }>(
+        "SELECT product_handle FROM order_lines WHERE line_id = ?",
+        [l.line_id]
+      )?.product_handle;
+      if (handle) {
+        const tx = translationFor(handle, "en");
+        if (tx?.title) l.product_title = tx.title;
+      }
+    }
+  }
 
   const images = new Map<number, Buffer | null>();
   await Promise.all(
     lines.map(async (l) => {
-      images.set(l.line_id, await fetchImage(l.image_url));
+      images.set(l.line_id, await fetchImage(l));
     })
   );
 
@@ -113,17 +194,17 @@ export async function buildOrderPdf(
     doc.image(LOGO, 40, 38, { width: 140 });
   }
   doc.font("B").fontSize(16).text(
-    kind === "proforma" ? "PROFORMA FATURA" : "SİPARİŞ TOPLAMA LİSTESİ",
+    kind === "proforma" ? t.proforma : t.pick,
     300, 42, { align: "right", width: 255 }
   );
   doc.font("R").fontSize(10).fillColor("#555")
-    .text(`Sipariş No: #${order.order_id}`, 300, 66, { align: "right", width: 255 })
-    .text(`Tarih: ${order.created_at.slice(0, 16)}`, 300, 80, { align: "right", width: 255 });
+    .text(`${t.orderNo}: #${order.order_id}`, 300, 66, { align: "right", width: 255 })
+    .text(`${t.date}: ${order.created_at.slice(0, 16)}`, 300, 80, { align: "right", width: 255 });
   doc.fillColor("#000");
 
   // ── customer ──
   let y = 110;
-  doc.font("B").fontSize(11).text("Müşteri", 40, y);
+  doc.font("B").fontSize(11).text(t.customer, 40, y);
   y += 16;
   doc.font("R").fontSize(9).fillColor("#333");
   const contactBits = [
@@ -147,14 +228,14 @@ export async function buildOrderPdf(
   const ROW_H = 46;
   const drawHeader = (extraCols: boolean) => {
     doc.font("B").fontSize(8).fillColor("#666");
-    doc.text("Ürün", 84, y);
-    doc.text("Renk", 300, y);
-    doc.text("Beden", 360, y);
-    doc.text("Adet", 412, y, { width: 34, align: "right" });
+    doc.text(t.product, 84, y);
+    doc.text(t.color, 300, y);
+    doc.text(t.size, 360, y);
+    doc.text(t.qty, 412, y, { width: 34, align: "right" });
     if (extraCols) {
-      doc.text("Birim ₺", 448, y, { width: 50, align: "right" });
-      doc.text("İnd.%", 500, y, { width: 26, align: "right" });
-      doc.text("Tutar ₺", 528, y, { width: 40, align: "right" });
+      doc.text(t.unit, 448, y, { width: 50, align: "right" });
+      doc.text(t.disc, 500, y, { width: 26, align: "right" });
+      doc.text(t.amount, 528, y, { width: 40, align: "right" });
     }
     y += 14;
     doc.moveTo(40, y - 3).lineTo(568, y - 3).strokeColor("#ddd").stroke();
@@ -228,31 +309,34 @@ export async function buildOrderPdf(
     ensureSpace(80, true);
     y += 6;
     const orderDisc = order.discount_pct || 0;
-    const grand = subtotal * (1 - orderDisc / 100);
+    const discAmt = order.discount_amount || 0;
+    const grand = Math.max(subtotal * (1 - orderDisc / 100) - discAmt, 0);
     doc.font("R").fontSize(10);
-    doc.text("Ara Toplam:", 380, y, { width: 110, align: "right" });
+    doc.text(t.subtotal, 380, y, { width: 110, align: "right" });
     doc.text(`${money(subtotal)} ₺`, 492, y, { width: 76, align: "right" });
     y += 16;
     if (orderDisc > 0) {
-      doc.text(`Sipariş İndirimi (%${orderDisc}):`, 340, y, { width: 150, align: "right" });
-      doc.text(`-${money(subtotal - grand)} ₺`, 492, y, { width: 76, align: "right" });
+      doc.text(t.orderDisc(orderDisc), 340, y, { width: 150, align: "right" });
+      doc.text(`-${money(subtotal * (orderDisc / 100))} ₺`, 492, y, { width: 76, align: "right" });
+      y += 16;
+    }
+    if (discAmt > 0) {
+      doc.text(lang === "en" ? "Discount:" : "İndirim:", 380, y, { width: 110, align: "right" });
+      doc.text(`-${money(discAmt)} ₺`, 492, y, { width: 76, align: "right" });
       y += 16;
     }
     doc.font("B").fontSize(12);
-    doc.text("GENEL TOPLAM:", 360, y, { width: 130, align: "right" });
+    doc.text(t.grand, 360, y, { width: 130, align: "right" });
     doc.text(`${money(grand)} ₺`, 492, y, { width: 76, align: "right" });
     y += 30;
-    doc.font("R").fontSize(8).fillColor("#888").text(
-      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar TL olup KDV durumu sipariş onayında netleşir.",
-      40, y, { width: 520 }
-    );
+    doc.font("R").fontSize(8).fillColor("#888").text(t.disclaimer, 40, y, { width: 520 });
     doc.fillColor("#000");
   }
 
   if (order.notes) {
     ensureSpace(40, false);
     y += 8;
-    doc.font("B").fontSize(9).text("Notlar:", 40, y);
+    doc.font("B").fontSize(9).text(t.notes, 40, y);
     doc.font("R").fontSize(9).text(order.notes.slice(0, 500), 84, y, { width: 480 });
   }
 
