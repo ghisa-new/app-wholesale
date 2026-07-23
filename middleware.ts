@@ -10,7 +10,7 @@ const COOKIE_NAME = "wholesale_token";
 
 // Everything requires a logged-in dealer (Murathan 2026-07-21: full gateway).
 // Only the auth surface itself is public.
-const PUBLIC_PATHS = ["/login", "/forgot", "/reset"];
+const PUBLIC_PATHS = ["/login", "/forgot", "/reset", "/register"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

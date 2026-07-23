@@ -392,6 +392,45 @@ function DiscountInput({
 
 const EMPTY_FORM = { email: "", password: "", name: "", company: "", phone: "", currAccCode: "" };
 
+function RegisterTokenCard() {
+  const [token, setToken] = useState("");
+  const [saved, setSaved] = useState("");
+  useEffect(() => {
+    fetch("/api/admin/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.registerToken && setToken(d.registerToken))
+      .catch(() => {});
+  }, []);
+  const save = async () => {
+    const res = await fetch("/api/admin/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ registerToken: token }),
+    });
+    if (res.ok) {
+      setSaved("✓ kaydedildi");
+      setTimeout(() => setSaved(""), 2000);
+    }
+  };
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-3 flex flex-wrap items-center gap-2">
+      <span className="text-sm font-bold">🔑 Kayıt Anahtarı</span>
+      <span className="text-xs text-gray-400">
+        (girişteki &quot;Kayıt&quot; kutusu bu anahtarı ister — değiştirince eskisi anında geçersizleşir)
+      </span>
+      <input
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        className="border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm font-mono w-44"
+      />
+      <button onClick={save} className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg">
+        Kaydet
+      </button>
+      {saved && <span className="text-xs text-green-700">{saved}</span>}
+    </div>
+  );
+}
+
 function CustomersTab() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [stats, setStats] = useState<Record<string, Stats | "loading">>({});
@@ -439,6 +478,7 @@ function CustomersTab() {
 
   return (
     <div className="space-y-4">
+      <RegisterTokenCard />
       <form onSubmit={create} className="bg-white border border-gray-200 rounded-xl p-3 flex flex-wrap gap-2 items-end">
         {(
           [

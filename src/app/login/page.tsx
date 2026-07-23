@@ -9,6 +9,21 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [regToken, setRegToken] = useState("");
+  const [regErr, setRegErr] = useState("");
+  const tryRegister = async () => {
+    setRegErr("");
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: regToken.trim() }),
+    });
+    if (res.ok) {
+      window.location.assign(`/register?token=${encodeURIComponent(regToken.trim())}`);
+    } else {
+      setRegErr("Kayıt anahtarı geçersiz");
+    }
+  };
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -118,6 +133,34 @@ export default function LoginPage() {
           <a href="/forgot" className="block text-center text-sm text-gray-500 hover:text-gray-900 mt-3">
             Şifremi unuttum
           </a>
+          <div className="mt-6 pt-5 border-t border-gray-100">
+            <p className="text-xs text-gray-400 text-center mb-2">
+              Yeni müşteri misiniz? Size verilen kayıt anahtarını girin.
+            </p>
+            <div className="flex gap-2">
+              <input
+                value={regToken}
+                onChange={(e) => setRegToken(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    tryRegister();
+                  }
+                }}
+                placeholder="Kayıt anahtarı"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm uppercase"
+              />
+              <button
+                type="button"
+                onClick={tryRegister}
+                disabled={!regToken.trim()}
+                className="px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-sm font-bold text-gray-700 disabled:opacity-40"
+              >
+                Kayıt →
+              </button>
+            </div>
+            {regErr && <p className="text-xs text-red-600 mt-1.5 text-center">{regErr}</p>}
+          </div>
         </form>
       </div>
     </div>
