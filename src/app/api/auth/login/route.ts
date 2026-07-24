@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { compare } from "bcryptjs";
 import { queryOne } from "@/lib/db";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
 
 
@@ -57,6 +58,8 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
+
+    logActivity({ id: user.id, role: user.role }, "login");
 
     const token = await signToken({
       id: user.id,

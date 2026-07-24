@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { track } from "@/lib/track";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,6 +28,9 @@ export default function CartPage() {
   const [notes, setNotes] = useState("");
   const [contact, setContact] = useState({ whatsapp: "", telegram: "", email: "" });
   const [hasContact, setHasContact] = useState(true);
+  useEffect(() => {
+    track("view_cart");
+  }, []);
   useEffect(() => {
     fetch("/api/account/contact")
       .then((r) => (r.ok ? r.json() : null))

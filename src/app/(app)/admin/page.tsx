@@ -79,7 +79,7 @@ interface Order {
 const fmt = (n: number) => n.toLocaleString("tr-TR");
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<"indirim" | "musteri" | "siparis" | "ceviri">("indirim");
+  const [tab, setTab] = useState<"indirim" | "musteri" | "siparis" | "ceviri" | "aktivite">("indirim");
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
@@ -91,6 +91,7 @@ export default function AdminPage() {
             ["musteri", "Müşteriler"],
             ["siparis", "Siparişler"],
             ["ceviri", "Çeviriler"],
+            ["aktivite", "Aktivite"],
           ] as const
         ).map(([k, label]) => (
           <button
@@ -108,6 +109,7 @@ export default function AdminPage() {
       {tab === "musteri" && <CustomersTab />}
       {tab === "siparis" && <OrdersTab />}
       {tab === "ceviri" && <TranslateTab />}
+      {tab === "aktivite" && <ActivityTab />}
     </div>
   );
 }
@@ -947,6 +949,132 @@ function AddLineForm({
       >
         Ekle
       </button>
+    </div>
+  );
+}
+
+
+// ── Aktivite ─────────────────────────────────────────────────────────────────
+
+interface FeedRow {
+  id: number;
+  event_type: string;
+  ref: string;
+  label: string;
+  meta: string;
+  created_at: string;
+  name: string;
+  company: string;
+}
+interface CustSummary {
+  user_id: number;
+  name: string;
+  company: string;
+  last_active: string | null;
+  views: number;
+  cart_adds: number;
+  cart_views: number;
+  logins: number;
+  orders: number;
+}
+
+const EVENT_LABEL: Record<string, string> = {
+  login: "🔑 Giriş yaptı",
+  view_product: "👁️ Ürün baktı",
+  add_to_cart: "🛒 Sepete ekledi",
+  view_cart: "🧺 Sepete baktı",
+  order: "📦 Sipariş verdi",
+};
+
+function ActivityTab() {
+  const [feed, setFeed] = useState<FeedRow[]>([]);
+  const [summary, setSummary] = useState<CustSummary[]>([]);
+  const [focus, setFocus] = useState<number | null>(null);
+
+  const load = useCallback(async (userId?: number) => {
+    const url = userId ? `/api/admin/activity?user=${userId}` : "/api/admin/activity";
+    const res = await fetch(url);
+    if (res.ok) {
+      const d = await res.json();
+      setFeed(d.feed);
+      if (!userId) setSummary(d.summary);
+    }
+  }, []);
+  useEffect(() => {
+    load();
+    const t = setInterval(() => load(focus ?? undefined), 20000);
+    return () => clearInterval(t);
+  }, [load, focus]);
+
+  return (
+    <div className="grid md:grid-cols-2 gap-4">
+      {/* per-customer engagement */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-bold">Müşteri Etkileşimi (son 30 gün)</h3>
+          {focus && (
+            <button onClick={() => { setFocus(null); load(); }} className="text-xs text-blue-700 underline">
+              tümünü göster
+            </button>
+          )}
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="text-left text-[11px] uppercase text-gray-400 border-b border-gray-200">
+                <th className="px-2 py-2">Müşteri</th>
+                <th className="px-2 py-2 text-right" title="Ürün görüntüleme">👁️</th>
+                <th className="px-2 py-2 text-right" title="Sepete ekleme">🛒</th>
+                <th className="px-2 py-2 text-right" title="Sipariş">📦</th>
+                <th className="px-2 py-2">Son görülme</th>
+              </tr>
+            </thead>
+            <tbody>
+              {summary.length === 0 && (
+                <tr><td colSpan={5} className="px-2 py-6 text-center text-gray-400">Henüz aktivite yok.</td></tr>
+              )}
+              {summary.map((c) => (
+                <tr
+                  key={c.user_id}
+                  onClick={() => { setFocus(c.user_id); load(c.user_id); }}
+                  className={`border-b border-gray-50 cursor-pointer hover:bg-gray-50 ${focus === c.user_id ? "bg-blue-50" : ""}`}
+                >
+                  <td className="px-2 py-1.5">
+                    <div className="font-medium">{c.company || c.name}</div>
+                  </td>
+                  <td className="px-2 py-1.5 text-right tabular-nums">{c.views}</td>
+                  <td className="px-2 py-1.5 text-right tabular-nums">{c.cart_adds}</td>
+                  <td className="px-2 py-1.5 text-right tabular-nums font-bold">{c.orders}</td>
+                  <td className="px-2 py-1.5 text-gray-400 whitespace-nowrap">{c.last_active?.slice(5, 16)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* live feed */}
+      <div>
+        <h3 className="text-sm font-bold mb-2">
+          {focus ? "Bu müşterinin akışı" : "Son Hareketler"}
+        </h3>
+        <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-50 max-h-[70vh] overflow-y-auto">
+          {feed.length === 0 && (
+            <p className="px-3 py-6 text-center text-gray-400 text-xs">Kayıt yok.</p>
+          )}
+          {feed.map((e) => (
+            <div key={e.id} className="px-3 py-2 text-xs flex items-start gap-2">
+              <span className="text-gray-400 tabular-nums whitespace-nowrap">{e.created_at.slice(5, 16)}</span>
+              <div className="min-w-0">
+                <span className="font-medium">{e.company || e.name || "—"}</span>{" "}
+                <span className="text-gray-600">{EVENT_LABEL[e.event_type] ?? e.event_type}</span>
+                {e.label && <span className="text-gray-500"> · {e.label}</span>}
+                {e.meta && <span className="text-gray-400"> ({e.meta})</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

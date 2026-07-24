@@ -6,6 +6,7 @@ import { useCurrency } from "@/lib/currency";
 import { useCart } from "@/lib/cart";
 import { Product } from "@/lib/types";
 import { parseProductDescription } from "@/lib/description-parser";
+import { track } from "@/lib/track";
 import { sizeLabel, SIZE_EQUIV } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
@@ -103,6 +104,11 @@ export default function ProductDetailPage({
   const [isAdmin, setIsAdmin] = useState(false);
   const [colorMax, setColorMax] = useState<Record<string, number> | null>(null);
   useEffect(() => {
+    if (product?.handle) {
+      track("view_product", { ref: product.handle, label: product.title });
+    }
+  }, [product?.handle, product?.title]);
+  useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => setIsAdmin(d?.user?.role === "admin"))
@@ -158,6 +164,12 @@ export default function ProductDetailPage({
       baseSku: variant.sku
         ? variant.sku.split("-").slice(0, -1).join("-")
         : sku || "",
+    });
+
+    track("add_to_cart", {
+      ref: product.handle,
+      label: product.title,
+      meta: `${selectedColor || ""} × ${quantity} seri`,
     });
 
     setAdded(true);

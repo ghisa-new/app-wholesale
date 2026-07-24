@@ -6,6 +6,7 @@ import { getDb, run, queryOne } from "@/lib/db";
 import { buildOrderPdf } from "@/lib/order-pdf";
 import { hasRealContact } from "@/app/api/account/contact/route";
 import { getLiveStockByModel, getLiveStockPerWarehouse } from "@/lib/nebim-live";
+import { logActivity } from "@/lib/activity";
 import { getReservedBySku } from "@/lib/nebim-stock";
 
 // POST { items, notes } — persists the order (status 'pending' reserves the
@@ -169,6 +170,9 @@ export async function POST(request: Request) {
       }
       return id;
     })();
+
+    logActivity({ id: user.id, role: user.role }, "order", String(orderId),
+      `${items.length} model`, `${Math.round(total)} TL`);
 
     // warehouse-grouped summary for the notification mail
     const whGroups: Record<string, Array<{ title: string; color: string; size: string; qty: number }>> = {};

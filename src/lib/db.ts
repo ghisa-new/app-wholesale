@@ -58,6 +58,18 @@ function initTables(db: Database.Database) {
       updated_at TEXT DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS activity (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      event_type TEXT NOT NULL,   -- login | view_product | add_to_cart | view_cart | order
+      ref TEXT NOT NULL DEFAULT '',
+      label TEXT NOT NULL DEFAULT '',
+      meta TEXT NOT NULL DEFAULT '',
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_activity_created ON activity(created_at);
+    CREATE INDEX IF NOT EXISTS idx_activity_user ON activity(user_id, created_at);
+
     CREATE TABLE IF NOT EXISTS orders (
       order_id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL REFERENCES users(id),
