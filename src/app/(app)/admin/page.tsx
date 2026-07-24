@@ -698,7 +698,12 @@ function OrdersTab() {
                 </thead>
                 <tbody>
                   {[...o.lines]
-                    .sort((a, b) => (a.warehouse_code || "z").localeCompare(b.warehouse_code || "z"))
+                    .sort(
+                      (a, b) =>
+                        a.product_title.localeCompare(b.product_title, "tr") ||
+                        (a.sku || "").localeCompare(b.sku || "", "tr") ||
+                        a.size.localeCompare(b.size, "tr")
+                    )
                     .map((l) => (
                       <tr key={l.line_id} className="border-t border-gray-100">
                         <td className="py-1">
