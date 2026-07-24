@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { getDb, queryAll, queryOne, run } from "./db";
-import { getWholesaleProducts, getProductByHandle } from "./products";
+import { getAllProductsForTranslation } from "./products";
 
 /**
  * Product content translation — pre-translated with Gemini Flash and cached in
@@ -166,38 +166,37 @@ export function getProgress(): TxProgress {
 export async function runTranslationBatch(): Promise<void> {
   if (progress.running) return;
   ensureTable();
-  const products = await getWholesaleProducts();
+  // EVERY Shopify product (not just the wholesale-eligible list), with
+  // descriptionHtml already in hand from the bulk fetch — no per-handle calls.
+  const products = await getAllProductsForTranslation();
 
-  // work list: (product, locale) pairs whose stored hash is stale (manual
-  // overrides only refresh when the Turkish source itself changed)
-  // the list payload has no descriptionHtml — pull the full product for
-  // anything that might need work, then hash on title+description
   const work: Array<{ item: TxItem; locale: TxLocale }> = [];
   for (const p of products) {
-    const missing = LOCALES.filter((locale) => {
-      const row = queryOne<{ source_hash: string }>(
-        "SELECT source_hash FROM product_i18n WHERE handle = ? AND locale = ?",
+    const h = hashOf(p.title, p.descriptionHtml ?? "");
+    // store/refresh the Turkish source row so the editor can search on TR too
+    const trRow = queryOne<{ source_hash: string; manual: number }>(
+      "SELECT source_hash, manual FROM product_i18n WHERE handle = ? AND locale = 'tr'",
+      [p.handle]
+    );
+    if (!trRow || trRow.source_hash !== h) {
+      run(
+        `INSERT INTO product_i18n (handle, locale, title, description_html, source_hash, manual, updated_at)
+         VALUES (?, 'tr', ?, ?, ?, 0, datetime('now'))
+         ON CONFLICT(handle, locale) DO UPDATE SET
+           title = excluded.title, description_html = excluded.description_html,
+           source_hash = excluded.source_hash, updated_at = datetime('now')`,
+        [p.handle, p.title, p.descriptionHtml ?? "", h]
+      );
+    }
+    for (const locale of LOCALES) {
+      const row = queryOne<{ source_hash: string; manual: number }>(
+        "SELECT source_hash, manual FROM product_i18n WHERE handle = ? AND locale = ?",
         [p.handle, locale]
       );
-      // cheap pre-check on title-only hash mismatch is impossible without the
-      // full source, so re-check with the full product below when any row exists
-      return !row;
-    });
-    let full: { title: string; descriptionHtml?: string } | null = null;
-    const localesToCheck = missing.length ? missing : [...LOCALES];
-    for (const locale of localesToCheck) {
-      if (!full) {
-        full = await getProductByHandle(p.handle);
-        if (!full) break;
-      }
-      const h = hashOf(full.title, full.descriptionHtml ?? "");
-      const row = queryOne<{ source_hash: string }>(
-        "SELECT source_hash FROM product_i18n WHERE handle = ? AND locale = ?",
-        [p.handle, locale]
-      );
-      if (row?.source_hash === h) continue;
+      // up to date, or a human-edited row whose source hasn't changed → skip
+      if (row && row.source_hash === h) continue;
       work.push({
-        item: { handle: p.handle, title: full.title, descriptionHtml: full.descriptionHtml ?? "" },
+        item: { handle: p.handle, title: p.title, descriptionHtml: p.descriptionHtml ?? "" },
         locale,
       });
     }

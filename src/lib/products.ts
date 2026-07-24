@@ -385,3 +385,17 @@ export async function getAdminCatalog(): Promise<AdminCatalogRow[]> {
   }
   return rows;
 }
+
+/** ALL Shopify products (handle, title, descriptionHtml) — for translating the
+ *  entire store, not just the wholesale-eligible catalog. Uses the same
+ *  bulk-fetch cache. */
+export async function getAllProductsForTranslation(): Promise<
+  Array<{ handle: string; title: string; descriptionHtml: string }>
+> {
+  const all = await fetchAllShopifyProducts();
+  return all.map((raw) => ({
+    handle: raw.handle,
+    title: raw.title,
+    descriptionHtml: raw.descriptionHtml || raw.description || "",
+  }));
+}

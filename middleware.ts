@@ -29,7 +29,8 @@ export async function middleware(request: NextRequest) {
   // Public: the auth surface only
   if (
     PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/")) ||
-    pathname.startsWith("/api/auth/")
+    pathname.startsWith("/api/auth/") ||
+    pathname.startsWith("/api/cron/")
   ) {
     return NextResponse.next();
   }

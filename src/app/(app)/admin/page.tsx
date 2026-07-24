@@ -902,6 +902,131 @@ function TranslateTab() {
           </div>
         )}
       </div>
+
+      <TranslationEditor />
+    </div>
+  );
+}
+
+interface TxItem {
+  handle: string;
+  tr?: { title: string; descriptionHtml: string };
+  en?: { title: string; descriptionHtml: string };
+  ar?: { title: string; descriptionHtml: string };
+}
+
+function TranslationEditor() {
+  const [q, setQ] = useState("");
+  const [items, setItems] = useState<TxItem[]>([]);
+  const [open, setOpen] = useState<string | null>(null);
+  const [searching, setSearching] = useState(false);
+
+  const search = async (term: string) => {
+    setQ(term);
+    if (term.trim().length < 2) { setItems([]); return; }
+    setSearching(true);
+    try {
+      const res = await fetch(`/api/admin/translations?q=${encodeURIComponent(term)}`);
+      if (res.ok) setItems((await res.json()).items);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-4 max-w-3xl">
+      <h3 className="text-sm font-bold mb-1">Çevirileri Düzenle</h3>
+      <p className="text-xs text-gray-400 mb-3">
+        Türkçe, İngilizce veya Arapça herhangi bir kelimeyle arayın; İngilizce ve Arapça
+        çevirileri (başlık ve açıklama) düzenleyin.
+      </p>
+      <input
+        value={q}
+        onChange={(e) => search(e.target.value)}
+        placeholder="Ara: ürün adı / kelime (TR, EN veya AR)…"
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-3"
+      />
+      {searching && <p className="text-xs text-gray-400">Aranıyor…</p>}
+      <div className="space-y-1.5">
+        {items.map((it) => (
+          <div key={it.handle} className="border border-gray-100 rounded-lg">
+            <button
+              onClick={() => setOpen(open === it.handle ? null : it.handle)}
+              className="w-full text-left px-3 py-2 flex items-center gap-2"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium truncate">{it.tr?.title || it.handle}</div>
+                <div className="text-[11px] text-gray-400 truncate">
+                  EN: {it.en?.title || "—"} · AR: {it.ar?.title || "—"}
+                </div>
+              </div>
+              <span className="text-gray-300 text-xs">{open === it.handle ? "▲" : "▼"}</span>
+            </button>
+            {open === it.handle && <EditRow item={it} />}
+          </div>
+        ))}
+        {q.trim().length >= 2 && !searching && items.length === 0 && (
+          <p className="text-xs text-gray-400 text-center py-4">Sonuç yok.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function EditRow({ item }: { item: TxItem }) {
+  const [en, setEn] = useState({ title: item.en?.title || "", descriptionHtml: item.en?.descriptionHtml || "" });
+  const [ar, setAr] = useState({ title: item.ar?.title || "", descriptionHtml: item.ar?.descriptionHtml || "" });
+  const [saved, setSaved] = useState("");
+
+  const save = async (locale: "en" | "ar", data: { title: string; descriptionHtml: string }) => {
+    const res = await fetch("/api/admin/translations", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ handle: item.handle, locale, ...data }),
+    });
+    if (res.ok) { setSaved(locale); setTimeout(() => setSaved(""), 2000); }
+  };
+
+  return (
+    <div className="px-3 pb-3 border-t border-gray-100 pt-2 space-y-3">
+      <div className="text-[11px] text-gray-500 bg-gray-50 rounded p-2">
+        <span className="font-bold">TR (kaynak):</span> {item.tr?.title}
+        {item.tr?.descriptionHtml && (
+          <div className="mt-1 text-gray-400" dangerouslySetInnerHTML={{ __html: item.tr.descriptionHtml }} />
+        )}
+      </div>
+      {([
+        ["en", "İngilizce", en, setEn] as const,
+        ["ar", "Arapça", ar, setAr] as const,
+      ]).map(([loc, label, val, setVal]) => (
+        <div key={loc} className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-600">{label}</span>
+            {saved === loc && <span className="text-[11px] text-green-600">✓ kaydedildi</span>}
+          </div>
+          <input
+            value={val.title}
+            onChange={(e) => setVal((v) => ({ ...v, title: e.target.value }))}
+            placeholder="Başlık"
+            dir={loc === "ar" ? "rtl" : "ltr"}
+            className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
+          />
+          <textarea
+            value={val.descriptionHtml}
+            onChange={(e) => setVal((v) => ({ ...v, descriptionHtml: e.target.value }))}
+            placeholder="Açıklama (HTML)"
+            rows={4}
+            dir={loc === "ar" ? "rtl" : "ltr"}
+            className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs font-mono"
+          />
+          <button
+            onClick={() => save(loc, val)}
+            className="px-3 py-1 bg-gray-900 text-white text-xs font-bold rounded"
+          >
+            Kaydet ({label})
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
