@@ -3,6 +3,7 @@ import { getUserFromRequest } from "@/lib/auth";
 import { queryAll, queryOne, run } from "@/lib/db";
 import { getProductByHandle } from "@/lib/products";
 import { getLiveStockPerWarehouse } from "@/lib/nebim-live";
+import { getNebimVariantSizes } from "@/lib/nebim-stock";
 
 async function requireAdmin(request: Request) {
   const user = await getUserFromRequest(request);
@@ -169,6 +170,58 @@ export async function PATCH(request: Request) {
             `INSERT INTO order_lines (order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code, image_url)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [orderId, handle, product.title, color, size, sku, u, unitPrice, wh, image]
+          );
+        }
+      }
+    } else if (b.action === "addNebimLot" && (b as Record<string, unknown>).itemCode) {
+      const bb = b as Record<string, unknown>;
+      const itemCode = String(bb.itemCode).trim();
+      const colorCode = String(bb.colorCode || "").trim();
+      const lots = Math.max(1, Math.floor(Number(bb.lots) || 1));
+      const unitPrice = Math.max(0, Number(bb.unitPrice) || 0);
+      const title = String(bb.title || itemCode);
+      if (unitPrice <= 0) {
+        return NextResponse.json({ error: "Birim fiyat gerekli" }, { status: 400 });
+      }
+      const sizes = await getNebimVariantSizes(itemCode, colorCode);
+      if (sizes.length === 0) {
+        return NextResponse.json({ error: "Bu ürün/renk için beden bulunamadı" }, { status: 400 });
+      }
+      const baseSku = colorCode ? `${itemCode}-${colorCode}` : itemCode;
+      const image = `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`;
+
+      const whAvail = new Map<string, number>();
+      try {
+        for (const rr of await getLiveStockPerWarehouse(itemCode)) {
+          if (rr.color !== colorCode) continue;
+          const k = `${rr.warehouse}|${rr.size}`;
+          whAvail.set(k, (whAvail.get(k) ?? 0) + rr.qty);
+        }
+      } catch (e) {
+        console.error("addNebimLot stock lookup failed:", e);
+      }
+      const alloc = (size: string, units: number): Array<[string, number]> => {
+        if (whAvail.size === 0) return [["", units]];
+        const out: Array<[string, number]> = [];
+        let left = units;
+        for (const wh of ["1-1-1", "1-2-23"]) {
+          if (left <= 0) break;
+          const key = `${wh}|${size}`;
+          const avail = whAvail.get(key) ?? 0;
+          const take = Math.min(left, avail);
+          if (take > 0) { out.push([wh, take]); whAvail.set(key, avail - take); left -= take; }
+        }
+        if (left > 0) out.push(["", left]);
+        return out;
+      };
+      for (const size of sizes) {
+        const units = lots; // one per size per lot
+        const sku = `${baseSku}-${size}`;
+        for (const [wh, u] of alloc(size, units)) {
+          run(
+            `INSERT INTO order_lines (order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code, image_url)
+             VALUES (?, '', ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [orderId, title, colorCode, size, sku, u, unitPrice, wh, image]
           );
         }
       }

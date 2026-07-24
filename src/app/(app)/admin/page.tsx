@@ -734,7 +734,9 @@ function OrdersTab() {
                 </tbody>
               </table>
 
-              <AddProductForm onAdd={(handle, lots) => lineAction(o.order_id, { action: "addLot", handle, lots })} />
+              <AddProductForm
+                onAddNebim={(pl) => lineAction(o.order_id, { action: "addNebimLot", ...pl })}
+              />
               <details className="mt-1.5">
                 <summary className="text-[11px] text-gray-400 cursor-pointer">özel satır ekle (elle)</summary>
                 <div className="mt-1.5">
@@ -930,46 +932,54 @@ function InlineNum({ value, onSave }: { value: number; onSave: (v: number) => vo
 }
 
 function AddProductForm({
-  onAdd,
+  onAddNebim,
 }: {
-  onAdd: (handle: string, lots: number) => void;
+  onAddNebim: (pl: { itemCode: string; colorCode: string; lots: number; unitPrice: number; title: string }) => void;
 }) {
   interface Hit {
-    handle: string;
-    title: string;
-    sku: string;
-    image: string | null;
+    itemCode: string;
+    colorCode: string;
+    name: string;
+    sizes: string[];
     unitPrice: number;
-    lots: number | null;
-    onSale: boolean;
+    image: string;
   }
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<Hit[]>([]);
   const [picked, setPicked] = useState<Hit | null>(null);
   const [lots, setLots] = useState("1");
+  const [price, setPrice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   const search = async (term: string) => {
     setQ(term);
     setPicked(null);
-    if (term.trim().length < 2) {
-      setHits([]);
-      return;
+    if (term.trim().length < 3) { setHits([]); return; }
+    setSearching(true);
+    try {
+      const res = await fetch(`/api/admin/nebim-search?q=${encodeURIComponent(term)}`);
+      if (res.ok) setHits((await res.json()).products);
+    } finally {
+      setSearching(false);
     }
-    const res = await fetch(`/api/admin/product-search?q=${encodeURIComponent(term)}`);
-    if (res.ok) setHits((await res.json()).products);
   };
 
   const add = async () => {
     if (!picked) return;
     const n = Math.max(1, parseInt(lots) || 1);
+    const up = parseFloat(price) || picked.unitPrice;
+    if (up <= 0) return;
     setBusy(true);
     try {
-      await onAdd(picked.handle, n);
-      setPicked(null);
-      setQ("");
-      setHits([]);
-      setLots("1");
+      await onAddNebim({
+        itemCode: picked.itemCode,
+        colorCode: picked.colorCode,
+        lots: n,
+        unitPrice: up,
+        title: picked.name,
+      });
+      setPicked(null); setQ(""); setHits([]); setLots("1"); setPrice("");
     } finally {
       setBusy(false);
     }
@@ -982,36 +992,36 @@ function AddProductForm({
         <input
           value={q}
           onChange={(e) => search(e.target.value)}
-          placeholder="Ürün adı veya SKU ara…"
+          placeholder="NEBIM'de ürün kodu veya adı ara… (ör: 3610T9292)"
           className="border border-gray-300 rounded px-2 py-1 flex-1"
         />
+        {searching && <span className="text-gray-400">…</span>}
       </div>
       {picked ? (
-        <div className="flex items-center gap-2 mt-2 bg-gray-50 rounded p-1.5">
-          {picked.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={`${picked.image}${picked.image.includes("?") ? "&" : "?"}width=60`} alt="" className="w-8 h-10 object-cover rounded" />
-          )}
+        <div className="flex items-center gap-2 mt-2 bg-gray-50 rounded p-1.5 flex-wrap">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${picked.image}${picked.image.includes("?") ? "&" : "?"}width=60`}
+            alt=""
+            className="w-8 h-10 object-cover rounded bg-gray-100"
+            onError={(e) => ((e.target as HTMLImageElement).style.visibility = "hidden")}
+          />
           <div className="flex-1 min-w-0">
-            <div className="font-medium truncate">{picked.title}</div>
+            <div className="font-medium truncate">{picked.name}</div>
             <div className="text-[10px] text-gray-400 font-mono">
-              {picked.sku} · {picked.unitPrice.toLocaleString("tr-TR")} ₺/adet
-              {picked.lots != null && <span> · stokta {picked.lots} seri</span>}
+              {picked.itemCode}-{picked.colorCode} · {picked.sizes.length} beden ({picked.sizes.join("-")})
             </div>
           </div>
-          <label className="flex items-center gap-1">
-            Seri:
-            <input
-              type="number"
-              min={1}
-              value={lots}
-              onChange={(e) => setLots(e.target.value)}
-              className="w-14 border border-gray-300 rounded px-1 py-0.5 text-right"
-            />
+          <label className="flex items-center gap-1">Seri:
+            <input type="number" min={1} value={lots} onChange={(e) => setLots(e.target.value)}
+              className="w-12 border border-gray-300 rounded px-1 py-0.5 text-right" />
           </label>
-          <button onClick={add} disabled={busy} className="px-2.5 py-1 bg-gray-900 text-white font-bold rounded disabled:opacity-50">
-            Ekle
-          </button>
+          <label className="flex items-center gap-1">Birim ₺:
+            <input type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)}
+              placeholder={String(picked.unitPrice)}
+              className="w-20 border border-gray-300 rounded px-1 py-0.5 text-right" />
+          </label>
+          <button onClick={add} disabled={busy} className="px-2.5 py-1 bg-gray-900 text-white font-bold rounded disabled:opacity-50">Ekle</button>
           <button onClick={() => setPicked(null)} className="text-gray-400 px-1">✕</button>
         </div>
       ) : (
@@ -1019,22 +1029,17 @@ function AddProductForm({
           <div className="mt-1.5 max-h-56 overflow-y-auto border border-gray-100 rounded divide-y divide-gray-50">
             {hits.map((h) => (
               <button
-                key={h.handle}
-                onClick={() => { setPicked(h); setLots("1"); }}
+                key={`${h.itemCode}-${h.colorCode}`}
+                onClick={() => { setPicked(h); setLots("1"); setPrice(String(h.unitPrice)); }}
                 className="w-full flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 text-left"
               >
-                {h.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={`${h.image}${h.image.includes("?") ? "&" : "?"}width=60`} alt="" className="w-7 h-9 object-cover rounded" />
-                ) : (
-                  <div className="w-7 h-9 bg-gray-100 rounded" />
-                )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`${h.image}?width=60`} alt="" className="w-7 h-9 object-cover rounded bg-gray-100"
+                  onError={(e) => ((e.target as HTMLImageElement).style.visibility = "hidden")} />
                 <div className="flex-1 min-w-0">
-                  <div className="truncate">{h.title}</div>
+                  <div className="truncate">{h.name}</div>
                   <div className="text-[10px] text-gray-400 font-mono">
-                    {h.sku} · {h.unitPrice.toLocaleString("tr-TR")} ₺
-                    {h.lots != null && <span> · {h.lots} seri</span>}
-                    {!h.onSale && <span className="text-amber-600"> · arşiv</span>}
+                    {h.itemCode}-{h.colorCode} · {h.sizes.length} beden · {h.unitPrice.toLocaleString("tr-TR")} ₺
                   </div>
                 </div>
               </button>

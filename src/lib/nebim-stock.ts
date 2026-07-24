@@ -108,3 +108,91 @@ export async function getCustomerStats(currAccCode: string): Promise<CustomerSta
     lastInvoiceDate: row.LastInvoiceDate ?? null,
   };
 }
+
+// ── Admin order editing: search ANY NEBIM product (not just Shopify catalog) ──
+
+export interface NebimProductHit {
+  itemCode: string;
+  colorCode: string;
+  name: string;
+  sizes: string[];
+  unitPrice: number; // wholesale TRY (BasePriceCode 3, else retail*0.5)
+}
+
+/** Search NEBIM by item code or product name → model+color rows with sizes
+ *  and wholesale unit price. Covers products absent from Shopify. */
+export async function searchNebimProducts(term: string): Promise<NebimProductHit[]> {
+  const t = term.trim();
+  if (t.length < 3) return [];
+  const p = await getPool();
+  const req = p.request();
+  req.input("code", mssql.NVarChar, `${t}%`);
+  req.input("name", mssql.NVarChar, `%${t}%`);
+  const r = await req.query(`
+    SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+    SELECT TOP 800 b.ItemCode, b.ColorCode, COALESCE(b.ItemDim1Code,'') AS Size,
+           d.ItemDescription AS Name,
+           bp3.Price AS WsPrice, bp7.Price AS RetailPrice
+    FROM prItemBarcode b WITH (NOLOCK)
+    LEFT JOIN cdItemDesc d WITH (NOLOCK)
+      ON d.ItemTypeCode = 1 AND d.ItemCode = b.ItemCode AND d.LangCode = 'TR'
+    OUTER APPLY (SELECT TOP 1 Price FROM prItemBasePrice pp WITH (NOLOCK)
+                 WHERE pp.ItemCode = b.ItemCode AND pp.BasePriceCode = '3' AND pp.CurrencyCode = 'TRY'
+                 ORDER BY pp.PriceDate DESC) bp3
+    OUTER APPLY (SELECT TOP 1 Price FROM prItemBasePrice pp WITH (NOLOCK)
+                 WHERE pp.ItemCode = b.ItemCode AND pp.BasePriceCode = '7' AND pp.CurrencyCode = 'TRY'
+                 ORDER BY pp.PriceDate DESC) bp7
+    WHERE b.ItemCode LIKE @code OR d.ItemDescription LIKE @name
+  `);
+  const byVariant = new Map<string, NebimProductHit>();
+  for (const row of r.recordset as Array<{
+    ItemCode: string; ColorCode: string; Size: string; Name: string;
+    WsPrice: number | null; RetailPrice: number | null;
+  }>) {
+    const key = `${row.ItemCode}|${row.ColorCode}`;
+    let hit = byVariant.get(key);
+    if (!hit) {
+      const ws = Number(row.WsPrice) || (Number(row.RetailPrice) || 0) * 0.5;
+      hit = {
+        itemCode: row.ItemCode,
+        colorCode: (row.ColorCode || "").trim(),
+        name: row.Name || row.ItemCode,
+        sizes: [],
+        unitPrice: Math.round(ws * 100) / 100,
+      };
+      byVariant.set(key, hit);
+    }
+    if (row.Size && !hit.sizes.includes(row.Size)) hit.sizes.push(row.Size);
+    if (byVariant.size > 60) break;
+  }
+  const sizeSort = (a: string, b: string) => {
+    const na = parseFloat(a), nb = parseFloat(b);
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    return a.localeCompare(b, "tr");
+  };
+  return [...byVariant.values()]
+    .map((h) => ({ ...h, sizes: h.sizes.sort(sizeSort) }))
+    .slice(0, 40);
+}
+
+/** Sizes of one NEBIM item+color (for the add-lot expansion). */
+export async function getNebimVariantSizes(itemCode: string, colorCode: string): Promise<string[]> {
+  const p = await getPool();
+  const req = p.request();
+  req.input("item", mssql.NVarChar, itemCode);
+  req.input("color", mssql.NVarChar, colorCode);
+  const r = await req.query(`
+    SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+    SELECT DISTINCT COALESCE(ItemDim1Code,'') AS Size
+    FROM prItemBarcode WITH (NOLOCK)
+    WHERE ItemCode = @item AND LTRIM(RTRIM(ColorCode)) = @color AND ItemDim1Code IS NOT NULL
+  `);
+  return (r.recordset as Array<{ Size: string }>)
+    .map((x) => x.Size)
+    .filter(Boolean)
+    .sort((a, b) => {
+      const na = parseFloat(a), nb = parseFloat(b);
+      if (!isNaN(na) && !isNaN(nb)) return na - nb;
+      return a.localeCompare(b, "tr");
+    });
+}
