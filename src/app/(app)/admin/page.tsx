@@ -734,7 +734,13 @@ function OrdersTab() {
                 </tbody>
               </table>
 
-              <AddLineForm onAdd={(al) => lineAction(o.order_id, { action: "addLine", addLine: al })} />
+              <AddProductForm onAdd={(handle, lots) => lineAction(o.order_id, { action: "addLot", handle, lots })} />
+              <details className="mt-1.5">
+                <summary className="text-[11px] text-gray-400 cursor-pointer">özel satır ekle (elle)</summary>
+                <div className="mt-1.5">
+                  <AddLineForm onAdd={(al) => lineAction(o.order_id, { action: "addLine", addLine: al })} />
+                </div>
+              </details>
 
               <div className="flex flex-wrap items-center gap-3 mt-3">
                 <label className="text-xs text-gray-500 flex items-center gap-1">
@@ -920,6 +926,123 @@ function InlineNum({ value, onSave }: { value: number; onSave: (v: number) => vo
       onKeyDown={(e) => e.key === "Enter" && commit()}
       className="w-14 text-right border border-gray-300 rounded px-1 py-0.5 tabular-nums bg-white"
     />
+  );
+}
+
+function AddProductForm({
+  onAdd,
+}: {
+  onAdd: (handle: string, lots: number) => void;
+}) {
+  interface Hit {
+    handle: string;
+    title: string;
+    sku: string;
+    image: string | null;
+    unitPrice: number;
+    lots: number | null;
+    onSale: boolean;
+  }
+  const [q, setQ] = useState("");
+  const [hits, setHits] = useState<Hit[]>([]);
+  const [picked, setPicked] = useState<Hit | null>(null);
+  const [lots, setLots] = useState("1");
+  const [busy, setBusy] = useState(false);
+
+  const search = async (term: string) => {
+    setQ(term);
+    setPicked(null);
+    if (term.trim().length < 2) {
+      setHits([]);
+      return;
+    }
+    const res = await fetch(`/api/admin/product-search?q=${encodeURIComponent(term)}`);
+    if (res.ok) setHits((await res.json()).products);
+  };
+
+  const add = async () => {
+    if (!picked) return;
+    const n = Math.max(1, parseInt(lots) || 1);
+    setBusy(true);
+    try {
+      await onAdd(picked.handle, n);
+      setPicked(null);
+      setQ("");
+      setHits([]);
+      setLots("1");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="bg-white border border-dashed border-gray-300 rounded-lg p-2 text-xs">
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-gray-500">+ Ürün ekle:</span>
+        <input
+          value={q}
+          onChange={(e) => search(e.target.value)}
+          placeholder="Ürün adı veya SKU ara…"
+          className="border border-gray-300 rounded px-2 py-1 flex-1"
+        />
+      </div>
+      {picked ? (
+        <div className="flex items-center gap-2 mt-2 bg-gray-50 rounded p-1.5">
+          {picked.image && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={`${picked.image}${picked.image.includes("?") ? "&" : "?"}width=60`} alt="" className="w-8 h-10 object-cover rounded" />
+          )}
+          <div className="flex-1 min-w-0">
+            <div className="font-medium truncate">{picked.title}</div>
+            <div className="text-[10px] text-gray-400 font-mono">
+              {picked.sku} · {picked.unitPrice.toLocaleString("tr-TR")} ₺/adet
+              {picked.lots != null && <span> · stokta {picked.lots} seri</span>}
+            </div>
+          </div>
+          <label className="flex items-center gap-1">
+            Seri:
+            <input
+              type="number"
+              min={1}
+              value={lots}
+              onChange={(e) => setLots(e.target.value)}
+              className="w-14 border border-gray-300 rounded px-1 py-0.5 text-right"
+            />
+          </label>
+          <button onClick={add} disabled={busy} className="px-2.5 py-1 bg-gray-900 text-white font-bold rounded disabled:opacity-50">
+            Ekle
+          </button>
+          <button onClick={() => setPicked(null)} className="text-gray-400 px-1">✕</button>
+        </div>
+      ) : (
+        hits.length > 0 && (
+          <div className="mt-1.5 max-h-56 overflow-y-auto border border-gray-100 rounded divide-y divide-gray-50">
+            {hits.map((h) => (
+              <button
+                key={h.handle}
+                onClick={() => { setPicked(h); setLots("1"); }}
+                className="w-full flex items-center gap-2 px-1.5 py-1 hover:bg-gray-50 text-left"
+              >
+                {h.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={`${h.image}${h.image.includes("?") ? "&" : "?"}width=60`} alt="" className="w-7 h-9 object-cover rounded" />
+                ) : (
+                  <div className="w-7 h-9 bg-gray-100 rounded" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="truncate">{h.title}</div>
+                  <div className="text-[10px] text-gray-400 font-mono">
+                    {h.sku} · {h.unitPrice.toLocaleString("tr-TR")} ₺
+                    {h.lots != null && <span> · {h.lots} seri</span>}
+                    {!h.onSale && <span className="text-amber-600"> · arşiv</span>}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )
+      )}
+    </div>
   );
 }
 

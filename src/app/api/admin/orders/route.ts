@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { queryAll, queryOne, run } from "@/lib/db";
+import { getProductByHandle } from "@/lib/products";
+import { getLiveStockPerWarehouse } from "@/lib/nebim-live";
 
 async function requireAdmin(request: Request) {
   const user = await getUserFromRequest(request);
@@ -108,6 +110,68 @@ export async function PATCH(request: Request) {
     } else if (b.action === "orderDiscountAmount") {
       const d = Math.max(Number((b as Record<string, unknown>).orderDiscountAmount) || 0, 0);
       run("UPDATE orders SET discount_amount = ? WHERE order_id = ?", [d, orderId]);
+    } else if (b.action === "addLot" && (b as Record<string, unknown>).handle) {
+      const handle = String((b as Record<string, unknown>).handle);
+      const lots = Math.max(1, Math.floor(Number((b as Record<string, unknown>).lots) || 1));
+      const product = await getProductByHandle(handle);
+      if (!product) return NextResponse.json({ error: "Ürün bulunamadı" }, { status: 404 });
+      const seri = Object.entries(product.seriDistribution || {});
+      if (seri.length === 0) {
+        return NextResponse.json({ error: "Bu ürünün seri bilgisi yok" }, { status: 400 });
+      }
+      const unitPrice = parseFloat(product.price.amount);
+      const image = product.images?.[0]?.url || "";
+      const variantSku = product.variants?.[0]?.sku || "";
+      const baseSku = variantSku.split("-").slice(0, -1).join("-"); // MODEL-COLOR
+      const colorCode = baseSku.split("-").slice(-1)[0] || "";
+      const model = baseSku.split("-").slice(0, -1).join("-");
+      const color =
+        product.variants?.[0]?.selectedOptions?.find(
+          (o) => o.name.toLowerCase() === "color" || o.name.toLowerCase() === "renk"
+        )?.value || colorCode;
+
+      // live per-warehouse stock for this color (Merkez first, then e-com)
+      const whAvail = new Map<string, number>();
+      try {
+        for (const r of await getLiveStockPerWarehouse(model)) {
+          if (r.color !== colorCode) continue;
+          const k = `${r.warehouse}|${r.size}`;
+          whAvail.set(k, (whAvail.get(k) ?? 0) + r.qty);
+        }
+      } catch (e) {
+        console.error("addLot stock lookup failed:", e);
+      }
+      const allocate = (size: string, units: number): Array<[string, number]> => {
+        if (whAvail.size === 0) return [["", units]];
+        const out: Array<[string, number]> = [];
+        let left = units;
+        for (const wh of ["1-1-1", "1-2-23"]) {
+          if (left <= 0) break;
+          const key = `${wh}|${size}`;
+          const avail = whAvail.get(key) ?? 0;
+          const take = Math.min(left, avail);
+          if (take > 0) {
+            out.push([wh, take]);
+            whAvail.set(key, avail - take);
+            left -= take;
+          }
+        }
+        if (left > 0) out.push(["", left]);
+        return out;
+      };
+
+      for (const [size, perSeri] of seri) {
+        const units = (Number(perSeri) || 0) * lots;
+        if (units <= 0) continue;
+        const sku = baseSku ? `${baseSku}-${size}` : "";
+        for (const [wh, u] of allocate(size, units)) {
+          run(
+            `INSERT INTO order_lines (order_id, product_handle, product_title, color, size, sku, qty, unit_price, warehouse_code, image_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [orderId, handle, product.title, color, size, sku, u, unitPrice, wh, image]
+          );
+        }
+      }
     } else if (b.action === "addLine" && b.addLine) {
       const a = b.addLine;
       if (!a.title || !a.qty || !a.unitPrice) {
