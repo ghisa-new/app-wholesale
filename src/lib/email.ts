@@ -30,7 +30,7 @@ export async function sendOrderEmail(
   items: CartItem[],
   notes: string,
   orderId?: number,
-  whGroups?: Record<string, Array<{ title: string; color: string; size: string; qty: number }>>,
+  whGroups?: Record<string, Array<{ title: string; sku: string; color: string; size: string; qty: number }>>,
   pdf?: Buffer | null
 ) {
   const totalAmount = items.reduce(
@@ -115,6 +115,7 @@ export async function sendOrderEmail(
         <table style="border-collapse:collapse;width:100%;">
           <thead><tr style="background:#f3f4f6;">
             <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Urun</th>
+            <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">SKU</th>
             <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Renk</th>
             <th style="padding:6px;text-align:left;border:1px solid #e5e7eb;">Beden</th>
             <th style="padding:6px;text-align:right;border:1px solid #e5e7eb;">Adet</th>
@@ -122,7 +123,7 @@ export async function sendOrderEmail(
           <tbody>${lines
             .map(
               (l) =>
-                `<tr><td style="padding:6px;border:1px solid #e5e7eb;">${l.title}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.color}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.size}</td><td style="padding:6px;border:1px solid #e5e7eb;text-align:right;">${l.qty}</td></tr>`
+                `<tr><td style="padding:6px;border:1px solid #e5e7eb;">${l.title}</td><td style="padding:6px;border:1px solid #e5e7eb;font-family:monospace;font-size:12px;">${l.sku || "-"}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.color}</td><td style="padding:6px;border:1px solid #e5e7eb;">${l.size}</td><td style="padding:6px;border:1px solid #e5e7eb;text-align:right;">${l.qty}</td></tr>`
             )
             .join("")}</tbody>
         </table>`

@@ -175,15 +175,15 @@ export async function POST(request: Request) {
       `${items.length} model`, `${Math.round(total)} TL`);
 
     // warehouse-grouped summary for the notification mail
-    const whGroups: Record<string, Array<{ title: string; color: string; size: string; qty: number }>> = {};
+    const whGroups: Record<string, Array<{ title: string; sku: string; color: string; size: string; qty: number }>> = {};
     const glines = getDb()
       .prepare(
-        "SELECT product_title, color, size, qty, warehouse_code FROM order_lines WHERE order_id = ?"
+        "SELECT product_title, sku, color, size, qty, warehouse_code FROM order_lines WHERE order_id = ?"
       )
       .all(orderId) as Array<{ product_title: string; color: string; size: string; qty: number; warehouse_code: string }>;
     for (const l of glines) {
       const key = l.warehouse_code || "?";
-      (whGroups[key] ??= []).push({ title: l.product_title, color: l.color, size: l.size, qty: l.qty });
+      (whGroups[key] ??= []).push({ title: l.product_title, sku: l.sku, color: l.color, size: l.size, qty: l.qty });
     }
 
     let pickPdf: Buffer | null = null;
