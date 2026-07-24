@@ -234,14 +234,15 @@ export async function buildOrderPdf(
   const ROW_H = 72;
   const drawHeader = (extraCols: boolean) => {
     doc.font("B").fontSize(8).fillColor("#666");
-    doc.text(t.product, 100, y);
-    doc.text(t.color, 300, y);
-    doc.text(t.size, 360, y);
-    doc.text(t.qty, 412, y, { width: 34, align: "right" });
+    doc.text(t.product, 100, y, { width: 104 });
+    doc.text("SKU", 208, y, { width: 86 });
+    doc.text(t.color, 298, y, { width: 40 });
+    doc.text(t.size, 342, y, { width: 38 });
+    doc.text(t.qty, 384, y, { width: 26, align: "right" });
     if (extraCols) {
-      doc.text(t.unit, 442, y, { width: 56, align: "right" });
-      doc.text(t.disc, 500, y, { width: 26, align: "right" });
-      doc.text(t.amount, 522, y, { width: 46, align: "right" });
+      doc.text(t.unit, 414, y, { width: 52, align: "right" });
+      doc.text(t.disc, 468, y, { width: 24, align: "right" });
+      doc.text(t.amount, 496, y, { width: 72, align: "right" });
     }
     y += 14;
     doc.moveTo(40, y - 3).lineTo(568, y - 3).strokeColor("#ddd").stroke();
@@ -274,20 +275,23 @@ export async function buildOrderPdf(
         }
       }
       doc.font("R").fontSize(9);
-      doc.text(l.product_title.slice(0, 55), 100, y + 6, { width: 194 });
-      doc.text(l.color, 300, y + 6, { width: 56 });
-      doc.text(sizeLabel(l.size), 360, y + 6, { width: 50 });
-      doc.text(String(l.qty), 412, y + 6, { width: 34, align: "right" });
+      doc.text(l.product_title.slice(0, 42), 100, y + 6, { width: 104 });
+      doc.fontSize(7.5).fillColor("#444");
+      doc.text(l.sku || "-", 208, y + 6, { width: 86 });
+      doc.fontSize(9).fillColor("#000");
+      doc.text(l.color, 298, y + 6, { width: 40 });
+      doc.text(sizeLabel(l.size), 342, y + 6, { width: 38 });
+      doc.text(String(l.qty), 384, y + 6, { width: 26, align: "right" });
       if (extraCols) {
         const pu = l.unit_price;
         const lineTotal = pu * l.qty * (1 - (l.discount_pct || 0) / 100);
         subtotal += lineTotal;
-        doc.text(moneyUsd(usd(pu)), 442, y + 6, { width: 56, align: "right" });
-        doc.text(l.discount_pct ? String(l.discount_pct) : "-", 500, y + 6, { width: 26, align: "right" });
-        doc.text(moneyUsd(usd(lineTotal)), 522, y + 6, { width: 46, align: "right" });
+        doc.text(moneyUsd(usd(pu)), 414, y + 6, { width: 52, align: "right" });
+        doc.text(l.discount_pct ? String(l.discount_pct) : "-", 468, y + 6, { width: 24, align: "right" });
+        doc.text(moneyUsd(usd(lineTotal)), 496, y + 6, { width: 72, align: "right" });
         if (includeTry) {
           doc.fontSize(7).fillColor("#999");
-          doc.text(`${money(lineTotal)} ₺`, 522, y + 18, { width: 46, align: "right" });
+          doc.text(`${money(lineTotal)} ₺`, 496, y + 18, { width: 72, align: "right" });
           doc.fontSize(9).fillColor("#000");
         }
       }
