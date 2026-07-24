@@ -183,10 +183,10 @@ export async function PATCH(request: Request) {
       if (unitPrice <= 0) {
         return NextResponse.json({ error: "Birim fiyat gerekli" }, { status: 400 });
       }
-      const sizes = await getNebimVariantSizes(itemCode, colorCode);
-      if (sizes.length === 0) {
-        return NextResponse.json({ error: "Bu ürün/renk için beden bulunamadı" }, { status: 400 });
-      }
+      // lenient: if NEBIM has no size rows for this color, still add a single
+      // line so admin editing is never blocked (Murathan 2026-07-24)
+      let sizes = await getNebimVariantSizes(itemCode, colorCode);
+      if (sizes.length === 0) sizes = [""];
       const baseSku = colorCode ? `${itemCode}-${colorCode}` : itemCode;
       const image = `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`;
 

@@ -315,8 +315,15 @@ export async function buildOrderPdf(
       y += 10;
     }
   } else {
+    // keep each product's sizes together (warehouse order is only for picking)
+    const sorted = [...lines].sort(
+      (a, b) =>
+        a.product_title.localeCompare(b.product_title, "tr") ||
+        a.color.localeCompare(b.color, "tr") ||
+        a.size.localeCompare(b.size, "tr")
+    );
     drawHeader(true);
-    renderLines(lines, true);
+    renderLines(sorted, true);
 
     // totals
     ensureSpace(80, true);
