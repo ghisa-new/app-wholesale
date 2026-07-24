@@ -180,7 +180,7 @@ export async function POST(request: Request) {
       .prepare(
         "SELECT product_title, sku, color, size, qty, warehouse_code FROM order_lines WHERE order_id = ?"
       )
-      .all(orderId) as Array<{ product_title: string; color: string; size: string; qty: number; warehouse_code: string }>;
+      .all(orderId) as Array<{ product_title: string; sku: string; color: string; size: string; qty: number; warehouse_code: string }>;
     for (const l of glines) {
       const key = l.warehouse_code || "?";
       (whGroups[key] ??= []).push({ title: l.product_title, sku: l.sku, color: l.color, size: l.size, qty: l.qty });
