@@ -39,6 +39,9 @@ interface OrderRow {
   telegram: string;
   contact_email: string;
   curr_acc_code: string;
+  country: string;
+  city: string;
+  address: string;
 }
 
 interface LineRow {
@@ -57,7 +60,7 @@ interface LineRow {
 function loadOrder(orderId: number): { order: OrderRow; lines: LineRow[] } | null {
   const order = queryOne<OrderRow>(
     `SELECT o.order_id, o.status, o.notes, o.total_amount, o.discount_pct, o.discount_amount, datetime(o.created_at, '+3 hours') AS created_at,
-            u.email, u.name, u.company, u.phone, u.whatsapp, u.telegram, u.contact_email, u.curr_acc_code
+            u.email, u.name, u.company, u.phone, u.whatsapp, u.telegram, u.contact_email, u.curr_acc_code, u.country, u.city, u.address
      FROM orders o JOIN users u ON u.id = o.user_id WHERE o.order_id = ?`,
     [orderId]
   );
@@ -221,6 +224,8 @@ export async function buildOrderPdf(
     order.whatsapp ? `WhatsApp: ${order.whatsapp}` : "",
     order.telegram ? `Telegram: ${order.telegram}` : "",
     order.phone ? `Tel: ${order.phone}` : "",
+    order.address ? `${order.address}` : "",
+    [order.city, order.country].filter(Boolean).join(", "),
   ].filter(Boolean);
   for (const bit of contactBits) {
     doc.text(String(bit), 40, y);

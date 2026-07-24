@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       return NextResponse.json(await getCustomerStats(statsFor.trim()));
     }
     const customers = queryAll(
-      `SELECT id, email, name, company, phone, role, curr_acc_code, password_plain, whatsapp, telegram, contact_email, created_at
+      `SELECT id, email, name, company, phone, role, curr_acc_code, password_plain, whatsapp, telegram, contact_email, country, city, address, created_at
        FROM users ORDER BY role = 'admin' DESC, company, name`
     );
     return NextResponse.json({ customers });
@@ -87,6 +87,9 @@ export async function PATCH(request: Request) {
       ["whatsapp", "whatsapp"],
       ["telegram", "telegram"],
       ["contact_email", "contactEmail"],
+      ["country", "country"],
+      ["city", "city"],
+      ["address", "address"],
     ] as const) {
       if (b[key] !== undefined) {
         sets.push(`${col} = ?`);

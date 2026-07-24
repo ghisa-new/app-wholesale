@@ -32,12 +32,17 @@ export async function POST(request: Request) {
     if (!b.name?.trim()) {
       return NextResponse.json({ error: "İsim gerekli" }, { status: 400 });
     }
+    for (const [f, lbl] of [["country", "Ülke"], ["city", "Şehir"], ["address", "Adres"]] as const) {
+      if (!b[f]?.trim()) {
+        return NextResponse.json({ error: `${lbl} gerekli` }, { status: 400 });
+      }
+    }
     if (queryOne("SELECT id FROM users WHERE lower(email) = ?", [email])) {
       return NextResponse.json({ error: "Bu e-posta zaten kayıtlı" }, { status: 409 });
     }
     const res = run(
-      `INSERT INTO users (email, password_hash, password_plain, name, company, phone, whatsapp, telegram, role)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'customer')`,
+      `INSERT INTO users (email, password_hash, password_plain, name, company, phone, whatsapp, telegram, country, city, address, role)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'customer')`,
       [
         email,
         hashSync(password, 10),
@@ -47,6 +52,9 @@ export async function POST(request: Request) {
         (b.phone || "").trim(),
         (b.whatsapp || "").trim(),
         (b.telegram || "").trim(),
+        b.country.trim(),
+        b.city.trim(),
+        b.address.trim(),
       ]
     );
     const id = Number(res.lastInsertRowid);

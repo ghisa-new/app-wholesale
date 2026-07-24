@@ -33,6 +33,9 @@ interface Customer {
   whatsapp: string;
   telegram: string;
   contact_email: string;
+  country: string;
+  city: string;
+  address: string;
   created_at: string;
 }
 interface Stats {
@@ -540,6 +543,11 @@ function CustomersTab() {
                 )}
                 {c.telegram && (
                   <span className="text-[11px] bg-sky-50 border border-sky-200 rounded px-1.5 py-0.5">✈️ {c.telegram}</span>
+                )}
+                {(c.city || c.country || c.address) && (
+                  <span className="text-[11px] text-gray-500 basis-full mt-0.5">
+                    📍 {[c.address, c.city, c.country].filter(Boolean).join(", ")}
+                  </span>
                 )}
                 {c.curr_acc_code ? (
                   <button
