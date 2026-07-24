@@ -612,14 +612,20 @@ function OrdersTab() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [open, setOpen] = useState<number | null>(null);
   const [withTry, setWithTry] = useState(false);
+  const [refreshedAt, setRefreshedAt] = useState<string>("");
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/orders");
     const json = await res.json();
-    if (res.ok) setOrders(json.orders);
+    if (res.ok) {
+      setOrders(json.orders);
+      setRefreshedAt(new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }));
+    }
   }, []);
   useEffect(() => {
     load();
+    const t = setInterval(load, 30000); // new orders appear without reopening
+    return () => clearInterval(t);
   }, [load]);
 
   const lineAction = async (orderId: number, body: Record<string, unknown>) => {
@@ -640,11 +646,18 @@ function OrdersTab() {
     load();
   };
 
-  if (orders.length === 0)
-    return <p className="text-gray-400 text-sm py-8 text-center">Henüz sipariş yok.</p>;
-
   return (
     <div className="space-y-2">
+      <div className="flex items-center gap-3 mb-1">
+        <span className="text-sm font-bold">{orders.length} sipariş</span>
+        <button onClick={load} className="text-xs px-2.5 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+          ⟳ Yenile
+        </button>
+        {refreshedAt && <span className="text-[11px] text-gray-400">son güncelleme {refreshedAt}</span>}
+      </div>
+      {orders.length === 0 && (
+        <p className="text-gray-400 text-sm py-8 text-center">Henüz sipariş yok.</p>
+      )}
       {orders.map((o) => (
         <div key={o.order_id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
           <button
