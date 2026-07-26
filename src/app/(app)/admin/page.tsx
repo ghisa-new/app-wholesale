@@ -616,6 +616,95 @@ const ORDER_LABEL: Record<string, string> = {
   cancelled: "İptal",
 };
 
+function NewOrderForm({ onCreated }: { onCreated: (orderId: number) => void }) {
+  const [openForm, setOpenForm] = useState(false);
+  const [customers, setCustomers] = useState<Array<{ id: number; company: string; name: string; email: string }>>([]);
+  const [q, setQ] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    if (!openForm || customers.length > 0) return;
+    fetch("/api/admin/customers")
+      .then((r) => r.json())
+      .then((j) => setCustomers(j.customers || []))
+      .catch(() => {});
+  }, [openForm, customers.length]);
+
+  const matches = q.trim().length < 1
+    ? []
+    : customers
+        .filter((c) =>
+          `${c.company} ${c.name} ${c.email}`.toLowerCase().includes(q.trim().toLowerCase())
+        )
+        .slice(0, 8);
+
+  const create = async (userId: number) => {
+    setBusy(true);
+    setErr("");
+    try {
+      const res = await fetch("/api/admin/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Oluşturulamadı");
+      setOpenForm(false);
+      setQ("");
+      onCreated(json.orderId);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Oluşturulamadı");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl p-3">
+      {!openForm ? (
+        <button
+          onClick={() => setOpenForm(true)}
+          className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg"
+        >
+          + Yeni Sipariş
+        </button>
+      ) : (
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-bold">Yeni sipariş — müşteri seçin</span>
+            <button onClick={() => { setOpenForm(false); setQ(""); setErr(""); }} className="text-xs text-gray-400">✕ kapat</button>
+          </div>
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Firma / isim / e-posta ara…"
+            autoFocus
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-2"
+          />
+          {err && <p className="text-xs text-red-600 mb-1">{err}</p>}
+          <div className="space-y-1">
+            {matches.map((c) => (
+              <button
+                key={c.id}
+                disabled={busy}
+                onClick={() => create(c.id)}
+                className="w-full text-left px-3 py-2 border border-gray-100 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+              >
+                <span className="text-sm font-medium">{c.company || c.name}</span>
+                <span className="text-xs text-gray-400 ml-2">{c.email}</span>
+              </button>
+            ))}
+            {q.trim().length >= 1 && matches.length === 0 && (
+              <p className="text-xs text-gray-400 py-2">Müşteri bulunamadı.</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OrdersTab() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [open, setOpen] = useState<number | null>(null);
@@ -656,6 +745,11 @@ function OrdersTab() {
 
   return (
     <div className="space-y-2">
+      <NewOrderForm
+        onCreated={(orderId) => {
+          load().then(() => setOpen(orderId));
+        }}
+      />
       <div className="flex items-center gap-3 mb-1">
         <span className="text-sm font-bold">{orders.length} sipariş</span>
         <button onClick={load} className="text-xs px-2.5 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">

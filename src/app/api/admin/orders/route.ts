@@ -245,3 +245,39 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Güncellenemedi" }, { status: 500 });
   }
 }
+
+// POST { userId } — create an EMPTY order on behalf of a customer. The admin
+// then fills it with the normal line tools (NEBIM search, lots, discounts).
+// It shows up in the customer's own "Siparişlerim" immediately (my-orders
+// lists by user_id), including the proforma download.
+export async function POST(request: Request) {
+  const admin = await requireAdmin(request);
+  if (!admin) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
+  try {
+    const b = (await request.json()) as { userId?: number };
+    if (!b.userId) {
+      return NextResponse.json({ error: "Müşteri gerekli" }, { status: 400 });
+    }
+    const customer = queryOne<{ id: number; company: string; name: string }>(
+      "SELECT id, company, name FROM users WHERE id = ?",
+      [b.userId]
+    );
+    if (!customer) {
+      return NextResponse.json({ error: "Müşteri bulunamadı" }, { status: 404 });
+    }
+    const res = run(
+      `INSERT INTO orders (user_id, status, notes, total_amount, currency)
+       VALUES (?, 'pending', ?, 0, 'TRY')`,
+      [customer.id, `Sipariş yönetici tarafından oluşturuldu (${admin.email})`]
+    );
+    const orderId = Number(res.lastInsertRowid);
+    return NextResponse.json({
+      ok: true,
+      orderId,
+      customer: customer.company || customer.name,
+    });
+  } catch (err) {
+    console.error("Admin order create error:", err);
+    return NextResponse.json({ error: "Oluşturulamadı" }, { status: 500 });
+  }
+}
