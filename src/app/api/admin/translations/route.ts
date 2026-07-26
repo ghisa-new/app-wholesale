@@ -1,6 +1,7 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import { queryAll, queryOne, run } from "@/lib/db";
+import { queryAll, run } from "@/lib/db";
 
 async function requireAdmin(request: Request) {
   const user = await getUserFromRequest(request);
@@ -8,74 +9,90 @@ async function requireAdmin(request: Request) {
   return user;
 }
 
-interface Row {
-  handle: string;
-  locale: string;
-  title: string;
-  description_html: string;
+function textHash(text: string): string {
+  return crypto.createHash("sha1").update(text).digest("hex");
 }
 
-// GET ?q= — search products by ANY language (TR/EN/AR title or description);
-// returns each matching product with all three locale versions.
+// GET ?q=&offset= — UNIQUE translated strings (the translation memory), each
+// once, regardless of how many products share it. Empty q lists everything.
+// Search matches Turkish source OR the EN/AR translation.
 export async function GET(request: Request) {
   const user = await requireAdmin(request);
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
-  const q = (new URL(request.url).searchParams.get("q") || "").trim();
-  if (q.length < 2) return NextResponse.json({ items: [] });
+  const url = new URL(request.url);
+  const q = (url.searchParams.get("q") || "").trim();
+  const offset = Math.max(0, Number(url.searchParams.get("offset")) || 0);
+  const LIMIT = 50;
   const like = `%${q}%`;
-  const handles = queryAll<{ handle: string }>(
-    `SELECT handle, MAX(updated_at) mu FROM product_i18n
-     WHERE title LIKE ? OR description_html LIKE ?
-     GROUP BY handle ORDER BY mu DESC LIMIT 40`,
-    [like, like]
-  ).map((r) => r.handle);
-  if (handles.length === 0) return NextResponse.json({ items: [] });
 
-  const ph = handles.map(() => "?").join(",");
-  const rows = queryAll<Row>(
-    `SELECT handle, locale, title, description_html FROM product_i18n WHERE handle IN (${ph})`,
-    handles
+  const rows = queryAll<{
+    source_hash: string;
+    source_text: string;
+    en: string | null;
+    ar: string | null;
+    used_by: number;
+  }>(
+    `SELECT source_hash, source_text,
+            MAX(CASE WHEN locale = 'en' THEN translated_text END) AS en,
+            MAX(CASE WHEN locale = 'ar' THEN translated_text END) AS ar,
+            (SELECT COUNT(*) FROM product_i18n p
+             WHERE p.locale = 'tr'
+               AND (p.title = source_text OR p.description_html = source_text)) AS used_by
+     FROM tx_memory
+     GROUP BY source_hash
+     HAVING (? = '' OR source_text LIKE ? OR en LIKE ? OR ar LIKE ?)
+     ORDER BY LENGTH(source_text), source_text
+     LIMIT ${LIMIT + 1} OFFSET ?`,
+    [q, like, like, like, offset]
   );
-  const byHandle = new Map<string, Record<string, { title: string; descriptionHtml: string }>>();
-  for (const r of rows) {
-    const m = byHandle.get(r.handle) ?? {};
-    m[r.locale] = { title: r.title, descriptionHtml: r.description_html };
-    byHandle.set(r.handle, m);
-  }
-  const items = handles.map((h) => ({ handle: h, ...byHandle.get(h) }));
-  return NextResponse.json({ items });
+
+  const hasMore = rows.length > LIMIT;
+  const items = rows.slice(0, LIMIT).map((r) => ({
+    hash: r.source_hash,
+    tr: r.source_text,
+    en: r.en || "",
+    ar: r.ar || "",
+    usedBy: r.used_by,
+  }));
+  return NextResponse.json({ items, hasMore, nextOffset: offset + LIMIT });
 }
 
-// PUT { handle, locale, title, descriptionHtml } — save a manual edit; the
-// batch won't overwrite it unless the Turkish source itself changes.
+// PUT { tr, locale, text } — save a manual edit of ONE string; it updates the
+// translation memory and propagates to EVERY product whose Turkish title or
+// description is that string. Marked manual so the batch never overwrites it.
 export async function PUT(request: Request) {
   const user = await requireAdmin(request);
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 403 });
   try {
-    const b = (await request.json()) as {
-      handle?: string;
-      locale?: string;
-      title?: string;
-      descriptionHtml?: string;
-    };
-    if (!b.handle || (b.locale !== "en" && b.locale !== "ar")) {
-      return NextResponse.json({ error: "handle ve locale (en|ar) gerekli" }, { status: 400 });
+    const b = (await request.json()) as { tr?: string; locale?: string; text?: string };
+    if (!b.tr || (b.locale !== "en" && b.locale !== "ar")) {
+      return NextResponse.json({ error: "tr ve locale (en|ar) gerekli" }, { status: 400 });
     }
-    // tie the edit to the current TR source hash so the batch treats it as current
-    const tr = queryOne<{ source_hash: string }>(
-      "SELECT source_hash FROM product_i18n WHERE handle = ? AND locale = 'tr'",
-      [b.handle]
-    );
+    const text = (b.text || "").trim();
+    const hash = textHash(b.tr);
     run(
-      `INSERT INTO product_i18n (handle, locale, title, description_html, source_hash, manual, updated_at)
-       VALUES (?, ?, ?, ?, ?, 1, datetime('now'))
-       ON CONFLICT(handle, locale) DO UPDATE SET
-         title = excluded.title, description_html = excluded.description_html,
-         source_hash = COALESCE(excluded.source_hash, product_i18n.source_hash),
-         manual = 1, updated_at = datetime('now')`,
-      [b.handle, b.locale, (b.title || "").trim(), b.descriptionHtml || "", tr?.source_hash || ""]
+      `INSERT INTO tx_memory (locale, source_hash, source_text, translated_text)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(locale, source_hash) DO UPDATE SET translated_text = excluded.translated_text`,
+      [b.locale, hash, b.tr, text]
     );
-    return NextResponse.json({ ok: true });
+    // propagate to all products sharing this Turkish title / description
+    const titleRes = run(
+      `UPDATE product_i18n SET title = ?, manual = 1, updated_at = datetime('now')
+       WHERE locale = ? AND handle IN
+         (SELECT handle FROM product_i18n WHERE locale = 'tr' AND title = ?)`,
+      [text, b.locale, b.tr]
+    );
+    const descRes = run(
+      `UPDATE product_i18n SET description_html = ?, manual = 1, updated_at = datetime('now')
+       WHERE locale = ? AND handle IN
+         (SELECT handle FROM product_i18n WHERE locale = 'tr' AND description_html = ?)`,
+      [text, b.locale, b.tr]
+    );
+    return NextResponse.json({
+      ok: true,
+      productsUpdated: (titleRes.changes || 0) + (descRes.changes || 0),
+    });
   } catch (err) {
     console.error("Translation edit error:", err);
     return NextResponse.json({ error: "Kaydedilemedi" }, { status: 500 });

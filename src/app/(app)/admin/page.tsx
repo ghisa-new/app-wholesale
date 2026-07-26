@@ -1002,92 +1002,130 @@ function TranslateTab() {
   );
 }
 
-interface TxItem {
-  handle: string;
-  tr?: { title: string; descriptionHtml: string };
-  en?: { title: string; descriptionHtml: string };
-  ar?: { title: string; descriptionHtml: string };
+interface TxString {
+  hash: string;
+  tr: string;
+  en: string;
+  ar: string;
+  usedBy: number;
 }
 
 function TranslationEditor() {
   const [q, setQ] = useState("");
-  const [items, setItems] = useState<TxItem[]>([]);
+  const [items, setItems] = useState<TxString[]>([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [nextOffset, setNextOffset] = useState(0);
   const [open, setOpen] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
 
-  const search = async (term: string) => {
-    setQ(term);
-    if (term.trim().length < 2) { setItems([]); return; }
+  const load = useCallback(async (term: string, offset: number, append: boolean) => {
     setSearching(true);
     try {
-      const res = await fetch(`/api/admin/translations?q=${encodeURIComponent(term)}`);
-      if (res.ok) setItems((await res.json()).items);
+      const res = await fetch(
+        `/api/admin/translations?q=${encodeURIComponent(term)}&offset=${offset}`
+      );
+      if (res.ok) {
+        const j = await res.json();
+        setItems((prev) => (append ? [...prev, ...j.items] : j.items));
+        setHasMore(j.hasMore);
+        setNextOffset(j.nextOffset);
+      }
     } finally {
       setSearching(false);
     }
+  }, []);
+
+  useEffect(() => {
+    load("", 0, false); // everything we've translated, from the start
+  }, [load]);
+
+  const search = (term: string) => {
+    setQ(term);
+    setOpen(null);
+    load(term.trim(), 0, false);
   };
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 max-w-3xl">
       <h3 className="text-sm font-bold mb-1">Çevirileri Düzenle</h3>
       <p className="text-xs text-gray-400 mb-3">
-        Türkçe, İngilizce veya Arapça herhangi bir kelimeyle arayın; İngilizce ve Arapça
-        çevirileri (başlık ve açıklama) düzenleyin.
+        Çevrilen her metin BİR kez listelenir; birden çok üründe kullanılan bir isim tek
+        satırdır ve düzenleyince hepsine uygulanır. Türkçe, İngilizce veya Arapça arayın.
       </p>
       <input
         value={q}
         onChange={(e) => search(e.target.value)}
-        placeholder="Ara: ürün adı / kelime (TR, EN veya AR)…"
+        placeholder="Ara (TR, EN veya AR)… boş bırakınca hepsi listelenir"
         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-3"
       />
-      {searching && <p className="text-xs text-gray-400">Aranıyor…</p>}
       <div className="space-y-1.5">
         {items.map((it) => (
-          <div key={it.handle} className="border border-gray-100 rounded-lg">
+          <div key={it.hash} className="border border-gray-100 rounded-lg">
             <button
-              onClick={() => setOpen(open === it.handle ? null : it.handle)}
+              onClick={() => setOpen(open === it.hash ? null : it.hash)}
               className="w-full text-left px-3 py-2 flex items-center gap-2"
             >
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium truncate">{it.tr?.title || it.handle}</div>
+                <div className="text-sm font-medium truncate">{stripHtml(it.tr)}</div>
                 <div className="text-[11px] text-gray-400 truncate">
-                  EN: {it.en?.title || "—"} · AR: {it.ar?.title || "—"}
+                  EN: {stripHtml(it.en) || "—"} · AR: {stripHtml(it.ar) || "—"}
                 </div>
               </div>
-              <span className="text-gray-300 text-xs">{open === it.handle ? "▲" : "▼"}</span>
+              {it.usedBy > 1 && (
+                <span className="text-[10px] bg-amber-50 border border-amber-200 text-amber-700 rounded px-1.5 py-0.5 whitespace-nowrap">
+                  {it.usedBy} ürün
+                </span>
+              )}
+              <span className="text-gray-300 text-xs">{open === it.hash ? "▲" : "▼"}</span>
             </button>
-            {open === it.handle && <EditRow item={it} />}
+            {open === it.hash && <EditRow item={it} />}
           </div>
         ))}
-        {q.trim().length >= 2 && !searching && items.length === 0 && (
+        {!searching && items.length === 0 && (
           <p className="text-xs text-gray-400 text-center py-4">Sonuç yok.</p>
         )}
       </div>
+      {searching && <p className="text-xs text-gray-400 mt-2">Yükleniyor…</p>}
+      {hasMore && !searching && (
+        <button
+          onClick={() => load(q.trim(), nextOffset, true)}
+          className="mt-3 w-full py-2 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50"
+        >
+          Daha fazla yükle
+        </button>
+      )}
     </div>
   );
 }
 
-function EditRow({ item }: { item: TxItem }) {
-  const [en, setEn] = useState({ title: item.en?.title || "", descriptionHtml: item.en?.descriptionHtml || "" });
-  const [ar, setAr] = useState({ title: item.ar?.title || "", descriptionHtml: item.ar?.descriptionHtml || "" });
-  const [saved, setSaved] = useState("");
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
 
-  const save = async (locale: "en" | "ar", data: { title: string; descriptionHtml: string }) => {
+function EditRow({ item }: { item: TxString }) {
+  const [en, setEn] = useState(item.en);
+  const [ar, setAr] = useState(item.ar);
+  const [saved, setSaved] = useState("");
+  const long = item.tr.length > 80 || item.tr.includes("<");
+
+  const save = async (locale: "en" | "ar", text: string) => {
     const res = await fetch("/api/admin/translations", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ handle: item.handle, locale, ...data }),
+      body: JSON.stringify({ tr: item.tr, locale, text }),
     });
-    if (res.ok) { setSaved(locale); setTimeout(() => setSaved(""), 2000); }
+    if (res.ok) {
+      const j = await res.json();
+      setSaved(`${locale}:${j.productsUpdated}`);
+      setTimeout(() => setSaved(""), 2500);
+    }
   };
 
   return (
     <div className="px-3 pb-3 border-t border-gray-100 pt-2 space-y-3">
-      <div className="text-[11px] text-gray-500 bg-gray-50 rounded p-2">
-        <span className="font-bold">TR (kaynak):</span> {item.tr?.title}
-        {item.tr?.descriptionHtml && (
-          <div className="mt-1 text-gray-400" dangerouslySetInnerHTML={{ __html: item.tr.descriptionHtml }} />
-        )}
+      <div className="text-[11px] text-gray-500 bg-gray-50 rounded p-2 max-h-32 overflow-y-auto">
+        <span className="font-bold">TR (kaynak):</span>{" "}
+        {long ? <div dangerouslySetInnerHTML={{ __html: item.tr }} /> : item.tr}
       </div>
       {([
         ["en", "İngilizce", en, setEn] as const,
@@ -1096,23 +1134,28 @@ function EditRow({ item }: { item: TxItem }) {
         <div key={loc} className="space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-600">{label}</span>
-            {saved === loc && <span className="text-[11px] text-green-600">✓ kaydedildi</span>}
+            {saved.startsWith(loc) && (
+              <span className="text-[11px] text-green-600">
+                ✓ kaydedildi ({saved.split(":")[1]} ürüne uygulandı)
+              </span>
+            )}
           </div>
-          <input
-            value={val.title}
-            onChange={(e) => setVal((v) => ({ ...v, title: e.target.value }))}
-            placeholder="Başlık"
-            dir={loc === "ar" ? "rtl" : "ltr"}
-            className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
-          />
-          <textarea
-            value={val.descriptionHtml}
-            onChange={(e) => setVal((v) => ({ ...v, descriptionHtml: e.target.value }))}
-            placeholder="Açıklama (HTML)"
-            rows={4}
-            dir={loc === "ar" ? "rtl" : "ltr"}
-            className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs font-mono"
-          />
+          {long ? (
+            <textarea
+              value={val}
+              onChange={(e) => setVal(e.target.value)}
+              rows={5}
+              dir={loc === "ar" ? "rtl" : "ltr"}
+              className="w-full border border-gray-300 rounded px-2 py-1.5 text-xs font-mono"
+            />
+          ) : (
+            <input
+              value={val}
+              onChange={(e) => setVal(e.target.value)}
+              dir={loc === "ar" ? "rtl" : "ltr"}
+              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm"
+            />
+          )}
           <button
             onClick={() => save(loc, val)}
             className="px-3 py-1 bg-gray-900 text-white text-xs font-bold rounded"
@@ -1124,7 +1167,6 @@ function EditRow({ item }: { item: TxItem }) {
     </div>
   );
 }
-
 
 const TEMP_COLORS: Record<string, string> = {
   FIRE: "bg-red-100 text-red-700",
