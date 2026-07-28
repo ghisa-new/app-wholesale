@@ -188,7 +188,14 @@ export async function PATCH(request: Request) {
       let sizes = await getNebimVariantSizes(itemCode, colorCode);
       if (sizes.length === 0) sizes = [""];
       const baseSku = colorCode ? `${itemCode}-${colorCode}` : itemCode;
-      const image = `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`;
+      let image = `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`;
+      try {
+        const shopProd = await getProductByHandle(baseSku.toLowerCase());
+        const shopImg = shopProd?.images?.[0]?.url;
+        if (shopImg) image = shopImg; // exact color from the store
+      } catch {
+        /* Shopify hiccup — CDN guess stands */
+      }
 
       const whAvail = new Map<string, number>();
       try {

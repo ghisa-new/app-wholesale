@@ -113,18 +113,44 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Lin
     const buf = await fetchOne(url);
     if (buf) return { buf: await shrink(buf) };
   }
-  // Last resort: this exact color was never photographed — use a sibling
-  // color of the same model so the line still has a visual anchor, and SAY SO.
+  // The CDN misses many colors that Shopify has — the store handle is
+  // MODEL-COLOR lowercased (e.g. 3611t9297-mv), exact color, right photo.
   if (line.sku) {
     const parts = line.sku.split("-");
     if (parts.length >= 3) {
       const model = parts.slice(0, -2).join("-");
       const ownColor = parts[parts.length - 2];
+      const shop = await shopifyColorImage(`${model}-${ownColor}`);
+      if (shop) return { buf: shop };
+      // Last resort: this exact color has no photo ANYWHERE — use a sibling
+      // color of the same model as a visual anchor, and SAY SO under it.
       const sib = await siblingColorImage(model, ownColor);
       if (sib) return { buf: sib.buf, borrowedColor: sib.color };
     }
   }
   return null;
+}
+
+const shopifyImgCache = new Map<string, Promise<Buffer | null>>();
+
+function shopifyColorImage(baseSku: string): Promise<Buffer | null> {
+  const handle = baseSku.toLowerCase();
+  const cached = shopifyImgCache.get(handle);
+  if (cached) return cached;
+  const p = (async () => {
+    try {
+      const { getProductByHandle } = await import("./products");
+      const prod = await getProductByHandle(handle);
+      const url = prod?.images?.[0]?.url;
+      if (!url) return null;
+      const buf = await fetchOne(url.includes("?") ? `${url}&width=200` : `${url}?width=200`);
+      return buf ? await shrink(buf) : null;
+    } catch {
+      return null;
+    }
+  })();
+  shopifyImgCache.set(handle, p);
+  return p;
 }
 
 /** CDN photos are full-resolution (~1.5 MB); embed at PI size or the PDF
