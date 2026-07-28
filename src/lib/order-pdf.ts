@@ -89,7 +89,14 @@ async function fetchOne(url: string): Promise<Buffer | null> {
 
 /** stored url first; older orders (no image_url) fall back to the verioku CDN
  *  by base sku (MODEL-COLOR), then the low-quality model photo */
-async function fetchImage(line: { image_url: string; sku: string }): Promise<Buffer | null> {
+interface LineImage {
+  buf: Buffer;
+  /** set when the photo shows a DIFFERENT color of the same model — printed
+   *  under the image so nobody mistakes it for the ordered color */
+  borrowedColor?: string;
+}
+
+async function fetchImage(line: { image_url: string; sku: string }): Promise<LineImage | null> {
   const candidates: string[] = [];
   if (line.image_url) {
     candidates.push(
@@ -104,18 +111,17 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Buf
   }
   for (const url of candidates) {
     const buf = await fetchOne(url);
-    if (buf) return shrink(buf);
+    if (buf) return { buf: await shrink(buf) };
   }
   // Last resort: this exact color was never photographed — use a sibling
-  // color of the same model so the line still has a visual anchor (the Renk
-  // column states the true color).
+  // color of the same model so the line still has a visual anchor, and SAY SO.
   if (line.sku) {
     const parts = line.sku.split("-");
     if (parts.length >= 3) {
       const model = parts.slice(0, -2).join("-");
       const ownColor = parts[parts.length - 2];
-      const buf = await siblingColorImage(model, ownColor);
-      if (buf) return buf;
+      const sib = await siblingColorImage(model, ownColor);
+      if (sib) return { buf: sib.buf, borrowedColor: sib.color };
     }
   }
   return null;
@@ -133,9 +139,12 @@ async function shrink(buf: Buffer): Promise<Buffer> {
   }
 }
 
-const siblingCache = new Map<string, Promise<Buffer | null>>();
+const siblingCache = new Map<string, Promise<{ buf: Buffer; color: string } | null>>();
 
-function siblingColorImage(model: string, ownColor: string): Promise<Buffer | null> {
+function siblingColorImage(
+  model: string,
+  ownColor: string
+): Promise<{ buf: Buffer; color: string } | null> {
   const cached = siblingCache.get(model);
   if (cached) return cached;
   const p = (async () => {
@@ -145,7 +154,7 @@ function siblingColorImage(model: string, ownColor: string): Promise<Buffer | nu
       for (const c of colors) {
         if (c === ownColor) continue;
         const buf = await fetchOne(`https://verioku.com/products/${encodeURIComponent(`${model}-${c}`)}/0.jpg`);
-        if (buf) return shrink(buf);
+        if (buf) return { buf: await shrink(buf), color: c };
       }
     } catch {
       // NEBIM unreachable — no image, keep the PDF going
@@ -228,7 +237,7 @@ export async function buildOrderPdf(
     }
   }
 
-  const images = new Map<number, Buffer | null>();
+  const images = new Map<number, LineImage | null>();
   await Promise.all(
     lines.map(async (l) => {
       images.set(l.line_id, await fetchImage(l));
@@ -321,7 +330,16 @@ export async function buildOrderPdf(
       const img = images.get(l.line_id);
       if (img) {
         try {
-          doc.image(img, 40, y, { fit: [IMG_W, ROW_H - 8] });
+          const h = img.borrowedColor ? ROW_H - 18 : ROW_H - 8;
+          doc.image(img.buf, 40, y, { fit: [IMG_W, h] });
+          if (img.borrowedColor) {
+            doc.font("R").fontSize(5.5).fillColor("#b45309");
+            doc.text(
+              lang === "en" ? `photo: ${img.borrowedColor}` : `görsel: ${img.borrowedColor}`,
+              36, y + ROW_H - 14, { width: IMG_W + 8, align: "center" }
+            );
+            doc.fillColor("#000");
+          }
         } catch {
           /* corrupt image — skip */
         }

@@ -146,7 +146,7 @@ export async function PATCH(request: Request) {
         if (whAvail.size === 0) return [["", units]];
         const out: Array<[string, number]> = [];
         let left = units;
-        for (const wh of ["1-1-1", "1-1-4", "1-2-23"]) {
+        for (const wh of ["1-1-1", "1-2-23"]) {
           if (left <= 0) break;
           const key = `${wh}|${size}`;
           const avail = whAvail.get(key) ?? 0;
@@ -204,7 +204,7 @@ export async function PATCH(request: Request) {
         if (whAvail.size === 0) return [["", units]];
         const out: Array<[string, number]> = [];
         let left = units;
-        for (const wh of ["1-1-1", "1-1-4", "1-2-23"]) {
+        for (const wh of ["1-1-1", "1-2-23"]) {
           if (left <= 0) break;
           const key = `${wh}|${size}`;
           const avail = whAvail.get(key) ?? 0;

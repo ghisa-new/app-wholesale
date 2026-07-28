@@ -1,22 +1,29 @@
 import fs from "fs";
 import path from "path";
+import { getLiveCatalogStock } from "./nebim-live";
 
 /**
- * Dynamic wholesale catalog eligibility — served by cell-product-intel
- * (get_wholesale_eligibility): Merkez + e-com combined stock, one row per
- * item+color holding a full size run.
+ * Dynamic wholesale catalog eligibility.
  *
- * Murathan's exclusion rule (2026-07-23): drop only items that are
- * FIRE **and** first arrived at Merkez within the last 14 days **and**
- * have fewer than 20 lots. Everything else with >=1 full seri is offered.
+ * STOCK comes from the NEBIM Integrator stored proc (one full-catalog call,
+ * Merkez 1-1-1 + e-com 1-2-23, positive cells only) — NEVER from the 5433
+ * SQL copy, which misses recent Merkez receipts (Murathan 2026-07-28).
+ * A full seri = every size of the color present; lots = min across sizes;
+ * only colors with >= MIN_LOTS full seri are offered.
+ *
+ * TEMPERATURE (FIRE gating) still comes from cell-product-intel as a
+ * best-effort overlay: FIRE items that arrived at Merkez within 14 days and
+ * hold < 20 lots are kept off the catalog. If the cell is unreachable the
+ * overlay is skipped (fail open) — stock alone decides.
  *
  * Refreshed every 6h in-process; last good copy persisted to
- * data/eligibility.json so a cell outage never empties the catalog.
+ * data/eligibility.json so an integrator outage never empties the catalog.
  */
 
 const CELL_URL =
   process.env.CELL_PRODUCT_INTEL_URL || "http://46.62.246.160:3215";
 const TTL_MS = 6 * 60 * 60 * 1000;
+const MIN_LOTS = 5; // Murathan 2026-07-23: only full 5+ seri products are offered
 const FALLBACK_FILE = path.join(process.cwd(), "data", "eligibility.json");
 
 export interface EligibilityRow {
@@ -47,20 +54,65 @@ function buildMap(rows: EligibilityRow[]): Map<string, EligibilityRow> {
   return map;
 }
 
-async function fetchFromCell(): Promise<EligibilityRow[]> {
-  const res = await fetch(`${CELL_URL}/call/get_wholesale_eligibility`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ min_lots: 5 }), // Murathan 2026-07-23: only full 5+ seri products are offered
-    signal: AbortSignal.timeout(240000),
-  });
-  if (!res.ok) throw new Error(`cell ${res.status}`);
-  const json = (await res.json()) as {
-    ok: boolean;
-    data?: { rows: EligibilityRow[] };
-  };
-  if (!json.ok || !json.data?.rows) throw new Error("cell envelope not ok");
-  return json.data.rows;
+/** Aggregate the proc's positive stock cells into per-color eligibility rows. */
+async function fetchRows(): Promise<EligibilityRow[]> {
+  const cells = await getLiveCatalogStock();
+
+  const byColor = new Map<
+    string,
+    { sizes: Record<string, number>; arrived: string | null }
+  >();
+  for (const c of cells) {
+    const k = `${c.itemCode}|${c.color}`;
+    const e = byColor.get(k) ?? { sizes: {}, arrived: null };
+    e.sizes[c.size] = (e.sizes[c.size] ?? 0) + c.qty;
+    // age rule keys off the Merkez arrival
+    if (c.warehouse === "1-1-1" && c.arrivedDate) {
+      if (!e.arrived || c.arrivedDate > e.arrived) e.arrived = c.arrivedDate;
+    }
+    byColor.set(k, e);
+  }
+
+  // temperature overlay from the cell — best-effort
+  const tempMap = new Map<string, { temp: string; firstCentral: string | null }>();
+  try {
+    const res = await fetch(`${CELL_URL}/call/get_wholesale_eligibility`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ min_lots: 1 }),
+      signal: AbortSignal.timeout(240000),
+    });
+    if (res.ok) {
+      const json = (await res.json()) as {
+        ok: boolean;
+        data?: { rows: Array<{ itemCode: string; colorCode: string; temp: string; firstCentral: string | null }> };
+      };
+      for (const r of json.data?.rows ?? []) {
+        tempMap.set(`${r.itemCode}|${r.colorCode}`, { temp: r.temp, firstCentral: r.firstCentral });
+      }
+    }
+  } catch (err) {
+    console.error("Temperature overlay unavailable (fail open):", err);
+  }
+
+  const rows: EligibilityRow[] = [];
+  for (const [k, e] of byColor) {
+    const qtys = Object.values(e.sizes);
+    if (qtys.length < 2) continue; // a lone size is not a seri
+    const lots = Math.min(...qtys);
+    if (lots < MIN_LOTS) continue;
+    const [itemCode, colorCode] = k.split("|");
+    const t = tempMap.get(k);
+    rows.push({
+      itemCode,
+      colorCode,
+      sizes: e.sizes,
+      lots,
+      temp: t?.temp ?? "UNKNOWN",
+      firstCentral: t?.firstCentral ?? e.arrived,
+    });
+  }
+  return rows;
 }
 
 /** baseSku (MODEL-COLOR, upper) -> eligibility row. Null only if we have
@@ -68,7 +120,8 @@ async function fetchFromCell(): Promise<EligibilityRow[]> {
 export async function getEligibilityMap(): Promise<Map<string, EligibilityRow> | null> {
   if (cache && Date.now() - cache.at < TTL_MS) return cache.map;
   try {
-    const rows = await fetchFromCell();
+    const rows = await fetchRows();
+    if (rows.length === 0) throw new Error("integrator returned empty catalog");
     cache = { map: buildMap(rows), at: Date.now() };
     try {
       fs.writeFileSync(FALLBACK_FILE, JSON.stringify({ at: Date.now(), rows }));

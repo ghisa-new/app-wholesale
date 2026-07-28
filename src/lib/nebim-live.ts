@@ -8,7 +8,7 @@ const BASE = process.env.NEBIM_INTEGRATOR_URL || "http://95.9.94.84:1515";
 const USER = process.env.NEBIM_INTEGRATOR_USER || "";
 const PASS = process.env.NEBIM_INTEGRATOR_PASSWORD || "";
 const DB = process.env.NEBIM_INTEGRATOR_DB || "GHİSA_V3";
-const PAIRS = "M:1-1-1,U:1-1-4,S99:1-2-23"; // central = Merkez + Uretim depot, plus e-com
+const PAIRS = "M:1-1-1,S99:1-2-23"; // wholesale sells from Merkez + e-com depot
 
 let sessionBase: string | null = null;
 
@@ -57,14 +57,14 @@ async function runStockProc(productCode: string, base: string): Promise<LiveStoc
       { Name: "BufferUnits", Value: "0" },
       { Name: "PriceBasePriceCode", Value: "7" },
       { Name: "MinPrice", Value: "0" },
-      { Name: "ProductCode", Value: productCode },
+      ...(productCode ? [{ Name: "ProductCode", Value: productCode }] : []),
     ],
   };
   const res = await fetch(`${base}/IntegratorService/RunProc`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(60000),
+    signal: AbortSignal.timeout(240000),
   });
   const text = await res.text();
   if (/session.*(invalid|expired)/i.test(text)) {
@@ -109,7 +109,7 @@ export async function getLiveStockByModel(
 }
 
 export interface LiveWarehouseStock {
-  warehouse: string; // "1-1-1" | "1-1-4" | "1-2-23"
+  warehouse: string; // "1-1-1" | "1-2-23"
   color: string;
   size: string;
   qty: number;
@@ -135,6 +135,41 @@ export async function getLiveStockPerWarehouse(
           const [warehouse, color, size] = k.split("|");
           return { warehouse, color, size, qty };
         });
+    } catch (e) {
+      sessionBase = null;
+      if (attempt === 1) throw e;
+    }
+  }
+  return [];
+}
+
+export interface LiveCatalogCell {
+  warehouse: string;
+  itemCode: string;
+  color: string;
+  size: string;
+  qty: number;
+  arrivedDate: string | null;
+}
+
+/** ONE proc call, no ProductCode → the whole catalog's live positive stock
+ *  cells for Merkez + e-com. ~13k rows in ~4s. This is the ONLY stock source
+ *  for wholesale eligibility — the 5433 SQL copy misses recent Merkez
+ *  receipts (Murathan 2026-07-28: integrator only, never DB, for stock). */
+export async function getLiveCatalogStock(): Promise<LiveCatalogCell[]> {
+  if (!USER || !PASS) throw new Error("NEBIM_INTEGRATOR_USER/PASSWORD yok");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      if (!sessionBase) sessionBase = await connect();
+      const rows = await runStockProc("", sessionBase);
+      return rows.map((r) => ({
+        warehouse: r.WarehouseCode,
+        itemCode: r.ProductCode,
+        color: r.ColorCode,
+        size: r.Size,
+        qty: Number(r.RawQty) || 0,
+        arrivedDate: (r as unknown as { ArrivedDate?: string }).ArrivedDate ?? null,
+      }));
     } catch (e) {
       sessionBase = null;
       if (attempt === 1) throw e;
