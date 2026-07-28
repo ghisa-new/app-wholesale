@@ -362,11 +362,9 @@ export async function buildOrderPdf(
       const img = images.get(l.line_id);
       if (img) {
         try {
-          const caption = img.borrowedColor
-            ? (lang === "en" ? `photo: ${img.borrowedColor}` : `görsel: ${img.borrowedColor}`)
-            : img.generic
-              ? (lang === "en" ? "representative photo" : "temsili görsel")
-              : null;
+          const caption = img.borrowedColor || img.generic
+            ? (lang === "en" ? "color may be wrong" : "renk yanlış olabilir")
+            : null;
           doc.image(img.buf, 40, y, { fit: [IMG_W, caption ? ROW_H - 18 : ROW_H - 8] });
           if (caption) {
             doc.font("R").fontSize(5.5).fillColor("#b45309");
