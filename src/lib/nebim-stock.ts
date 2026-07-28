@@ -196,3 +196,23 @@ export async function getNebimVariantSizes(itemCode: string, colorCode: string):
       return a.localeCompare(b, "tr");
     });
 }
+
+/** Distinct NEBIM color codes of a model — used by the PDF image fallback. */
+export async function getNebimModelColors(itemCode: string): Promise<string[]> {
+  try {
+    const p = await getPool();
+    const req = p.request();
+    req.input("item", mssql.NVarChar, itemCode);
+    const r = await req.query(`
+      SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+      SELECT DISTINCT LTRIM(RTRIM(ColorCode)) AS ColorCode
+      FROM prItemBarcode WITH (NOLOCK)
+      WHERE ItemTypeCode = 1 AND ItemCode = @item
+    `);
+    return (r.recordset as Array<{ ColorCode: string }>)
+      .map((x) => x.ColorCode)
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}

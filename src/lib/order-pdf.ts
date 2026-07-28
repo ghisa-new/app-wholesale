@@ -106,7 +106,42 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Buf
     const buf = await fetchOne(url);
     if (buf) return buf;
   }
+  // Last resort: this exact color was never photographed — use a sibling
+  // color of the same model so the line still has a visual anchor (the Renk
+  // column states the true color).
+  if (line.sku) {
+    const parts = line.sku.split("-");
+    if (parts.length >= 3) {
+      const model = parts.slice(0, -2).join("-");
+      const ownColor = parts[parts.length - 2];
+      const buf = await siblingColorImage(model, ownColor);
+      if (buf) return buf;
+    }
+  }
   return null;
+}
+
+const siblingCache = new Map<string, Promise<Buffer | null>>();
+
+function siblingColorImage(model: string, ownColor: string): Promise<Buffer | null> {
+  const cached = siblingCache.get(model);
+  if (cached) return cached;
+  const p = (async () => {
+    try {
+      const { getNebimModelColors } = await import("./nebim-stock");
+      const colors = await getNebimModelColors(model);
+      for (const c of colors) {
+        if (c === ownColor) continue;
+        const buf = await fetchOne(`https://verioku.com/products/${encodeURIComponent(`${model}-${c}`)}/0.jpg`);
+        if (buf) return buf;
+      }
+    } catch {
+      // NEBIM unreachable — no image, keep the PDF going
+    }
+    return null;
+  })();
+  siblingCache.set(model, p);
+  return p;
 }
 
 const L = {
