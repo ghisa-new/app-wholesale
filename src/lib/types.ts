@@ -37,6 +37,8 @@ export interface WholesaleMeta {
   lotCount: number;
   discount: number;
   seriDistribution?: Record<string, number>;
+  /** NEBIM toptan per-piece price; when null the price is retail/2 */
+  toptanPrice?: number | null;
 }
 
 export interface Product {

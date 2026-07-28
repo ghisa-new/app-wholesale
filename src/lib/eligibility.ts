@@ -33,6 +33,8 @@ export interface EligibilityRow {
   lots: number;
   temp: string;
   firstCentral: string | null;
+  /** NEBIM toptan (BasePriceCode 3) per-piece price; null → seller falls back to retail/2 */
+  toptanPrice: number | null;
 }
 
 let cache: { map: Map<string, EligibilityRow>; at: number } | null = null;
@@ -60,11 +62,12 @@ async function fetchRows(): Promise<EligibilityRow[]> {
 
   const byColor = new Map<
     string,
-    { sizes: Record<string, number>; arrived: string | null }
+    { sizes: Record<string, number>; arrived: string | null; price: number | null }
   >();
   for (const c of cells) {
     const k = `${c.itemCode}|${c.color}`;
-    const e = byColor.get(k) ?? { sizes: {}, arrived: null };
+    const e = byColor.get(k) ?? { sizes: {}, arrived: null, price: null };
+    if (c.listPrice != null && c.listPrice > 0) e.price = c.listPrice;
     e.sizes[c.size] = (e.sizes[c.size] ?? 0) + c.qty;
     // age rule keys off the Merkez arrival
     if (c.warehouse === "1-1-1" && c.arrivedDate) {
@@ -110,6 +113,7 @@ async function fetchRows(): Promise<EligibilityRow[]> {
       lots,
       temp: t?.temp ?? "UNKNOWN",
       firstCentral: t?.firstCentral ?? e.arrived,
+      toptanPrice: e.price,
     });
   }
   return rows;

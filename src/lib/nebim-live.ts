@@ -43,6 +43,7 @@ interface LiveStockRow {
   Size: string;
   RawQty: number;
   EligibleQty: number;
+  ListPrice: number | null;
 }
 
 async function runStockProc(productCode: string, base: string): Promise<LiveStockRow[]> {
@@ -55,7 +56,7 @@ async function runStockProc(productCode: string, base: string): Promise<LiveStoc
       { Name: "NoSaleMode", Value: "window" },
       { Name: "NoSaleDays", Value: "-36500" },
       { Name: "BufferUnits", Value: "0" },
-      { Name: "PriceBasePriceCode", Value: "7" },
+      { Name: "PriceBasePriceCode", Value: "3" }, // toptan list price rides along
       { Name: "MinPrice", Value: "0" },
       ...(productCode ? [{ Name: "ProductCode", Value: productCode }] : []),
     ],
@@ -150,6 +151,8 @@ export interface LiveCatalogCell {
   size: string;
   qty: number;
   arrivedDate: string | null;
+  /** NEBIM toptan list price (BasePriceCode 3), item-level; null when unset */
+  listPrice: number | null;
 }
 
 /** ONE proc call, no ProductCode → the whole catalog's live positive stock
@@ -169,6 +172,7 @@ export async function getLiveCatalogStock(): Promise<LiveCatalogCell[]> {
         size: r.Size,
         qty: Number(r.RawQty) || 0,
         arrivedDate: (r as unknown as { ArrivedDate?: string }).ArrivedDate ?? null,
+        listPrice: r.ListPrice != null ? Number(r.ListPrice) : null,
       }));
     } catch (e) {
       sessionBase = null;

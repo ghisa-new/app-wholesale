@@ -82,10 +82,13 @@ const WHOLESALE_MULTIPLIER = 0.5;
 
 function applyWholesalePricing(
   price: { amount: string; currencyCode: string },
-  discount: number
+  discount: number,
+  toptanPrice?: number | null
 ): { amount: string; currencyCode: string } {
   const retail = parseFloat(price.amount);
-  const wholesale = retail * WHOLESALE_MULTIPLIER * (1 - discount / 100);
+  // NEBIM toptan list price wins; retail/2 only when NEBIM has none
+  const base = toptanPrice && toptanPrice > 0 ? toptanPrice : retail * WHOLESALE_MULTIPLIER;
+  const wholesale = base * (1 - discount / 100);
   return { amount: wholesale.toFixed(2), currencyCode: price.currencyCode };
 }
 
@@ -112,8 +115,8 @@ function transformProduct(
 
   const discount = discountOverrideFor(raw.handle) ?? meta?.discount ?? 0;
   const retailPrice = raw.priceRange.minVariantPrice;
-  const wholesaleBase = applyWholesalePricing(retailPrice, 0);
-  const wholesalePrice = applyWholesalePricing(retailPrice, discount);
+  const wholesaleBase = applyWholesalePricing(retailPrice, 0, meta?.toptanPrice);
+  const wholesalePrice = applyWholesalePricing(retailPrice, discount, meta?.toptanPrice);
 
   return {
     id: raw.id,
@@ -253,6 +256,7 @@ export async function getWholesaleProducts(): Promise<Product[]> {
           lotCount: e?.lots ?? 0,
           discount: 0,
           seriDistribution: e ? seriFromSizes(e.sizes) : {},
+          toptanPrice: e?.toptanPrice ?? null,
         })
       );
     }
