@@ -104,7 +104,7 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Buf
   }
   for (const url of candidates) {
     const buf = await fetchOne(url);
-    if (buf) return buf;
+    if (buf) return shrink(buf);
   }
   // Last resort: this exact color was never photographed — use a sibling
   // color of the same model so the line still has a visual anchor (the Renk
@@ -121,6 +121,18 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Buf
   return null;
 }
 
+/** CDN photos are full-resolution (~1.5 MB); embed at PI size or the PDF
+ *  balloons past what mailboxes accept. */
+async function shrink(buf: Buffer): Promise<Buffer> {
+  if (buf.length < 60_000) return buf;
+  try {
+    const sharp = (await import("sharp")).default;
+    return await sharp(buf).resize({ width: 300 }).jpeg({ quality: 72 }).toBuffer();
+  } catch {
+    return buf;
+  }
+}
+
 const siblingCache = new Map<string, Promise<Buffer | null>>();
 
 function siblingColorImage(model: string, ownColor: string): Promise<Buffer | null> {
@@ -133,7 +145,7 @@ function siblingColorImage(model: string, ownColor: string): Promise<Buffer | nu
       for (const c of colors) {
         if (c === ownColor) continue;
         const buf = await fetchOne(`https://verioku.com/products/${encodeURIComponent(`${model}-${c}`)}/0.jpg`);
-        if (buf) return buf;
+        if (buf) return shrink(buf);
       }
     } catch {
       // NEBIM unreachable — no image, keep the PDF going
