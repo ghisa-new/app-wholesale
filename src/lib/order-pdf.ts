@@ -97,36 +97,36 @@ interface LineImage {
 }
 
 async function fetchImage(line: { image_url: string; sku: string }): Promise<LineImage | null> {
-  const candidates: string[] = [];
+  // 1) the URL stored at order time (checkout lines: Shopify variant image)
   if (line.image_url) {
-    candidates.push(
+    const buf = await fetchOne(
       line.image_url.includes("?") ? `${line.image_url}&width=200` : `${line.image_url}?width=200`
     );
+    if (buf) return { buf: await shrink(buf) };
   }
-  if (line.sku) {
-    const baseSku = line.sku.split("-").slice(0, -1).join("-");
-    const model = baseSku.split("-").slice(0, -1).join("-") || baseSku;
-    if (baseSku) candidates.push(`https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`);
-    if (model) candidates.push(`https://verioku.com/low-quality/${encodeURIComponent(model)}/${encodeURIComponent(model)}.jpeg`);
+  const parts = (line.sku || "").split("-");
+  const baseSku = parts.slice(0, -1).join("-");
+  const model = parts.length >= 3 ? parts.slice(0, -2).join("-") : baseSku;
+  const ownColor = parts.length >= 3 ? parts[parts.length - 2] : "";
+  // 2) LIVE Shopify image for the exact color — preferred over the CDN copy,
+  //    which is a point-in-time snapshot and can go stale between sweeps
+  if (model && ownColor) {
+    const shop = await shopifyColorImage(`${model}-${ownColor}`);
+    if (shop) return { buf: shop };
   }
-  for (const url of candidates) {
+  // 3) CDN snapshot, then the low-quality model photo
+  for (const url of [
+    baseSku ? `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg` : "",
+    model ? `https://verioku.com/low-quality/${encodeURIComponent(model)}/${encodeURIComponent(model)}.jpeg` : "",
+  ].filter(Boolean)) {
     const buf = await fetchOne(url);
     if (buf) return { buf: await shrink(buf) };
   }
-  // The CDN misses many colors that Shopify has — the store handle is
-  // MODEL-COLOR lowercased (e.g. 3611t9297-mv), exact color, right photo.
-  if (line.sku) {
-    const parts = line.sku.split("-");
-    if (parts.length >= 3) {
-      const model = parts.slice(0, -2).join("-");
-      const ownColor = parts[parts.length - 2];
-      const shop = await shopifyColorImage(`${model}-${ownColor}`);
-      if (shop) return { buf: shop };
-      // Last resort: this exact color has no photo ANYWHERE — use a sibling
-      // color of the same model as a visual anchor, and SAY SO under it.
-      const sib = await siblingColorImage(model, ownColor);
-      if (sib) return { buf: sib.buf, borrowedColor: sib.color };
-    }
+  // 4) Last resort: this exact color has no photo ANYWHERE — use a sibling
+  //    color of the same model as a visual anchor, and SAY SO under it.
+  if (model && ownColor) {
+    const sib = await siblingColorImage(model, ownColor);
+    if (sib) return { buf: sib.buf, borrowedColor: sib.color };
   }
   return null;
 }
