@@ -248,10 +248,11 @@ export default function CartPage() {
 
           <div className="space-y-4">
             <div className="bg-white p-4 border border-line">
-              <div className="flex justify-between text-lg font-bold mb-4">
+              <div className="flex justify-between text-lg font-bold mb-1">
                 <span>{t("total")}</span>
                 <span>{formatPrice(getCartTotal())}</span>
               </div>
+              <p className="text-[11px] text-gray-400 mb-4">{t("taxExcluded")}</p>
 
               <div className="mb-4">
                 <label className="block text-sm text-gray-700 mb-1">

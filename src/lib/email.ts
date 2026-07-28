@@ -101,6 +101,7 @@ export async function sendOrderEmail(
           </tr>
         </tfoot>
       </table>
+      <p style="color:#9ca3af;font-size:12px;margin-top:4px;">Fiyatlara KDV dahil değildir.</p>
 
       ${notes ? `<h3 style="color:#111827;">Notlar</h3><p style="background:#f5f5f5;padding:12px;border-radius:4px;">${notes}</p>` : ""}
 

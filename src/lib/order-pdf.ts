@@ -216,7 +216,7 @@ const L = {
     grand: "GENEL TOPLAM:",
     notes: "Notlar:",
     disclaimer:
-      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar USD olup belirtilen kurla hesaplanmıştır; KDV durumu sipariş onayında netleşir.",
+      "Bu belge proforma faturadır; mali belge niteliği taşımaz. Fiyatlar USD olup belirtilen kurla hesaplanmıştır. Fiyatlara KDV dahil değildir.",
   },
   en: {
     proforma: "PROFORMA INVOICE",
@@ -236,7 +236,7 @@ const L = {
     grand: "GRAND TOTAL:",
     notes: "Notes:",
     disclaimer:
-      "This document is a proforma invoice and is not a fiscal document. Prices are in USD at the stated exchange rate; VAT is confirmed on order approval.",
+      "This document is a proforma invoice and is not a fiscal document. Prices are in USD at the stated exchange rate. Prices exclude VAT.",
   },
 } as const;
 

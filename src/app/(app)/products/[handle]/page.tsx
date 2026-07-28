@@ -312,6 +312,7 @@ export default function ProductDetailPage({
                 {t("lotPriceLabel")} ({totalPieces} {t("pieces")})
               </span>
             </div>
+            <p className="text-[11px] text-gray-400 mt-1">{t("taxExcluded")}</p>
           </div>
 
           {/* Sibling colors */}
