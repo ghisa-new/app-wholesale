@@ -94,6 +94,8 @@ interface LineImage {
   /** set when the photo shows a DIFFERENT color of the same model — printed
    *  under the image so nobody mistakes it for the ordered color */
   borrowedColor?: string;
+  /** model-level photo of unknown color — captioned as representative */
+  generic?: boolean;
 }
 
 async function fetchImage(line: { image_url: string; sku: string }): Promise<LineImage | null> {
@@ -114,19 +116,23 @@ async function fetchImage(line: { image_url: string; sku: string }): Promise<Lin
     const shop = await shopifyColorImage(`${model}-${ownColor}`);
     if (shop) return { buf: shop };
   }
-  // 3) CDN snapshot, then the low-quality model photo
-  for (const url of [
-    baseSku ? `https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg` : "",
-    model ? `https://verioku.com/low-quality/${encodeURIComponent(model)}/${encodeURIComponent(model)}.jpeg` : "",
-  ].filter(Boolean)) {
-    const buf = await fetchOne(url);
+  // 3) CDN snapshot for the exact color
+  if (baseSku) {
+    const buf = await fetchOne(`https://verioku.com/products/${encodeURIComponent(baseSku)}/0.jpg`);
     if (buf) return { buf: await shrink(buf) };
   }
-  // 4) Last resort: this exact color has no photo ANYWHERE — use a sibling
-  //    color of the same model as a visual anchor, and SAY SO under it.
+  // 4) no exact-color photo ANYWHERE — a sibling color of the same model,
+  //    labeled with the color it actually shows
   if (model && ownColor) {
     const sib = await siblingColorImage(model, ownColor);
     if (sib) return { buf: sib.buf, borrowedColor: sib.color };
+  }
+  // 5) very last: the model-level low-quality photo. Its color is UNKNOWN —
+  //    it once rendered a LACİVERT suit for an ANT line with no warning, so
+  //    it must always carry the "representative" caption.
+  if (model) {
+    const buf = await fetchOne(`https://verioku.com/low-quality/${encodeURIComponent(model)}/${encodeURIComponent(model)}.jpeg`);
+    if (buf) return { buf: await shrink(buf), generic: true };
   }
   return null;
 }
@@ -356,14 +362,15 @@ export async function buildOrderPdf(
       const img = images.get(l.line_id);
       if (img) {
         try {
-          const h = img.borrowedColor ? ROW_H - 18 : ROW_H - 8;
-          doc.image(img.buf, 40, y, { fit: [IMG_W, h] });
-          if (img.borrowedColor) {
+          const caption = img.borrowedColor
+            ? (lang === "en" ? `photo: ${img.borrowedColor}` : `görsel: ${img.borrowedColor}`)
+            : img.generic
+              ? (lang === "en" ? "representative photo" : "temsili görsel")
+              : null;
+          doc.image(img.buf, 40, y, { fit: [IMG_W, caption ? ROW_H - 18 : ROW_H - 8] });
+          if (caption) {
             doc.font("R").fontSize(5.5).fillColor("#b45309");
-            doc.text(
-              lang === "en" ? `photo: ${img.borrowedColor}` : `görsel: ${img.borrowedColor}`,
-              36, y + ROW_H - 14, { width: IMG_W + 8, align: "center" }
-            );
+            doc.text(caption, 36, y + ROW_H - 14, { width: IMG_W + 8, align: "center" });
             doc.fillColor("#000");
           }
         } catch {
