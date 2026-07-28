@@ -8,7 +8,7 @@ const BASE = process.env.NEBIM_INTEGRATOR_URL || "http://95.9.94.84:1515";
 const USER = process.env.NEBIM_INTEGRATOR_USER || "";
 const PASS = process.env.NEBIM_INTEGRATOR_PASSWORD || "";
 const DB = process.env.NEBIM_INTEGRATOR_DB || "GHİSA_V3";
-const PAIRS = "M:1-1-1,S99:1-2-23"; // wholesale sells from Merkez + e-com depot
+const PAIRS = "M:1-1-1,U:1-1-4,S99:1-2-23"; // central = Merkez + Uretim depot, plus e-com
 
 let sessionBase: string | null = null;
 
@@ -109,7 +109,7 @@ export async function getLiveStockByModel(
 }
 
 export interface LiveWarehouseStock {
-  warehouse: string; // "1-1-1" | "1-2-23"
+  warehouse: string; // "1-1-1" | "1-1-4" | "1-2-23"
   color: string;
   size: string;
   qty: number;

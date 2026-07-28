@@ -118,7 +118,7 @@ export async function POST(request: Request) {
       if (whAvail.size === 0 || !sku) return [["", units]];
       const out: Array<[string, number]> = [];
       let left = units;
-      for (const wh of ["1-1-1", "1-2-23"]) {
+      for (const wh of ["1-1-1", "1-1-4", "1-2-23"]) {
         if (left <= 0) break;
         const key = `${wh}|${sku}`;
         const avail = whAvail.get(key) ?? 0;

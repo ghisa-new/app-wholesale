@@ -168,7 +168,7 @@ const L = {
     size: "Beden",
     qty: "Adet",
     unit: "Birim $",
-    disc: "İnd.%",
+    disc: "İnd",
     amount: "Tutar $",
     subtotal: "Ara Toplam:",
     orderDisc: (d: number) => `Sipariş İndirimi (%${d}):`,
@@ -188,7 +188,7 @@ const L = {
     size: "Size",
     qty: "Qty",
     unit: "Unit $",
-    disc: "Disc.%",
+    disc: "Disc",
     amount: "Total $",
     subtotal: "Subtotal:",
     orderDisc: (d: number) => `Order Discount (${d}%):`,
@@ -421,7 +421,9 @@ export async function buildOrderPdf(
     );
     doc.fillColor("#000");
     y += 18;
-    doc.font("R").fontSize(8).fillColor("#888").text(t.disclaimer, 40, y, { width: 520 });
+    doc.font("R").fontSize(8).fillColor("#888");
+    doc.text(t.disclaimer, 40, y, { width: 520 });
+    y += doc.heightOfString(t.disclaimer, { width: 520 }) + 4;
     doc.fillColor("#000");
   }
 
