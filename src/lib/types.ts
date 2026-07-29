@@ -39,6 +39,9 @@ export interface WholesaleMeta {
   seriDistribution?: Record<string, number>;
   /** NEBIM toptan per-piece price; when null the price is retail/2 */
   toptanPrice?: number | null;
+  totalSold?: number;
+  last30dSales?: number;
+  firstCentral?: string | null;
 }
 
 export interface Product {
@@ -58,6 +61,8 @@ export interface Product {
   retailPrice: Money;
   campaignDiscount: number;
   seriDistribution: Record<string, number>;
+  /** merchandising score for the default "featured" sort */
+  merchScore?: number;
   images: ShopifyImage[];
   variants: ProductVariant[];
   siblings: SiblingProduct[];

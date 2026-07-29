@@ -35,6 +35,8 @@ export interface EligibilityRow {
   firstCentral: string | null;
   /** NEBIM toptan (BasePriceCode 3) per-piece price; null → seller falls back to retail/2 */
   toptanPrice: number | null;
+  totalRetailSold: number;
+  last30dSales: number;
 }
 
 let cache: { map: Map<string, EligibilityRow>; at: number } | null = null;
@@ -77,7 +79,7 @@ async function fetchRows(): Promise<EligibilityRow[]> {
   }
 
   // temperature overlay from the cell — best-effort
-  const tempMap = new Map<string, { temp: string; firstCentral: string | null }>();
+  const tempMap = new Map<string, { temp: string; firstCentral: string | null; totalRetailSold: number; last30dSales: number }>();
   try {
     const res = await fetch(`${CELL_URL}/call/get_wholesale_eligibility`, {
       method: "POST",
@@ -88,10 +90,15 @@ async function fetchRows(): Promise<EligibilityRow[]> {
     if (res.ok) {
       const json = (await res.json()) as {
         ok: boolean;
-        data?: { rows: Array<{ itemCode: string; colorCode: string; temp: string; firstCentral: string | null }> };
+        data?: { rows: Array<{ itemCode: string; colorCode: string; temp: string; firstCentral: string | null; totalRetailSold?: number; last30dSales?: number }> };
       };
       for (const r of json.data?.rows ?? []) {
-        tempMap.set(`${r.itemCode}|${r.colorCode}`, { temp: r.temp, firstCentral: r.firstCentral });
+        tempMap.set(`${r.itemCode}|${r.colorCode}`, {
+          temp: r.temp,
+          firstCentral: r.firstCentral,
+          totalRetailSold: r.totalRetailSold ?? 0,
+          last30dSales: r.last30dSales ?? 0,
+        });
       }
     }
   } catch (err) {
@@ -114,6 +121,8 @@ async function fetchRows(): Promise<EligibilityRow[]> {
       temp: t?.temp ?? "UNKNOWN",
       firstCentral: t?.firstCentral ?? e.arrived,
       toptanPrice: e.price,
+      totalRetailSold: t?.totalRetailSold ?? 0,
+      last30dSales: t?.last30dSales ?? 0,
     });
   }
   return rows;

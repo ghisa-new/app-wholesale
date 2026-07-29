@@ -9,7 +9,7 @@ import { Category, normalizeType } from "@/lib/categories";
 import Link from "next/link";
 import Image from "next/image";
 
-type SortOption = "newest" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
+type SortOption = "featured" | "newest" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
 
 function stripGhisaPrefix(title: string): string {
   return title.replace(/^Ghisa\s+/i, "");
@@ -30,7 +30,7 @@ function ProductsPageInner() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState<SortOption>("newest");
+  const [sort, setSort] = useState<SortOption>("featured");
   const PAGE = 48;
   const [visibleCount, setVisibleCount] = useState(48);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -77,6 +77,8 @@ function ProductsPageInner() {
   const sorted = useMemo(() => {
     const items = [...filtered];
     switch (sort) {
+      case "featured":
+        return items.sort((a, b) => (b.merchScore ?? 0) - (a.merchScore ?? 0));
       case "price-asc":
         return items.sort(
           (a, b) => parseFloat(a.price.amount) - parseFloat(b.price.amount)
@@ -208,6 +210,7 @@ function ProductsPageInner() {
               onChange={(e) => setSort(e.target.value as SortOption)}
               className="border border-line px-3 py-2 text-sm text-ink-soft bg-white focus:outline-none focus:border-ink"
             >
+              <option value="featured">{t("sortFeatured")}</option>
               <option value="newest">{t("sortNewest")}</option>
               <option value="price-asc">{t("sortPriceLow")}</option>
               <option value="price-desc">{t("sortPriceHigh")}</option>

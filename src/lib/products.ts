@@ -80,6 +80,28 @@ interface ShopifyRawProduct {
 
 const WHOLESALE_MULTIPLIER = 0.5;
 
+/** Default-sort merchandising score (Murathan 2026-07-29): bestsellers with
+ *  deep stock (>5 sets), skewed to higher-priced pieces, freshness still
+ *  counts. All components 0..1; weights sum to 1. */
+function computeMerchScore(x: {
+  totalSold: number;
+  last30d: number;
+  lots: number;
+  price: number;
+  firstCentral: string | null;
+}): number {
+  const sales = Math.min(Math.log1p(x.totalSold) / Math.log1p(2000), 1); // "sold great once"
+  const recent = Math.min(x.last30d / 100, 1); // still moving now
+  const stock = Math.min(x.lots / 20, 1); // deep stock ships full orders
+  const price = Math.min(x.price / 6000, 1); // premium over basic tunics
+  let fresh = 0;
+  if (x.firstCentral) {
+    const days = (Date.now() - Date.parse(x.firstCentral)) / 86400000;
+    fresh = days <= 30 ? 1 : Math.max(0, 1 - (days - 30) / 180);
+  }
+  return 0.3 * sales + 0.15 * recent + 0.1 * stock + 0.25 * price + 0.2 * fresh;
+}
+
 function applyWholesalePricing(
   price: { amount: string; currencyCode: string },
   discount: number,
@@ -117,8 +139,16 @@ function transformProduct(
   const retailPrice = raw.priceRange.minVariantPrice;
   const wholesaleBase = applyWholesalePricing(retailPrice, 0, meta?.toptanPrice);
   const wholesalePrice = applyWholesalePricing(retailPrice, discount, meta?.toptanPrice);
+  const merchScore = computeMerchScore({
+    totalSold: meta?.totalSold ?? 0,
+    last30d: meta?.last30dSales ?? 0,
+    lots: meta?.lotCount ?? 0,
+    price: parseFloat(wholesalePrice.amount) || 0,
+    firstCentral: meta?.firstCentral ?? null,
+  });
 
   return {
+    merchScore,
     id: raw.id,
     title: raw.title,
     handle: raw.handle,
@@ -257,6 +287,9 @@ export async function getWholesaleProducts(): Promise<Product[]> {
           discount: 0,
           seriDistribution: e ? seriFromSizes(e.sizes) : {},
           toptanPrice: e?.toptanPrice ?? null,
+          totalSold: e?.totalRetailSold ?? 0,
+          last30dSales: e?.last30dSales ?? 0,
+          firstCentral: e?.firstCentral ?? null,
         })
       );
     }
