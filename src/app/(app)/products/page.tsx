@@ -35,6 +35,7 @@ function ProductsPageInner() {
   const [visibleCount, setVisibleCount] = useState(48);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [season, setSeason] = useState<"" | "ss" | "aw">("");
+  const [q, setQ] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
@@ -59,10 +60,19 @@ function ProductsPageInner() {
   const filtered = useMemo(() => {
     let base = products;
     if (season) base = base.filter((p) => p.season === season);
+    const needle = q.trim().toLocaleLowerCase("tr-TR");
+    if (needle) {
+      base = base.filter(
+        (p) =>
+          p.title.toLocaleLowerCase("tr-TR").includes(needle) ||
+          p.handle.toLowerCase().includes(needle.toLowerCase().replace(/\s+/g, "-")) ||
+          p.handle.toLowerCase().replace(/-/g, "").includes(needle.toLowerCase().replace(/[\s-]+/g, ""))
+      );
+    }
     if (!selectedCategory) return base;
     const target = normalizeType(selectedCategory);
     return base.filter((p) => normalizeType(p.productType) === target);
-  }, [products, selectedCategory, season]);
+  }, [products, selectedCategory, season, q]);
 
   const sorted = useMemo(() => {
     const items = [...filtered];
@@ -165,6 +175,12 @@ function ProductsPageInner() {
               ))}
             </div>
           )}
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder={t("searchProducts")}
+            className="w-full sm:w-64 border border-line px-3 py-2 text-sm bg-white focus:outline-none focus:border-ink"
+          />
           <div className="flex gap-2 w-full sm:w-auto">
             {(
               [
