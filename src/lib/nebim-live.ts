@@ -65,7 +65,7 @@ async function runStockProc(productCode: string, base: string): Promise<LiveStoc
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(240000),
+    signal: AbortSignal.timeout(90000),
   });
   const text = await res.text();
   if (/session.*(invalid|expired)/i.test(text)) {

@@ -85,7 +85,7 @@ async function fetchRows(): Promise<EligibilityRow[]> {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ min_lots: 1 }),
-      signal: AbortSignal.timeout(240000),
+      signal: AbortSignal.timeout(90000),
     });
     if (res.ok) {
       const json = (await res.json()) as {
@@ -128,32 +128,68 @@ async function fetchRows(): Promise<EligibilityRow[]> {
   return rows;
 }
 
-/** baseSku (MODEL-COLOR, upper) -> eligibility row. Null only if we have
- *  neither a fresh fetch nor a persisted fallback. */
-export async function getEligibilityMap(): Promise<Map<string, EligibilityRow> | null> {
-  if (cache && Date.now() - cache.at < TTL_MS) return cache.map;
+let refreshing: Promise<void> | null = null;
+
+/** Fetch fresh rows and update cache + disk. Throws on failure. */
+async function refresh(): Promise<void> {
+  const rows = await fetchRows();
+  if (rows.length === 0) throw new Error("integrator returned empty catalog");
+  cache = { map: buildMap(rows), at: Date.now() };
   try {
-    const rows = await fetchRows();
-    if (rows.length === 0) throw new Error("integrator returned empty catalog");
-    cache = { map: buildMap(rows), at: Date.now() };
-    try {
-      fs.writeFileSync(FALLBACK_FILE, JSON.stringify({ at: Date.now(), rows }));
-    } catch {
-      /* persist is best-effort */
-    }
+    fs.writeFileSync(FALLBACK_FILE, JSON.stringify({ at: Date.now(), rows }));
+  } catch {
+    /* persist is best-effort */
+  }
+}
+
+/** Kick off a background refresh at most once at a time. Never awaited by a
+ *  request — NEBIM being slow must never block the catalog. */
+function triggerRefresh(): void {
+  if (refreshing) return;
+  refreshing = refresh()
+    .catch((err) => console.error("Eligibility background refresh failed:", err))
+    .finally(() => {
+      refreshing = null;
+    });
+}
+
+/** Seed the in-memory cache from the last good disk copy (stale). */
+function seedFromDisk(): boolean {
+  try {
+    const raw = JSON.parse(fs.readFileSync(FALLBACK_FILE, "utf-8")) as {
+      rows: EligibilityRow[];
+    };
+    cache = { map: buildMap(raw.rows), at: 0 }; // at:0 → treated as stale
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** baseSku (MODEL-COLOR, upper) -> eligibility row. STALE-WHILE-REVALIDATE:
+ *  a request is served from cache/disk instantly and the refresh runs in the
+ *  background, so a slow NEBIM never hangs the storefront. Null only on a true
+ *  cold start with no disk fallback AND the very first fetch failing. */
+export async function getEligibilityMap(): Promise<Map<string, EligibilityRow> | null> {
+  // fresh cache → serve as-is
+  if (cache && Date.now() - cache.at < TTL_MS) return cache.map;
+
+  // no cache yet → try the disk copy so we have something to serve instantly
+  if (!cache) seedFromDisk();
+
+  // any cache (fresh-enough handled above, so this is stale) → serve + refresh
+  if (cache) {
+    triggerRefresh();
     return cache.map;
+  }
+
+  // no cache, no disk copy → must block on the first fetch, once
+  try {
+    await refresh();
+    return cache!.map;
   } catch (err) {
-    console.error("Eligibility fetch failed, using fallback:", err);
-    if (cache) return cache.map; // stale beats empty
-    try {
-      const raw = JSON.parse(fs.readFileSync(FALLBACK_FILE, "utf-8")) as {
-        rows: EligibilityRow[];
-      };
-      cache = { map: buildMap(raw.rows), at: Date.now() - TTL_MS + 15 * 60 * 1000 };
-      return cache.map;
-    } catch {
-      return null;
-    }
+    console.error("Eligibility cold fetch failed, no fallback:", err);
+    return null;
   }
 }
 
