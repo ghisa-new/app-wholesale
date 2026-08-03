@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     // the TR code grants a 3-day access window from Turkish IPs
     const trAccessUntil = isTrToken
       ? new Date(Date.now() + TR_ACCESS_DAYS * 86400000).toISOString()
-      : null;
+      : ""; // column is NOT NULL; "" = no Turkish-IP access
     if (!b.email) return NextResponse.json({ ok: true, gate: true }); // gate check
 
     const email = b.email.trim().toLowerCase();

@@ -86,7 +86,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ ok: true, trAccessUntil: until });
     }
     if (b.revokeTr) {
-      run("UPDATE users SET tr_access_until = NULL WHERE id = ?", [id]);
+      run("UPDATE users SET tr_access_until = '' WHERE id = ?", [id]);
       return NextResponse.json({ ok: true, trAccessUntil: null });
     }
 
