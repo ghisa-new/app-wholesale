@@ -35,3 +35,14 @@ export const REGISTER_TOKEN_DEFAULT = "GHSWH1991";
 export function getRegisterToken(): string {
   return getSetting(REGISTER_TOKEN_KEY, REGISTER_TOKEN_DEFAULT);
 }
+
+export const TR_REGISTER_TOKEN_KEY = "tr_register_token";
+export const TR_REGISTER_TOKEN_DEFAULT = "GHSTR3GUN";
+
+/** Second registration code: grants a 3-day access window from Turkish IPs. */
+export function getTrRegisterToken(): string {
+  return getSetting(TR_REGISTER_TOKEN_KEY, TR_REGISTER_TOKEN_DEFAULT);
+}
+
+/** Days of Turkish-IP access granted by the TR code / an admin grant. */
+export const TR_ACCESS_DAYS = 3;

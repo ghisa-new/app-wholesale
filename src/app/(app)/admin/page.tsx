@@ -36,6 +36,7 @@ interface Customer {
   country: string;
   city: string;
   address: string;
+  tr_access_until: string | null;
   created_at: string;
 }
 interface Stats {
@@ -410,18 +411,22 @@ const EMPTY_FORM = { email: "", password: "", name: "", company: "", phone: "", 
 
 function RegisterTokenCard() {
   const [token, setToken] = useState("");
+  const [trToken, setTrToken] = useState("");
   const [saved, setSaved] = useState("");
   useEffect(() => {
     fetch("/api/admin/settings")
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => d?.registerToken && setToken(d.registerToken))
+      .then((d) => {
+        if (d?.registerToken) setToken(d.registerToken);
+        if (d?.trRegisterToken) setTrToken(d.trRegisterToken);
+      })
       .catch(() => {});
   }, []);
-  const save = async () => {
+  const save = async (body: Record<string, string>) => {
     const res = await fetch("/api/admin/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ registerToken: token }),
+      body: JSON.stringify(body),
     });
     if (res.ok) {
       setSaved("✓ kaydedildi");
@@ -429,19 +434,35 @@ function RegisterTokenCard() {
     }
   };
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-3 flex flex-wrap items-center gap-2">
-      <span className="text-sm font-bold">🔑 Kayıt Anahtarı</span>
-      <span className="text-xs text-gray-400">
-        (girişteki &quot;Kayıt&quot; kutusu bu anahtarı ister — değiştirince eskisi anında geçersizleşir)
-      </span>
-      <input
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
-        className="border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm font-mono w-44"
-      />
-      <button onClick={save} className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg">
-        Kaydet
-      </button>
+    <div className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm font-bold">🔑 Kayıt Anahtarı</span>
+        <span className="text-xs text-gray-400">
+          (girişteki &quot;Kayıt&quot; kutusu bu anahtarı ister — değiştirince eskisi anında geçersizleşir)
+        </span>
+        <input
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          className="border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm font-mono w-44"
+        />
+        <button onClick={() => save({ registerToken: token })} className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg">
+          Kaydet
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 border-t border-gray-100 pt-2">
+        <span className="text-sm font-bold">🇹🇷 3 Gün TR Anahtarı</span>
+        <span className="text-xs text-gray-400">
+          (bu anahtarla kayıt olan Türkiye IP&apos;sinden 3 gün erişebilir; sonra tekrar kapanır)
+        </span>
+        <input
+          value={trToken}
+          onChange={(e) => setTrToken(e.target.value)}
+          className="border border-gray-300 rounded-lg px-2.5 py-1.5 text-sm font-mono w-44"
+        />
+        <button onClick={() => save({ trRegisterToken: trToken })} className="px-3 py-1.5 bg-gray-900 text-white text-xs font-bold rounded-lg">
+          Kaydet
+        </button>
+      </div>
       {saved && <span className="text-xs text-green-700">{saved}</span>}
     </div>
   );
@@ -489,6 +510,15 @@ function CustomersTab() {
   const remove = async (c: Customer) => {
     if (!confirm(`${c.email} hesabı silinsin mi?`)) return;
     await fetch(`/api/admin/customers?id=${c.id}`, { method: "DELETE" });
+    load();
+  };
+
+  const setTrAccess = async (c: Customer, body: Record<string, unknown>) => {
+    await fetch("/api/admin/customers", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: c.id, ...body }),
+    });
     load();
   };
 
@@ -559,6 +589,35 @@ function CustomersTab() {
                 ) : (
                   <span className="text-[11px] text-gray-300">cari kodu yok</span>
                 )}
+                {c.role !== "admin" && (() => {
+                  const until = c.tr_access_until ? Date.parse(c.tr_access_until) : 0;
+                  const active = until > Date.now();
+                  return (
+                    <span className="flex items-center gap-1.5 basis-full mt-0.5">
+                      {active ? (
+                        <span className="text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-700 rounded px-1.5 py-0.5">
+                          🇹🇷 TR erişimi {new Date(until).toLocaleDateString("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" })}&apos;e kadar
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-gray-400">🇹🇷 TR erişimi kapalı</span>
+                      )}
+                      <button
+                        onClick={() => setTrAccess(c, { grantTrDays: 3 })}
+                        className="text-[11px] text-blue-700 underline decoration-dotted"
+                      >
+                        3 gün ver
+                      </button>
+                      {active && (
+                        <button
+                          onClick={() => setTrAccess(c, { revokeTr: true })}
+                          className="text-[11px] text-red-400 hover:text-red-600 underline decoration-dotted"
+                        >
+                          kapat
+                        </button>
+                      )}
+                    </span>
+                  );
+                })()}
                 {c.role !== "admin" && (
                   <button onClick={() => remove(c)} className="ml-auto text-xs text-red-400 hover:text-red-600">
                     Sil

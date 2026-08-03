@@ -118,7 +118,7 @@ function initTables(db: Database.Database) {
   if (!lineNames.has("discount_pct")) {
     db.exec("ALTER TABLE order_lines ADD COLUMN discount_pct REAL NOT NULL DEFAULT 0");
   }
-  for (const col of ["whatsapp", "telegram", "contact_email", "country", "city", "address"]) {
+  for (const col of ["whatsapp", "telegram", "contact_email", "country", "city", "address", "tr_access_until"]) {
     if (!names.has(col)) {
       db.exec(`ALTER TABLE users ADD COLUMN ${col} TEXT NOT NULL DEFAULT ''`);
     }

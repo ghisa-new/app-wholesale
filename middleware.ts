@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { isTurkishIp, clientIpFromHeaders } from "@/lib/geo";
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "dev-secret-change-me"
@@ -8,14 +9,17 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const COOKIE_NAME = "wholesale_token";
 
-// Everything requires a logged-in dealer (Murathan 2026-07-21: full gateway).
-// Only the auth surface itself is public.
-const PUBLIC_PATHS = ["/login", "/forgot", "/reset", "/register"];
+// The auth surface + the region-block page must stay reachable from ANY IP
+// (a Turkish visitor has to be able to reach login/register to get a code).
+const PUBLIC_PATHS = ["/login", "/forgot", "/reset", "/register", "/blocked"];
+
+// Always-allow IPs regardless of geo (office VPN / NEBIM egress).
+const ALLOW_IPS = new Set(["95.9.94.84"]);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow static assets (images, fonts, icons served from /public)
+  // static assets
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
@@ -26,7 +30,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Public: the auth surface only
+  // Public: the auth surface + region page + auth/cron APIs
   if (
     PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/")) ||
     pathname.startsWith("/api/auth/") ||
@@ -46,6 +50,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
+
     // Admin section is server-gated here AND in each /api/admin route
     if (
       (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) &&
@@ -56,6 +61,26 @@ export async function middleware(request: NextRequest) {
       }
       return NextResponse.redirect(new URL("/products", request.url));
     }
+
+    // ── Turkey geo-gate (per-account 3-day allowance) ────────────────────────
+    // Admins always pass. Everyone else on a Turkish IP needs a live trUntil
+    // window (from the TR signup code or an admin grant).
+    if (payload.role !== "admin") {
+      const ip = clientIpFromHeaders(request.headers);
+      if (ip && !ALLOW_IPS.has(ip) && isTurkishIp(ip)) {
+        const trUntil = typeof payload.trUntil === "number" ? payload.trUntil : 0;
+        if (Date.now() >= trUntil) {
+          if (pathname.startsWith("/api/")) {
+            return NextResponse.json(
+              { error: "Bölgenizde erişim kısıtlı", code: "REGION_BLOCKED" },
+              { status: 451 }
+            );
+          }
+          return NextResponse.redirect(new URL("/blocked", request.url));
+        }
+      }
+    }
+
     return NextResponse.next();
   } catch {
     if (pathname.startsWith("/api/")) {

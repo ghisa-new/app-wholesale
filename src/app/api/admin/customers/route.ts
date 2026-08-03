@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       return NextResponse.json(await getCustomerStats(statsFor.trim()));
     }
     const customers = queryAll(
-      `SELECT id, email, name, company, phone, role, curr_acc_code, password_plain, whatsapp, telegram, contact_email, country, city, address, created_at
+      `SELECT id, email, name, company, phone, role, curr_acc_code, password_plain, whatsapp, telegram, contact_email, country, city, address, tr_access_until, created_at
        FROM users ORDER BY role = 'admin' DESC, company, name`
     );
     return NextResponse.json({ customers });
@@ -77,6 +77,19 @@ export async function PATCH(request: Request) {
     const b = (await request.json()) as Record<string, string | number>;
     const id = Number(b.id);
     if (!id) return NextResponse.json({ error: "id gerekli" }, { status: 400 });
+
+    // Turkish-IP access grant/revoke (from the admin panel)
+    if (b.grantTrDays !== undefined) {
+      const days = Math.max(1, Math.min(90, Number(b.grantTrDays) || 0));
+      const until = new Date(Date.now() + days * 86400000).toISOString();
+      run("UPDATE users SET tr_access_until = ? WHERE id = ?", [until, id]);
+      return NextResponse.json({ ok: true, trAccessUntil: until });
+    }
+    if (b.revokeTr) {
+      run("UPDATE users SET tr_access_until = NULL WHERE id = ?", [id]);
+      return NextResponse.json({ ok: true, trAccessUntil: null });
+    }
+
     const sets: string[] = [];
     const params: unknown[] = [];
     for (const [col, key] of [

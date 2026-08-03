@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { hashSync } from "bcryptjs";
 import { queryOne, run } from "@/lib/db";
-import { getRegisterToken } from "@/lib/settings";
+import { getRegisterToken, getTrRegisterToken, TR_ACCESS_DAYS } from "@/lib/settings";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
 import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
 
@@ -16,9 +16,14 @@ export async function POST(request: Request) {
     }
     const b = (await request.json()) as Record<string, string>;
     const token = (b.token || "").trim();
-    if (!token || token !== getRegisterToken()) {
+    const isTrToken = token !== "" && token === getTrRegisterToken();
+    if (!token || (token !== getRegisterToken() && !isTrToken)) {
       return NextResponse.json({ error: "Kayıt anahtarı geçersiz" }, { status: 403 });
     }
+    // the TR code grants a 3-day access window from Turkish IPs
+    const trAccessUntil = isTrToken
+      ? new Date(Date.now() + TR_ACCESS_DAYS * 86400000).toISOString()
+      : null;
     if (!b.email) return NextResponse.json({ ok: true, gate: true }); // gate check
 
     const email = b.email.trim().toLowerCase();
@@ -41,8 +46,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Bu e-posta zaten kayıtlı" }, { status: 409 });
     }
     const res = run(
-      `INSERT INTO users (email, password_hash, password_plain, name, company, phone, whatsapp, telegram, country, city, address, role)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'customer')`,
+      `INSERT INTO users (email, password_hash, password_plain, name, company, phone, whatsapp, telegram, country, city, address, tr_access_until, role)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'customer')`,
       [
         email,
         hashSync(password, 10),
@@ -55,6 +60,7 @@ export async function POST(request: Request) {
         b.country.trim(),
         b.city.trim(),
         b.address.trim(),
+        trAccessUntil,
       ]
     );
     const id = Number(res.lastInsertRowid);
@@ -65,6 +71,7 @@ export async function POST(request: Request) {
       company: (b.company || "").trim(),
       phone: (b.phone || "").trim(),
       role: "customer",
+      trUntil: trAccessUntil ? Date.parse(trAccessUntil) : undefined,
     });
     const response = NextResponse.json({ ok: true, id });
     response.cookies.set(COOKIE_NAME, jwt, {

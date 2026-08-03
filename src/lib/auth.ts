@@ -14,6 +14,8 @@ export interface UserPayload {
   company: string;
   phone: string;
   role: string;
+  /** epoch ms until which this account may access from a Turkish IP (0 = never) */
+  trUntil?: number;
 }
 
 export async function signToken(payload: UserPayload): Promise<string> {

@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       company: string;
       phone: string;
       role: string;
+      tr_access_until: string | null;
     }>("SELECT * FROM users WHERE email = ? COLLATE NOCASE", [email]) ??
       // bare username = e-mail local part (murathan -> murathan@...)
       (!String(email).includes("@")
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
             company: string;
             phone: string;
             role: string;
+            tr_access_until: string | null;
           }>("SELECT * FROM users WHERE email LIKE ? || '@%' COLLATE NOCASE", [email])
         : undefined);
 
@@ -61,6 +63,8 @@ export async function POST(request: Request) {
 
     logActivity({ id: user.id, role: user.role }, "login");
 
+    const trMs = user.tr_access_until ? Date.parse(user.tr_access_until) : NaN;
+    const trUntil = !isNaN(trMs) && trMs > Date.now() ? trMs : undefined;
     const token = await signToken({
       id: user.id,
       email: user.email,
@@ -68,6 +72,7 @@ export async function POST(request: Request) {
       company: user.company,
       phone: user.phone,
       role: user.role,
+      trUntil,
     });
 
     const response = NextResponse.json({
