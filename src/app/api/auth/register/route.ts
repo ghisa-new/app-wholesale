@@ -4,6 +4,7 @@ import { queryOne, run } from "@/lib/db";
 import { getRegisterToken, getTrRegisterToken, TR_ACCESS_DAYS } from "@/lib/settings";
 import { signToken, COOKIE_NAME } from "@/lib/auth";
 import { rateLimit, clientIp, sweep } from "@/lib/rate-limit";
+import { isTurkishIp, clientIpFromHeaders } from "@/lib/geo";
 
 
 // POST {token} — gate check only; POST {token, email, password, ...} — register
@@ -19,6 +20,14 @@ export async function POST(request: Request) {
     const isTrToken = token !== "" && token === getTrRegisterToken();
     if (!token || (token !== getRegisterToken() && !isTrToken)) {
       return NextResponse.json({ error: "Kayıt anahtarı geçersiz" }, { status: 403 });
+    }
+    // From a Turkish IP, only the 3-day TR code may open an account — the normal
+    // code is for the export audience. (Gate check + real signup both enforce it.)
+    if (!isTrToken && isTurkishIp(clientIpFromHeaders(request.headers))) {
+      return NextResponse.json(
+        { error: "Türkiye'den kayıt için 3 günlük erişim kodu gereklidir." },
+        { status: 403 }
+      );
     }
     // the TR code grants a 3-day access window from Turkish IPs
     const trAccessUntil = isTrToken
